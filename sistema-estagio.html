@@ -1,0 +1,3866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Estágio</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1f2435;
+      --border: #2a3045;
+      --accent: #5b8af0;
+      --accent2: #7dd3c0;
+      --accent3: #f0a05b;
+      --danger: #ef4444;
+      --text: #e8eaf2;
+      --text2: #8a91a8;
+      --text3: #555e7a;
+      --4h: #5b8af0;
+      --4h5: #7dd3c0;
+      --5h: #f0a05b;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 0;
+    }
+
+    .topbar-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      color: var(--text);
+      margin-right: 24px;
+      white-space: nowrap;
+    }
+
+    .topbar-logo span {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .nav-tabs {
+      display: flex;
+      height: 100%;
+    }
+
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 15px;
+      font-size: 0.77rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.04em;
+      color: var(--text3);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      background: none;
+      transition: all 0.18s;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .nav-tab:hover {
+      color: var(--text2);
+    }
+
+    .nav-tab.active {
+      color: var(--text);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── PAGES ── */
+    .page {
+      display: none;
+      padding: 30px 28px 60px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page.enc-page {
+      padding: 20px 28px 0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ── HOME ── */
+    .home-hero {
+      text-align: center;
+      padding: 60px 20px 48px;
+    }
+
+    .home-hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.9rem;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+
+    .home-hero h1 em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .home-hero p {
+      color: var(--text2);
+      font-size: 0.93rem;
+      max-width: 450px;
+      margin: 0 auto 44px;
+      line-height: 1.6;
+    }
+
+    .home-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .home-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .home-card:hover {
+      border-color: #3a4560;
+      transform: translateY(-2px);
+    }
+
+    .home-card:hover::before {
+      opacity: 1;
+    }
+
+    .home-card.c1::before {
+      background: linear-gradient(90deg, var(--accent), #7b9fef);
+    }
+
+    .home-card.c2::before {
+      background: linear-gradient(90deg, var(--accent2), #a8e6d8);
+    }
+
+    .home-card.c3::before {
+      background: linear-gradient(90deg, var(--accent3), #f7c896);
+    }
+
+    .home-card.c4::before {
+      background: linear-gradient(90deg, #c084fc, #e0aaff);
+    }
+
+    .home-card-icon {
+      font-size: 1.9rem;
+      margin-bottom: 13px;
+      display: block;
+    }
+
+    .home-card h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 7px;
+    }
+
+    .home-card p {
+      font-size: 0.8rem;
+      color: var(--text2);
+      line-height: 1.5;
+      padding-right: 20px;
+    }
+
+    .home-card-arrow {
+      position: absolute;
+      bottom: 16px;
+      right: 18px;
+      color: var(--text3);
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .home-card:hover .home-card-arrow {
+      color: var(--text2);
+      transform: translateX(3px);
+    }
+
+    /* ── SHARED ── */
+    .mod-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .mod-title h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.85rem;
+      font-weight: 400;
+    }
+
+    .mod-title h2 span {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .mod-title p {
+      font-size: 0.74rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.77rem;
+      letter-spacing: 0.03em;
+      padding: 9px 15px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 180px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.87rem;
+      padding: 9px 0;
+      flex: 1;
+    }
+
+    .search-box input::placeholder {
+      color: var(--text3);
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 20, 0.88);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
+      max-width: 420px;
+      width: 100%;
+      animation: fadeIn 0.18s ease;
+    }
+
+    .modal h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      font-size: 0.82rem;
+      color: var(--text2);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .modal textarea,
+    .modal input[type=text],
+    .modal input[type=number] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.87rem;
+      padding: 9px 12px;
+      outline: none;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+
+    .modal textarea:focus,
+    .modal input:focus {
+      border-color: var(--accent);
+    }
+
+    .modal label {
+      font-size: 0.72rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* ══ HORAS ══ */
+    .hours-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+    }
+
+    .hours-selector label {
+      font-size: 0.73rem;
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .hours-selector select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      padding: 6px 28px 6px 10px;
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a91a8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    .hours-selector select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card.total {
+      grid-column: span 2;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .stat-card.total::before {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .stat-card.agosto::before {
+      background: var(--accent);
+    }
+
+    .stat-card.setembro::before {
+      background: var(--accent2);
+    }
+
+    .stat-card.outubro::before {
+      background: var(--accent3);
+    }
+
+    .stat-card.novembro::before {
+      background: #c084fc;
+    }
+
+    .stat-card.dezembro::before {
+      background: #f472b6;
+    }
+
+    .stat-card.janeiro::before {
+      background: #34d399;
+    }
+
+    .stat-label {
+      font-size: 0.67rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+
+    .stat-value span {
+      font-size: 0.74rem;
+      color: var(--text2);
+      font-weight: 400;
+    }
+
+    .stat-days {
+      font-size: 0.67rem;
+      color: var(--text3);
+      margin-top: 3px;
+    }
+
+    .cal-toolbar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.71rem;
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-left: auto;
+    }
+
+    .clear-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .calendars {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .month-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .month-header {
+      padding: 12px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .month-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+    }
+
+    .month-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--text2);
+      text-align: right;
+    }
+
+    .month-meta .m-hours {
+      font-size: 0.84rem;
+      color: var(--text);
+      display: block;
+    }
+
+    .dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px 10px 3px;
+      gap: 2px;
+    }
+
+    .dow {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.59rem;
+      color: var(--text3);
+      text-transform: uppercase;
+    }
+
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      padding: 0 10px 12px;
+    }
+
+    .day-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.77rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+      position: relative;
+      user-select: none;
+    }
+
+    .day-cell:hover:not(.empty):not(.weekend-cell) {
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+
+    .day-cell.empty,
+    .day-cell.weekend-cell {
+      cursor: default;
+    }
+
+    .day-cell.weekend-cell {
+      color: var(--text3);
+      opacity: 0.4;
+    }
+
+    .day-cell.active {
+      color: #fff;
+      font-weight: 500;
+      border-color: transparent !important;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(91, 138, 240, 0.35);
+    }
+
+    /* ══ ALUNOS ══ */
+    .alunos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 13px;
+    }
+
+    .aluno-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .aluno-card:hover {
+      border-color: #3a4560;
+      transform: translateY(-2px);
+    }
+
+    .aluno-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+    }
+
+    .aluno-photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 2rem;
+    }
+
+    .aluno-body {
+      padding: 10px 11px 11px;
+    }
+
+    .aluno-name-display {
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 1.3;
+    }
+
+    .aluno-name-display:hover .edit-icon {
+      opacity: 1;
+    }
+
+    .edit-icon {
+      color: var(--text3);
+      font-size: 0.66rem;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .aluno-name-input {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      padding: 4px 8px;
+      outline: none;
+      margin-bottom: 5px;
+      display: none;
+    }
+
+    .aluno-curso-display {
+      font-size: 0.72rem;
+      cursor: pointer;
+      line-height: 1.4;
+      min-height: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .aluno-curso-select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      padding: 4px 8px;
+      outline: none;
+      display: none;
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .aluno-curso-select:focus {
+      border-color: var(--accent2);
+    }
+
+    .curso-badge-info {
+      background: rgba(91, 138, 240, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(91, 138, 240, 0.3);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    .curso-badge-dev {
+      background: rgba(125, 211, 192, 0.15);
+      color: var(--accent2);
+      border: 1px solid rgba(125, 211, 192, 0.3);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    .curso-badge-vazio {
+      color: var(--text3);
+      font-size: 0.7rem;
+      opacity: 0.5;
+    }
+
+    .encaminhado-badge {
+      font-size: 0.64rem;
+      font-family: 'DM Mono', monospace;
+      background: rgba(125, 211, 192, 0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(125, 211, 192, 0.25);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+
+    .btn-del-small {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 0.67rem;
+      font-family: 'DM Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .btn-del-small:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text3);
+    }
+
+    .empty-state .ei {
+      font-size: 2.6rem;
+      margin-bottom: 13px;
+      opacity: 0.4;
+    }
+
+    .empty-state p {
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .empty-state strong {
+      color: var(--text2);
+    }
+
+    /* ══ EMPRESAS ══ */
+    .empresas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 15px;
+    }
+
+    .empresa-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 17px 19px;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .empresa-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent3), #f7c896);
+      border-radius: var(--radius) var(--radius) 0 0;
+      opacity: 0.7;
+    }
+
+    .empresa-card:hover {
+      border-color: #3a4560;
+    }
+
+    .empresa-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .empresa-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .empresa-vagas {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .vagas-ok {
+      color: var(--accent2);
+    }
+
+    .vagas-full {
+      color: var(--accent3);
+    }
+
+    .empresa-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-emp {
+      background: none;
+      border: 1px solid var(--border);
+      font-size: 0.67rem;
+      font-family: 'DM Mono', monospace;
+      padding: 3px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-emp.edit {
+      color: var(--text3);
+    }
+
+    .btn-emp.edit:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-emp.del {
+      color: var(--text3);
+    }
+
+    .btn-emp.del:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    /* ══ ENCAMINHAMENTO ══ */
+    .enc-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+      height: calc(100vh - 140px);
+    }
+
+    .enc-empresas-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .enc-col {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .enc-col-header {
+      margin-bottom: 10px;
+      flex-shrink: 0;
+    }
+
+    .enc-col-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      margin-bottom: 2px;
+    }
+
+    .enc-col-title span {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .enc-col-sub {
+      font-size: 0.7rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .enc-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .enc-scroll::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .enc-scroll::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    #encEmpresasScroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    #encEmpresasScroll::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    #encEmpresasScroll::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    /* drag cards */
+    .drag-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      cursor: grab;
+      transition: all 0.15s;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .drag-card:active {
+      cursor: grabbing;
+    }
+
+    .drag-card:hover {
+      border-color: #3a4560;
+      background: var(--surface2);
+    }
+
+    .drag-card.dragging {
+      opacity: 0.35;
+      border-style: dashed;
+    }
+
+    .drag-card img {
+      width: 66px;
+      height: 88px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .drag-card .d-avatar {
+      width: 66px;
+      height: 88px;
+      background: var(--surface2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+
+    .drag-name {
+      font-size: 0.92rem;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .drag-hint {
+      font-size: 0.68rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      margin-top: 4px;
+    }
+
+    /* empresa drop zones */
+    .enc-empresa {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 13px 15px;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .enc-empresa::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent3), #f7c896);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .enc-empresa.drag-over {
+      border-color: var(--accent2) !important;
+      background: rgba(125, 211, 192, 0.05);
+    }
+
+    .enc-empresa.full {
+      border-color: rgba(240, 160, 91, 0.35);
+    }
+
+    .enc-emp-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 9px;
+      gap: 8px;
+    }
+
+    .enc-emp-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.98rem;
+      font-weight: 400;
+    }
+
+    .enc-emp-vagas {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .vb-ok {
+      background: rgba(125, 211, 192, 0.1);
+      color: var(--accent2);
+      border: 1px solid rgba(125, 211, 192, 0.22);
+    }
+
+    .vb-full {
+      background: rgba(240, 160, 91, 0.1);
+      color: var(--accent3);
+      border: 1px solid rgba(240, 160, 91, 0.22);
+    }
+
+    .enc-drop-zone {
+      min-height: 80px;
+      border-radius: 8px;
+      border: 1.5px dashed var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      align-items: flex-start;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .enc-empresa.drag-over .enc-drop-zone {
+      border-color: var(--accent2);
+    }
+
+    .drop-hint {
+      width: 100%;
+      text-align: center;
+      font-size: 0.69rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      padding: 16px 0 8px;
+      align-self: center;
+      pointer-events: none;
+    }
+
+    /* chips */
+    .placed-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 7px 7px 6px;
+      font-size: 0.73rem;
+      color: var(--text);
+      position: relative;
+      width: 92px;
+      cursor: grab;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      user-select: none;
+    }
+
+    .placed-chip:hover {
+      border-color: #3a4560;
+      box-shadow: 0 0 0 2px rgba(91, 138, 240, 0.15);
+    }
+
+    .placed-chip:active {
+      cursor: grabbing;
+    }
+
+    .placed-chip img {
+      width: 78px;
+      height: 104px;
+      object-fit: cover;
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    .chip-av {
+      width: 78px;
+      height: 104px;
+      background: var(--surface);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 1.8rem;
+      pointer-events: none;
+    }
+
+    .chip-name {
+      width: 100%;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 0.71rem;
+      line-height: 1.3;
+      pointer-events: none;
+    }
+
+    .chip-drag-hint {
+      font-size: 0.58rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      pointer-events: none;
+    }
+
+    .chip-x {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(10, 12, 20, 0.72);
+      border: none;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 0.68rem;
+      padding: 2px 5px;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      line-height: 1;
+      border-radius: 4px;
+      z-index: 2;
+    }
+
+    .chip-x:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* ── home card c5 ── */
+    .home-card.c5::before {
+      background: linear-gradient(90deg, #34d399, #6ee7b7);
+    }
+
+    /* ══ CARGA HORÁRIA ══ */
+    .carga-filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.74rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .filter-btn:hover:not(.active) {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .carga-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .cs-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cs-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .cs-card.cs-total::before {
+      background: linear-gradient(90deg, #34d399, #6ee7b7);
+    }
+
+    .cs-card.cs-ok::before {
+      background: var(--accent2);
+    }
+
+    .cs-card.cs-andamento::before {
+      background: var(--accent);
+    }
+
+    .cs-card.cs-atrasado::before {
+      background: var(--danger);
+    }
+
+    .cs-label {
+      font-size: 0.68rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .cs-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .cs-sub {
+      font-size: 0.68rem;
+      color: var(--text3);
+      margin-top: 3px;
+    }
+
+    .carga-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    .carga-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+    }
+
+    .carga-table th {
+      background: var(--surface2);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text3);
+      padding: 9px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .carga-table td {
+      padding: 8px 10px;
+      font-size: 0.82rem;
+      border-bottom: 1px solid rgba(42, 48, 69, 0.5);
+      vertical-align: middle;
+    }
+
+    .carga-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .carga-table tr:hover td {
+      background: rgba(31, 36, 53, 0.5);
+    }
+
+    /* congelar coluna do aluno */
+    .carga-table th:first-child,
+    .carga-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: var(--surface2);
+    }
+
+    .carga-table td:first-child {
+      background: var(--surface);
+    }
+
+    .carga-table tr:hover td:first-child {
+      background: rgba(31, 36, 53, 0.9);
+    }
+
+    .aluno-thumb {
+      width: 32px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 5px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .aluno-thumb-ph {
+      width: 32px;
+      height: 42px;
+      background: var(--surface2);
+      border-radius: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 0.85rem;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .prog-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prog-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 80px;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .prog-fill.pf-ok {
+      background: var(--accent2);
+    }
+
+    .prog-fill.pf-meio {
+      background: var(--accent);
+    }
+
+    .prog-fill.pf-baixo {
+      background: var(--accent3);
+    }
+
+    .prog-fill.pf-concluido {
+      background: #34d399;
+    }
+
+    .prog-pct {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text2);
+      width: 34px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .sb-concluido {
+      background: rgba(52, 211, 153, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.25);
+    }
+
+    .sb-andamento {
+      background: rgba(91, 138, 240, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(91, 138, 240, 0.25);
+    }
+
+    .sb-atrasado {
+      background: rgba(239, 68, 68, 0.12);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .sb-pendente {
+      background: rgba(85, 94, 122, 0.15);
+      color: var(--text3);
+      border: 1px solid rgba(85, 94, 122, 0.25);
+    }
+
+    .previsao-cell {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .previsao-cell.atrasado {
+      color: var(--danger);
+    }
+
+    .previsao-cell.ok {
+      color: var(--accent2);
+    }
+
+    .previsao-cell.pendente {
+      color: var(--text3);
+    }
+
+    .ch-edit-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-size: 0.65rem;
+      font-family: 'DM Mono', monospace;
+      padding: 2px 7px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .ch-edit-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .curso-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    .curso-info {
+      background: rgba(91, 138, 240, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(91, 138, 240, 0.2);
+    }
+
+    .curso-dev {
+      background: rgba(125, 211, 192, 0.12);
+      color: var(--accent2);
+      border: 1px solid rgba(125, 211, 192, 0.2);
+    }
+
+    .curso-out {
+      background: rgba(85, 94, 122, 0.15);
+      color: var(--text2);
+      border: 1px solid rgba(85, 94, 122, 0.2);
+    }
+
+    /* células mensais de horas */
+    .mes-cell {
+      text-align: center;
+      min-width: 70px;
+    }
+
+    .mes-input-wrap {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mes-horas-input {
+      width: 56px;
+      text-align: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      padding: 5px 4px;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .mes-horas-input:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+
+    .mes-horas-input.tem-horas {
+      border-color: rgba(125, 211, 192, 0.5);
+      background: rgba(125, 211, 192, 0.07);
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    /* checkbox estilo toggle */
+    .mes-check-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .mes-check {
+      display: none;
+    }
+
+    .mes-toggle {
+      width: 32px;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--border);
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .mes-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .mes-check:checked+.mes-toggle {
+      background: var(--accent2);
+    }
+
+    .mes-check:checked+.mes-toggle::after {
+      left: 18px;
+    }
+
+    .mes-label {
+      font-size: 0.59rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      transition: color 0.2s;
+    }
+
+    .mes-check:checked~.mes-label {
+      color: var(--accent2);
+    }
+
+    .mes-confirmado {
+      font-size: 0.59rem;
+      color: var(--accent2);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* cabeçalho das colunas de mês com cor */
+    .th-ago {
+      color: #7b9fef !important;
+    }
+
+    /* célula início + previsão empilhadas */
+    .ini-prev-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ini-date-input {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.74rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 3px 7px;
+      outline: none;
+      width: 118px;
+      transition: border-color 0.15s;
+    }
+
+    .ini-date-input:focus {
+      border-color: var(--accent);
+    }
+
+    .ini-label {
+      font-size: 0.6rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.04em;
+    }
+
+    .prev-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.74rem;
+    }
+
+    .prev-value.ok {
+      color: var(--accent2);
+    }
+
+    .prev-value.pendente {
+      color: var(--text3);
+    }
+
+    .th-set {
+      color: var(--accent2) !important;
+    }
+
+    .th-out {
+      color: var(--accent3) !important;
+    }
+
+    .th-nov {
+      color: #c084fc !important;
+    }
+
+    .th-dez {
+      color: #f472b6 !important;
+    }
+
+    .th-jan {
+      color: #34d399 !important;
+    }
+
+    /* total acumulado — célula */
+    .total-cell {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .total-cell .tc-sub {
+      font-size: 0.65rem;
+      color: var(--text3);
+      font-weight: 400;
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* ══ DASHBOARD HOME ══ */
+    .dash-section-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dash-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .dash-kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: #3a4560;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+
+    .kpi-card.kpi-blue::before {
+      background: var(--accent);
+    }
+
+    .kpi-card.kpi-teal::before {
+      background: var(--accent2);
+    }
+
+    .kpi-card.kpi-orange::before {
+      background: var(--accent3);
+    }
+
+    .kpi-card.kpi-purple::before {
+      background: #c084fc;
+    }
+
+    .kpi-card.kpi-pink::before {
+      background: #f472b6;
+    }
+
+    .kpi-card.kpi-green::before {
+      background: #34d399;
+    }
+
+    .kpi-card.kpi-red::before {
+      background: var(--danger);
+    }
+
+    .kpi-icon {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .kpi-value {
+      font-family: 'DM Mono', monospace;
+      font-size: 2.4rem;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .kpi-label {
+      font-size: 0.78rem;
+      color: var(--text2);
+      margin-bottom: 3px;
+    }
+
+    .kpi-sub {
+      font-size: 0.68rem;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* Alunos críticos */
+    .criticos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .critico-card {
+      background: var(--surface);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .critico-card:hover {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .critico-photo {
+      width: 44px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 7px;
+      flex-shrink: 0;
+    }
+
+    .critico-avatar {
+      width: 44px;
+      height: 58px;
+      background: var(--surface2);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text3);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .critico-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .critico-nome {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+
+    .critico-empresa {
+      font-size: 0.72rem;
+      color: var(--text2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
+    }
+
+    .critico-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .critico-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .cb-red {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .cb-orange {
+      background: rgba(240, 160, 91, 0.15);
+      color: var(--accent3);
+      border: 1px solid rgba(240, 160, 91, 0.3);
+    }
+
+    .cb-gray {
+      background: rgba(85, 94, 122, 0.2);
+      color: var(--text3);
+      border: 1px solid rgba(85, 94, 122, 0.3);
+    }
+
+    .dash-empty {
+      text-align: center;
+      padding: 32px;
+      color: var(--text3);
+      font-size: 0.84rem;
+      grid-column: 1/-1;
+    }
+
+    .dash-empty .ei {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      opacity: 0.4;
+    }
+
+    /* mini barra de progresso inline */
+    .mini-prog {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mini-fill {
+      height: 100%;
+      border-radius: 2px;
+    }
+
+    /* ══ IMPRESSÃO / PDF ══ */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      body {
+        background: #fff !important;
+        color: #111 !important;
+        font-family: Arial, sans-serif !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ocultar tudo exceto o conteúdo de impressão */
+      .topbar,
+      .nav-tabs,
+      .mod-header .btn,
+      .btn-primary,
+      .btn-secondary,
+      .cal-toolbar .clear-btn,
+      .carga-filters,
+      .hours-selector,
+      #searchAluno,
+      #searchEmpresa,
+      #searchCarga,
+      .aluno-actions,
+      .empresa-btns,
+      .ch-edit-btn,
+      .enc-layout,
+      .modal-overlay,
+      .home-hero {
+        display: none !important;
+      }
+
+      .page {
+        display: none !important;
+        padding: 0 !important;
+      }
+
+      .page.print-active {
+        display: block !important;
+      }
+
+      /* ── Calendário ── */
+      .print-active .mod-header {
+        margin-bottom: 16px;
+      }
+
+      .print-active .mod-title h2 {
+        color: #111 !important;
+        font-size: 1.6rem;
+      }
+
+      .print-active .mod-title h2 span {
+        color: #2563eb !important;
+      }
+
+      .print-active .mod-title p {
+        color: #555 !important;
+      }
+
+      .print-active .stats-bar {
+        display: grid !important;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .print-active .stat-card.total {
+        grid-column: span 2;
+      }
+
+      .print-active .stat-card {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px;
+        padding: 8px 12px;
+      }
+
+      .print-active .stat-card::before {
+        display: none;
+      }
+
+      .print-active .stat-label {
+        color: #64748b !important;
+        font-size: 0.6rem;
+      }
+
+      .print-active .stat-value {
+        color: #111 !important;
+        font-size: 1.1rem;
+      }
+
+      .print-active .stat-days {
+        color: #64748b !important;
+        font-size: 0.6rem;
+      }
+
+      .print-active .calendars {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .print-active .month-card {
+        background: #fff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px;
+        break-inside: avoid;
+      }
+
+      .print-active .month-header {
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 8px 12px;
+      }
+
+      .print-active .month-name {
+        color: #111 !important;
+        font-size: 0.95rem;
+      }
+
+      .print-active .month-meta {
+        color: #555 !important;
+        font-size: 0.65rem;
+      }
+
+      .print-active .month-meta .m-hours {
+        color: #111 !important;
+        font-size: 0.82rem;
+      }
+
+      .print-active .dow {
+        color: #94a3b8 !important;
+        font-size: 0.55rem;
+      }
+
+      .print-active .day-cell {
+        font-size: 0.72rem;
+        color: #111 !important;
+      }
+
+      .print-active .day-cell.weekend-cell {
+        color: #cbd5e1 !important;
+        opacity: 1;
+      }
+
+      .print-active .day-cell.active {
+        background: #3b82f6 !important;
+        color: #fff !important;
+      }
+
+      .print-active .legend-item {
+        color: #555 !important;
+        font-size: 0.7rem;
+      }
+
+      /* ── Carga Horária ── */
+      .print-active .carga-summary {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .print-active .cs-card {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px;
+        padding: 8px 14px;
+      }
+
+      .print-active .cs-card::before {
+        display: none;
+      }
+
+      .print-active .cs-label {
+        color: #64748b !important;
+        font-size: 0.6rem;
+      }
+
+      .print-active .cs-value {
+        color: #111 !important;
+        font-size: 1.3rem;
+      }
+
+      .print-active .cs-sub {
+        color: #64748b !important;
+        font-size: 0.6rem;
+      }
+
+      .print-active .carga-table-wrap {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .print-active .carga-table th {
+        background: #f8fafc !important;
+        color: #475569 !important;
+        font-size: 0.62rem;
+        padding: 6px 8px;
+        border-bottom: 1px solid #e2e8f0 !important;
+        position: static !important;
+      }
+
+      .print-active .carga-table td {
+        color: #111 !important;
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        border-bottom: 1px solid #f1f5f9 !important;
+      }
+
+      .print-active .carga-table td:first-child {
+        position: static !important;
+        background: #fff !important;
+      }
+
+      .print-active .carga-table tr:hover td {
+        background: transparent !important;
+      }
+
+      .print-active .aluno-thumb {
+        width: 24px;
+        height: 32px;
+      }
+
+      .print-active .aluno-thumb-ph {
+        width: 24px;
+        height: 32px;
+        background: #e2e8f0 !important;
+        color: #94a3b8 !important;
+      }
+
+      .print-active .mes-horas-input {
+        background: #f1f5f9 !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #111 !important;
+        font-size: 0.72rem;
+        padding: 2px 4px;
+      }
+
+      .print-active .mes-horas-input.tem-horas {
+        background: #d1fae5 !important;
+        color: #065f46 !important;
+        border-color: #6ee7b7 !important;
+      }
+
+      .print-active .ini-date-input {
+        background: #f1f5f9 !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #111 !important;
+        font-size: 0.68rem;
+      }
+
+      .print-active .ini-label {
+        color: #64748b !important;
+      }
+
+      .print-active .prev-value.ok {
+        color: #059669 !important;
+      }
+
+      .print-active .prev-value.pendente {
+        color: #94a3b8 !important;
+      }
+
+      .print-active .prog-bar {
+        background: #e2e8f0 !important;
+      }
+
+      .print-active .prog-fill.pf-ok {
+        background: #10b981 !important;
+      }
+
+      .print-active .prog-fill.pf-meio {
+        background: #3b82f6 !important;
+      }
+
+      .print-active .prog-fill.pf-baixo {
+        background: #f97316 !important;
+      }
+
+      .print-active .prog-fill.pf-concluido {
+        background: #059669 !important;
+      }
+
+      .print-active .prog-pct {
+        color: #555 !important;
+        font-size: 0.68rem;
+      }
+
+      .print-active .status-badge {
+        font-size: 0.6rem;
+      }
+
+      .print-active .sb-concluido {
+        background: #d1fae5 !important;
+        color: #065f46 !important;
+        border-color: #6ee7b7 !important;
+      }
+
+      .print-active .sb-andamento {
+        background: #dbeafe !important;
+        color: #1e40af !important;
+        border-color: #93c5fd !important;
+      }
+
+      .print-active .sb-pendente {
+        background: #f1f5f9 !important;
+        color: #64748b !important;
+        border-color: #cbd5e1 !important;
+      }
+
+      .print-active .total-cell {
+        color: #111 !important;
+        font-size: 0.78rem;
+      }
+
+      .print-active .total-cell .tc-sub {
+        color: #64748b !important;
+      }
+
+      .print-active .ini-prev-cell {
+        gap: 3px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="topbar">
+    <div class="topbar-logo">Sistema de <span>Estágio</span></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('home')" id="tab-home">⌂ Início</button>
+      <button class="nav-tab" onclick="showPage('horas')" id="tab-horas">📅 Calendário</button>
+      <button class="nav-tab" onclick="showPage('alunos')" id="tab-alunos">👤 Alunos</button>
+      <button class="nav-tab" onclick="showPage('empresas')" id="tab-empresas">🏢 Empresas</button>
+      <button class="nav-tab" onclick="showPage('encaminhamento')" id="tab-encaminhamento">🔀 Encaminhamento</button>
+      <button class="nav-tab" onclick="showPage('carga')" id="tab-carga">📊 Carga Horária</button>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div style="padding:0">
+
+      <!-- Cabeçalho -->
+      <div
+        style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h1 style="font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400">
+            Sistema de <em style="color:var(--accent);font-style:italic">Estágio</em>
+          </h1>
+          <p style="font-size:0.76rem;color:var(--text3);font-family:'DM Mono',monospace;margin-top:4px"
+            id="dash-updated">carregando...</p>
+        </div>
+        <button class="btn btn-secondary" onclick="renderDashboard()">↺ Atualizar</button>
+      </div>
+
+      <!-- KPIs -->
+      <div class="dash-section-title">Visão Geral</div>
+      <div class="dash-kpi-grid" id="dashKpis"></div>
+
+      <!-- Críticos -->
+      <div class="dash-section-title" id="dash-criticos-title">Alunos em Situação Crítica</div>
+      <div class="criticos-grid" id="dashCriticos"></div>
+
+
+    </div>
+  </div>
+
+  <!-- HORAS -->
+  <div class="page" id="page-horas">
+    <div class="mod-header">
+      <div class="mod-title">
+        <h2>Controle de <span>Horas</span></h2>
+        <p>AGO 2026 → JAN 2027 · clique nos dias para marcar</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-secondary" onclick="exportarPDF('horas')">↓ Exportar PDF</button>
+      </div>
+    </div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="cal-toolbar">
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--accent)"></div>Dia de Estágio
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--border)"></div>Fim de Semana
+        </div>
+      </div>
+      <button class="clear-btn" onclick="clearAllCal()">↺ limpar tudo</button>
+    </div>
+    <div class="calendars" id="calendars"></div>
+  </div>
+
+  <!-- ALUNOS -->
+  <div class="page" id="page-alunos">
+    <div class="mod-header">
+      <div class="mod-title">
+        <h2>Cadastro de <span>Alunos</span></h2>
+        <p>Ordem alfabética · clique no nome ou curso para editar</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box">
+        <span style="color:var(--text3);font-size:0.9rem">🔍</span>
+        <input type="text" id="searchAluno" placeholder="Buscar aluno..." oninput="renderAlunos()">
+      </div>
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">＋ Adicionar fotos</button>
+      <button class="btn btn-secondary" onclick="exportarPDF('alunos')">↓ Exportar PDF</button>
+      <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleUpload(event)">
+    </div>
+    <div id="alunosCount"
+      style="font-family:'DM Mono',monospace;font-size:0.71rem;color:var(--text3);margin-bottom:14px"></div>
+    <div class="alunos-grid" id="alunosGrid"></div>
+  </div>
+
+  <!-- EMPRESAS -->
+  <div class="page" id="page-empresas">
+    <div class="mod-header">
+      <div class="mod-title">
+        <h2>Cadastro de <span>Empresas</span></h2>
+        <p>Cole os nomes ou importe um .txt para cadastrar em lote</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="search-box">
+        <span style="color:var(--text3);font-size:0.9rem">🔍</span>
+        <input type="text" id="searchEmpresa" placeholder="Buscar empresa..." oninput="renderEmpresas()">
+      </div>
+      <button class="btn btn-primary" onclick="abrirModalEmpresas()">＋ Adicionar empresas</button>
+
+    </div>
+    <div class="carga-filters" style="margin-bottom:14px;">
+      <button class="filter-btn active" onclick="setEmpresasFiltro('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setEmpresasFiltro('4',this)">4h</button>
+      <button class="filter-btn" onclick="setEmpresasFiltro('4.5',this)">4h30</button>
+      <button class="filter-btn" onclick="setEmpresasFiltro('5',this)">5h</button>
+    </div>
+    <div id="empresasCount"
+      style="font-family:'DM Mono',monospace;font-size:0.71rem;color:var(--text3);margin-bottom:14px"></div>
+    <div class="empresas-grid" id="empresasGrid"></div>
+  </div>
+
+  <!-- ENCAMINHAMENTO -->
+  <div class="page enc-page" id="page-encaminhamento">
+    <div class="mod-header" style="margin-bottom:14px">
+      <div class="mod-title">
+        <h2><span>Encaminhamento</span></h2>
+        <p>Arraste o aluno da esquerda e solte na empresa à direita</p>
+      </div>
+      <button class="btn btn-secondary" onclick="exportarEncaminhamento()">↓ Exportar CSV</button>
+    </div>
+    <div class="enc-layout">
+      <div class="enc-col">
+        <div class="enc-col-header">
+          <div class="enc-col-title">Alunos <span>disponíveis</span></div>
+          <div class="enc-col-sub" id="encAlunosCount"></div>
+        </div>
+        <div class="enc-scroll" id="encAlunosList"></div>
+      </div>
+      <div class="enc-col">
+        <div class="enc-col-header">
+          <div class="enc-col-title">Empresas</div>
+          <div class="enc-col-sub" id="encEmpresasCount"></div>
+        </div>
+        <div class="enc-scroll" id="encEmpresasScroll">
+          <div class="enc-empresas-cols" id="encEmpresasList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARGA HORÁRIA -->
+  <div class="page" id="page-carga">
+    <div class="mod-header">
+      <div class="mod-title">
+        <h2>Carga <span>Horária</span></h2>
+        <p>Acompanhe horas cumpridas, restantes e previsão de encerramento por aluno</p>
+      </div>
+      <button class="btn btn-secondary" onclick="exportarPDF('carga')">↓ Exportar PDF</button>
+    </div>
+    <div class="carga-summary" id="cargaSummary"></div>
+    <div class="carga-filters">
+      <button class="filter-btn active" onclick="setCargaFiltro('todos',this)">Todos</button>
+      <button class="filter-btn" onclick="setCargaFiltro('andamento',this)">Em andamento</button>
+      <button class="filter-btn" onclick="setCargaFiltro('concluido',this)">Concluídos</button>
+      <button class="filter-btn" onclick="setCargaFiltro('pendente',this)">Sem início</button>
+      <div class="search-box" style="margin-left:auto;max-width:220px">
+        <span style="color:var(--text3);font-size:0.9rem">🔍</span>
+        <input type="text" id="searchCarga" placeholder="Buscar aluno..." oninput="renderCarga()">
+      </div>
+    </div>
+    <div id="cargaTablesContainer"></div>
+  </div>
+
+  <!-- MODAL: editar carga do aluno -->
+  <div class="modal-overlay" id="modalCarga">
+    <div class="modal">
+      <h3>Carga Horária do Aluno</h3>
+      <p id="modalCargaNome" style="font-weight:500;color:var(--text);margin-bottom:14px"></p>
+      <label>META DE HORAS TOTAIS</label>
+      <input type="number" id="cargaMeta" value="300" min="1" max="9999">
+      <label>DATA DE INÍCIO DO ESTÁGIO</label>
+      <input type="date" id="cargaInicio"
+        style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.87rem;padding:9px 12px;outline:none;margin-bottom:12px;">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModalCarga()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarCarga()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: adicionar empresas -->
+  <div class="modal-overlay" id="modalEmpresas">
+    <div class="modal" style="max-width:500px">
+      <h3>Adicionar Empresas</h3>
+      <p>Envie um arquivo <strong>.txt</strong> ou <strong>.csv</strong> com uma empresa por linha no formato:<br>
+        <span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--accent2)">Nome da Empresa, 08:00,
+          12:00</span><br>
+        <span style="color:var(--text3);font-size:0.78rem">ou cole diretamente abaixo. Duplicatas são ignoradas.</span>
+      </p>
+      <label>ARQUIVO (.txt ou .csv)</label>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <button class="btn btn-secondary" onclick="document.getElementById('empFileInput').click()"
+          style="flex-shrink:0">📂 Escolher arquivo</button>
+        <span id="empFileName" style="font-size:0.78rem;color:var(--text3);font-family:'DM Mono',monospace">nenhum
+          arquivo</span>
+        <input type="file" id="empFileInput" accept=".txt,.csv" style="display:none"
+          onchange="lerArquivoEmpresas(event)">
+      </div>
+      <label>EMPRESAS (Nome, entrada, saída — uma por linha)</label>
+      <textarea id="empresasTextarea" rows="7"
+        placeholder="Empresa A, 08:00, 12:00&#10;Empresa B, 13:00, 17:30&#10;Empresa C, 07:30, 11:30"></textarea>
+      <label>VAGAS PADRÃO</label>
+      <input type="number" id="vagasDefault" value="1" min="1" max="100">
+      <div id="empPreview" style="display:none;margin-bottom:12px">
+        <div style="font-size:0.7rem;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">
+          PRÉ-VISUALIZAÇÃO</div>
+        <div id="empPreviewList" style="display:flex;flex-direction:column;gap:4px;max-height:140px;overflow-y:auto">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModalEmpresas()">Cancelar</button>
+        <button class="btn btn-secondary" onclick="previewEmpresas()"
+          style="border-color:var(--accent2);color:var(--accent2)">👁 Preview</button>
+        <button class="btn btn-primary" onclick="salvarEmpresas()">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: editar empresa -->
+  <div class="modal-overlay" id="modalEditEmpresa">
+    <div class="modal">
+      <h3>Editar Empresa</h3>
+      <label>NOME</label>
+      <input type="text" id="editEmpNome">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label>ENTRADA</label><input type="time" id="editEmpEntrada"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.87rem;padding:9px 12px;outline:none;margin-bottom:12px;">
+        </div>
+        <div><label>SAÍDA</label><input type="time" id="editEmpSaida"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.87rem;padding:9px 12px;outline:none;margin-bottom:12px;">
+        </div>
+      </div>
+      <div id="editEmpHorasCalc"
+        style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--accent2);margin-bottom:12px;min-height:18px">
+      </div>
+      <label>VAGAS</label>
+      <input type="number" id="editEmpVagas" min="1" max="100">
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharModalEditEmp()">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmarEditEmpresa()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: confirmação genérica -->
+  <div class="modal-overlay" id="modalConfirm">
+    <div class="modal">
+      <h3 id="confirmTitle">Confirmar</h3>
+      <p id="confirmMsg"></p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="fecharConfirm()">Cancelar</button>
+        <button class="btn" id="confirmBtn"
+          style="background:var(--danger);color:#fff;border:none;font-family:'DM Mono',monospace;font-size:0.77rem;padding:8px 16px;border-radius:8px;cursor:pointer;">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── NAV ── */
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      document.getElementById('tab-' + id).classList.add('active');
+      if (id === 'home') renderDashboard();
+      if (id === 'encaminhamento') renderEnc();
+      if (id === 'carga') renderCarga();
+    }
+
+    /* ── STORAGE (API local via servidor.py) ── */
+    const API = '/api/dados';
+    const _cache = {};
+
+    const S = {
+      get: (k, d) => (k in _cache) ? _cache[k] : d,
+      set: async (k, v) => {
+        _cache[k] = v;
+        try {
+          const r = await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chave: k, dados: v })
+          });
+          const j = await r.json();
+          if (!j.ok) console.warn('Erro ao salvar:', j.erro);
+          return j.ok;
+        } catch (e) {
+          try { localStorage.setItem(k, JSON.stringify(v)); } catch { }
+          showServerWarning();
+          return false;
+        }
+      }
+    };
+
+    async function initStorage() {
+      const chaves = ['est_cal', 'est_alunos', 'est_emp', 'est_enc'];
+      const defaults = { est_cal: {}, est_alunos: [], est_emp: [], est_enc: {} };
+      let servidorOk = true;
+      for (const k of chaves) {
+        try {
+          const r = await fetch(`${API}?chave=${k}`);
+          const j = await r.json();
+          _cache[k] = j.ok ? j.dados : defaults[k];
+        } catch {
+          servidorOk = false;
+          try { _cache[k] = JSON.parse(localStorage.getItem(k)) ?? defaults[k]; }
+          catch { _cache[k] = defaults[k]; }
+        }
+      }
+      if (!servidorOk) showServerWarning();
+      return servidorOk;
+    }
+
+    function showServerWarning() {
+      const id = 'server-warning';
+      if (document.getElementById(id)) return;
+      const el = document.createElement('div');
+      el.id = id;
+      el.style.cssText = "position:fixed;bottom:20px;right:20px;z-index:9999;background:#1f2435;border:1px solid #f0a05b;color:#f0a05b;font-family:'DM Mono',monospace;font-size:0.75rem;padding:12px 16px;border-radius:10px;max-width:340px;line-height:1.6;box-shadow:0 4px 20px rgba(0,0,0,0.5)";
+      el.innerHTML = '⚠ Servidor local não encontrado.<br><span style="color:#8a91a8">Execute <strong style="color:#e8eaf2">python servidor.py</strong> na pasta do sistema. Usando localStorage temporariamente.</span><button onclick="this.parentElement.remove()" style="display:block;margin-top:8px;background:none;border:1px solid #f0a05b;color:#f0a05b;font-family:DM Mono,monospace;font-size:0.72rem;padding:3px 10px;border-radius:5px;cursor:pointer">fechar</button>';
+      document.body.appendChild(el);
+    }
+
+    function compressImage(dataUrl, maxW = 500, quality = 0.80) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxW / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = dataUrl;
+      });
+    }
+
+    /* ══════════════════════════
+       HORAS
+    ══════════════════════════ */
+    const MONTHS = [
+      { name: 'Agosto', year: 2026, month: 8, cls: 'agosto' },
+      { name: 'Setembro', year: 2026, month: 9, cls: 'setembro' },
+      { name: 'Outubro', year: 2026, month: 10, cls: 'outubro' },
+      { name: 'Novembro', year: 2026, month: 11, cls: 'novembro' },
+      { name: 'Dezembro', year: 2026, month: 12, cls: 'dezembro' },
+      { name: 'Janeiro', year: 2027, month: 1, cls: 'janeiro' },
+    ];
+    const DOW = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    let calState = {};
+    const saveCal = () => S.set('est_cal', calState);
+    const calKey = (y, m, d) => `${y}-${m}-${d}`;
+    const hClass = h => h === 4 ? 'h4' : h === 4.5 ? 'h45' : 'h5';
+    const hLabel = h => h === 4 ? '4h' : h === 4.5 ? '4h30' : '5h';
+    const getDays = (y, m) => new Date(y, m, 0).getDate();
+    const fDow = (y, m) => new Date(y, m - 1, 1).getDay();
+    const isWE = (y, m, d) => { const w = new Date(y, m - 1, d).getDay(); return w === 0 || w === 6; };
+    function fmtH(h) {
+      if (!h) return '0';
+      const i = Math.floor(h), d = h - i;
+      if (!d) return `${i}`;
+      return `${i}h${Math.round(d * 60).toString().padStart(2, '0')}`;
+    }
+
+    function buildCal() {
+      const c = document.getElementById('calendars');
+      c.innerHTML = '';
+      MONTHS.forEach(({ name, year, month }) => {
+        const mc = document.createElement('div');
+        mc.className = 'month-card';
+        mc.innerHTML = `
+      <div class="month-header">
+        <div class="month-name">${name} ${year}</div>
+        <div class="month-meta" id="meta-${year}-${month}"><span class="m-hours">0h</span>0 dias</div>
+      </div>
+      <div class="dow-row">${DOW.map(d => `<div class="dow">${d}</div>`).join('')}</div>
+      <div class="days-grid" id="cgrid-${year}-${month}"></div>`;
+        c.appendChild(mc);
+
+        const g = document.getElementById(`cgrid-${year}-${month}`);
+        for (let i = 0; i < fDow(year, month); i++) { const e = document.createElement('div'); e.className = 'day-cell empty'; g.appendChild(e); }
+        for (let d = 1; d <= getDays(year, month); d++) {
+          const cell = document.createElement('div');
+          cell.className = 'day-cell'; cell.textContent = d; cell.id = `day-${year}-${month}-${d}`;
+          if (isWE(year, month, d)) { cell.classList.add('weekend-cell'); }
+          else {
+            const k = calKey(year, month, d);
+            if (calState[k]) { cell.classList.add('active'); }
+            cell.addEventListener('click', () => toggleDay(year, month, d));
+          }
+          g.appendChild(cell);
+        }
+      });
+      updateStats();
+    }
+
+    function toggleDay(y, m, d) {
+      const k = calKey(y, m, d);
+      const cell = document.getElementById(`day-${y}-${m}-${d}`);
+      if (calState[k]) {
+        delete calState[k];
+        cell.classList.remove('active');
+      } else {
+        calState[k] = true;
+        cell.classList.add('active');
+      }
+      saveCal(); updateStats();
+    }
+
+    function dataDeConclusaoParaDias(diasNecessarios) {
+      const inicio = new Date('2026-08-10T00:00:00');
+      const diasCal = Object.keys(calState)
+        .map(k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); })
+        .sort((a, b) => a - b);
+
+      if (diasCal.length >= diasNecessarios) {
+        const dataFim = diasCal[diasNecessarios - 1];
+        return { data: dataFim, extrapolado: false };
+      }
+
+      const ultimaRef = diasCal.length > 0
+        ? new Date(diasCal[diasCal.length - 1])
+        : new Date(inicio);
+
+      const aindaFalta = diasNecessarios - diasCal.length;
+      let cursor = new Date(ultimaRef);
+      let count = 0;
+      while (count < aindaFalta) {
+        cursor.setDate(cursor.getDate() + 1);
+        const wd = cursor.getDay();
+        if (wd !== 0 && wd !== 6) count++;
+      }
+      return { data: cursor, extrapolado: true };
+    }
+
+    const fmtDataFim = (res) => {
+      if (!res) return '—';
+      const dataStr = res.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      const ano = res.data.getFullYear();
+      return `${dataStr}/${ano}${res.extrapolado ? ' (est.)' : ''}`;
+    };
+
+    function updateStats() {
+      let tD = 0;
+      const bar = document.getElementById('statsBar');
+      const ms = MONTHS.map(({ name, year, month, cls }) => {
+        let md = 0;
+        Object.entries(calState).forEach(([k, val]) => {
+          if (val) {
+            const [ky, km] = k.split('-').map(Number);
+            if (ky === year && km === month) { md++; }
+          }
+        });
+        tD += md;
+        const meta = document.getElementById(`meta-${year}-${month}`);
+        if (meta) {
+          meta.innerHTML = `
+        <span class="m-hours" style="font-size:0.8rem; display:block; margin-bottom:3px;">${md} dia${md !== 1 ? 's' : ''}</span>
+        <div style="color:var(--text2); font-size:0.64rem;">4h: <strong>${fmtH(md * 4)}h</strong></div>
+        <div style="color:var(--text2); font-size:0.64rem;">4.5h: <strong>${fmtH(md * 4.5)}h</strong></div>
+        <div style="color:var(--text2); font-size:0.64rem;">5h: <strong>${fmtH(md * 5)}h</strong></div>
+      `;
+        }
+        return { name, cls, md };
+      });
+      bar.innerHTML = '';
+
+      // Card total: calcula dias que faltam para cada cenário baseado em meta de 300h
+      // Dias necessários: 4h = 75d, 4.5h = 67d, 5h = 60d
+      const f4 = Math.max(0, 75 - tD);
+      const f45 = Math.max(0, 67 - tD);
+      const f5 = Math.max(0, 60 - tD);
+
+      const res4 = dataDeConclusaoParaDias(75);
+      const res45 = dataDeConclusaoParaDias(67);
+      const res5 = dataDeConclusaoParaDias(60);
+
+      const tc = document.createElement('div'); tc.className = 'stat-card total';
+      tc.innerHTML = `
+    <div class="stat-label">TOTAL</div>
+    <div class="stat-value" style="display:flex; gap:16px; margin:8px 0; font-family:'DM Sans', sans-serif;">
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:0.6rem; color:var(--text3); font-family:'DM Mono', monospace; text-transform:uppercase; margin-bottom:2px;">4h/dia</div>
+        <strong style="font-size:1.1rem; display:block; font-family:'DM Mono', monospace; color:var(--accent); font-weight:600;">${fmtH(tD * 4)}h</strong>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          <span style="font-size:0.58rem; font-family:'DM Mono', monospace; color:${f4 === 0 ? 'var(--accent2)' : 'var(--accent3)'}">${f4 === 0 ? '✓ ok' : `+${f4}d`}</span>
+        </div>
+        <div style="font-size:0.58rem; color:var(--text2); margin-top:6px; font-family:'DM Mono', monospace; border-top:1px dashed var(--border); padding-top:4px;">
+          Fim: <strong style="color:#fff;">${fmtDataFim(res4)}</strong>
+        </div>
+      </div>
+      <div style="flex:1; min-width:0; border-left:1px solid var(--border); padding-left:14px;">
+        <div style="font-size:0.6rem; color:var(--text3); font-family:'DM Mono', monospace; text-transform:uppercase; margin-bottom:2px;">4.5h/dia</div>
+        <strong style="font-size:1.1rem; display:block; font-family:'DM Mono', monospace; color:var(--accent2); font-weight:600;">${fmtH(tD * 4.5)}h</strong>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          <span style="font-size:0.58rem; font-family:'DM Mono', monospace; color:${f45 === 0 ? 'var(--accent2)' : 'var(--accent3)'}">${f45 === 0 ? '✓ ok' : `+${f45}d`}</span>
+        </div>
+        <div style="font-size:0.58rem; color:var(--text2); margin-top:6px; font-family:'DM Mono', monospace; border-top:1px dashed var(--border); padding-top:4px;">
+          Fim: <strong style="color:#fff;">${fmtDataFim(res45)}</strong>
+        </div>
+      </div>
+      <div style="flex:1; min-width:0; border-left:1px solid var(--border); padding-left:14px;">
+        <div style="font-size:0.6rem; color:var(--text3); font-family:'DM Mono', monospace; text-transform:uppercase; margin-bottom:2px;">5h/dia</div>
+        <strong style="font-size:1.1rem; display:block; font-family:'DM Mono', monospace; color:var(--accent3); font-weight:600;">${fmtH(tD * 5)}h</strong>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          <span style="font-size:0.58rem; font-family:'DM Mono', monospace; color:${f5 === 0 ? 'var(--accent2)' : 'var(--accent3)'}">${f5 === 0 ? '✓ ok' : `+${f5}d`}</span>
+        </div>
+        <div style="font-size:0.58rem; color:var(--text2); margin-top:6px; font-family:'DM Mono', monospace; border-top:1px dashed var(--border); padding-top:4px;">
+          Fim: <strong style="color:#fff;">${fmtDataFim(res5)}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="stat-days">${tD} dia${tD !== 1 ? 's' : ''} marcado${tD !== 1 ? 's' : ''}</div>
+  `;
+      bar.appendChild(tc);
+
+      ms.forEach(({ name, cls, md }) => {
+        const c = document.createElement('div'); c.className = `stat-card ${cls}`;
+        c.innerHTML = `
+      <div class="stat-label">${name.substring(0, 3).toUpperCase()}</div>
+      <div class="stat-value" style="font-size: 0.72rem; line-height: 1.35; font-family: 'DM Mono', monospace; font-weight: 500; margin: 6px 0 8px;">
+        <div style="display:flex; justify-content:space-between; gap: 8px;"><span>4h:</span> <strong>${fmtH(md * 4)}h</strong></div>
+        <div style="display:flex; justify-content:space-between; gap: 8px;"><span>4.5h:</span> <strong>${fmtH(md * 4.5)}h</strong></div>
+        <div style="display:flex; justify-content:space-between; gap: 8px;"><span>5h:</span> <strong>${fmtH(md * 5)}h</strong></div>
+      </div>
+      <div class="stat-days">${md} dia${md !== 1 ? 's' : ''}</div>
+    `;
+      });
+    }
+
+    function clearAllCal() { if (!confirm('Limpar todos os dias marcados?')) return; calState = {}; saveCal(); buildCal(); }
+    /* ══════════════════════════
+       ALUNOS
+    ══════════════════════════ */
+    let alunos = [];
+    const saveAlunos = () => S.set('est_alunos', alunos);
+
+    async function handleUpload(e) {
+      const files = Array.from(e.target.files); let n = 0;
+      for (const f of files) {
+        const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = ev => res(ev.target.result); r.readAsDataURL(f); });
+        const compressed = await compressImage(dataUrl);
+        const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        alunos.push({ id: 'a' + Date.now() + Math.random().toString(36).slice(2), name, curso: '', photo: compressed, carga: {} });
+        n++;
+        if (n === files.length) { alunos.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')); saveAlunos(); renderAlunos(); }
+      }
+      e.target.value = '';
+    }
+
+    function encaminhadosIds() {
+      const enc = S.get('est_enc', {});
+      const ids = new Set();
+      Object.values(enc).forEach(arr => arr.forEach(id => ids.add(id)));
+      return ids;
+    }
+
+    function renderAlunos() {
+      const q = (document.getElementById('searchAluno').value || '').toLowerCase();
+      const fil = alunos.filter(a => a.name.toLowerCase().includes(q));
+      const grid = document.getElementById('alunosGrid');
+      const encIds = encaminhadosIds();
+      document.getElementById('alunosCount').textContent = `${fil.length} aluno${fil.length !== 1 ? 's' : ''}`;
+      if (!alunos.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">👤</div><p>Nenhum aluno cadastrado.<br><strong>Clique em "Adicionar fotos"</strong>.</p></div>`; return; }
+      if (!fil.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><p>Nenhum resultado para "<strong>${q}</strong>".</p></div>`; return; }
+      grid.innerHTML = '';
+      fil.forEach(al => {
+        const enc = encIds.has(al.id);
+        const div = document.createElement('div'); div.className = 'aluno-card';
+        const ph = al.photo ? `<img class="aluno-photo" src="${al.photo}" alt="">` : `<div class="aluno-photo-placeholder">👤</div>`;
+        div.innerHTML = `${ph}<div class="aluno-body">
+      <div class="aluno-name-display" onclick="editNome(this,'${al.id}')"><span class="t">${al.name}</span><span class="edit-icon">✎</span></div>
+      <input class="aluno-name-input" value="${al.name}" onblur="saveNome(this,'${al.id}')" onkeydown="if(event.key==='Enter')this.blur()">
+      <div class="aluno-curso-display" onclick="editCurso(this,'${al.id}')">${cursoBadge(al.curso)}</div>
+      <select class="aluno-curso-select" onchange="saveCurso(this,'${al.id}')" onblur="fecharCursoSelect(this)">
+        <option value="">— Curso —</option>
+        <option value="Informática" ${al.curso === 'Informática' ? 'selected' : ''}>Informática</option>
+        <option value="Dev. Sistemas" ${al.curso === 'Dev. Sistemas' ? 'selected' : ''}>Dev. Sistemas</option>
+      </select>
+      ${enc ? `<div class="encaminhado-badge">✓ encaminhado</div>` : ''}
+      <button class="btn-del-small" onclick="delAluno('${al.id}')">✕ remover</button>
+    </div>`;
+        grid.appendChild(div);
+      });
+    }
+
+    function editNome(el, id) { const inp = el.nextElementSibling; el.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select(); }
+    function saveNome(inp, id) {
+      const disp = inp.previousElementSibling;
+      const v = inp.value.trim() || disp.querySelector('.t').textContent;
+      inp.value = v; disp.querySelector('.t').textContent = v; disp.style.display = ''; inp.style.display = 'none';
+      const a = alunos.find(x => x.id === id); if (a) { a.name = v; alunos.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')); saveAlunos(); }
+      setTimeout(renderAlunos, 80);
+    }
+    function cursoBadge(curso) {
+      if (curso === 'Informática') return '<span class="curso-badge-info">Informática</span>';
+      if (curso === 'Dev. Sistemas') return '<span class="curso-badge-dev">Dev. Sistemas</span>';
+      return '<span class="curso-badge-vazio">+ curso</span>';
+    }
+    function editCurso(el, id) {
+      const sel = el.nextElementSibling;
+      el.style.display = 'none'; sel.style.display = 'block'; sel.focus();
+    }
+    function fecharCursoSelect(sel) {
+      const disp = sel.previousElementSibling;
+      disp.style.display = ''; sel.style.display = 'none';
+    }
+    function saveCurso(sel, id) {
+      const disp = sel.previousElementSibling;
+      const v = sel.value;
+      disp.innerHTML = cursoBadge(v);
+      disp.style.display = ''; sel.style.display = 'none';
+      const a = alunos.find(x => x.id === id);
+      if (a) { a.curso = v; saveAlunos(); }
+    }
+    function delAluno(id) {
+      openConfirm('Remover aluno', 'O aluno será removido de todos os encaminhamentos.', () => {
+        const enc = S.get('est_enc', {}); Object.keys(enc).forEach(k => { enc[k] = enc[k].filter(i => i !== id); }); S.set('est_enc', enc);
+        alunos = alunos.filter(a => a.id !== id); saveAlunos(); renderAlunos();
+      });
+    }
+    function exportarAlunos() {
+      if (!alunos.length) { alert('Nenhum aluno.'); return; }
+      csvDown([['Nome', 'Curso'], ...alunos.map(a => [a.name, a.curso || ''])], 'alunos.csv');
+    }
+
+    /* ══════════════════════════
+       EMPRESAS
+    ══════════════════════════ */
+    let empresas = [];
+    const saveEmpresas = () => S.set('est_emp', empresas);
+
+    // Converte "HH:MM" em minutos
+    function toMin(t) { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; }
+    // Calcula horas diárias de uma empresa
+    function calcHorasDia(emp) { if (!emp.entrada || !emp.saida) return 0; return Math.max(0, (toMin(emp.saida) - toMin(emp.entrada)) / 60); }
+
+    // Parseia uma linha "Nome, 08:00, 12:00" → {name, entrada, saida}
+    function parseLinha(linha) {
+      const parts = linha.split(',').map(s => s.trim());
+      if (parts.length >= 3) {
+        const name = parts[0];
+        const entrada = parts[1].match(/\d{1,2}:\d{2}/)?.[0]?.padStart(5, '0') || '';
+        const saida = parts[2].match(/\d{1,2}:\d{2}/)?.[0]?.padStart(5, '0') || '';
+        return { name, entrada, saida };
+      }
+      return { name: parts[0], entrada: '', saida: '' };
+    }
+
+    function abrirModalEmpresas() {
+      document.getElementById('empresasTextarea').value = '';
+      document.getElementById('vagasDefault').value = 1;
+      document.getElementById('empFileName').textContent = 'nenhum arquivo';
+      document.getElementById('empPreview').style.display = 'none';
+      document.getElementById('modalEmpresas').classList.add('open');
+      setTimeout(() => document.getElementById('empresasTextarea').focus(), 80);
+    }
+    function fecharModalEmpresas() { document.getElementById('modalEmpresas').classList.remove('open'); }
+
+    function lerArquivoEmpresas(e) {
+      const f = e.target.files[0]; if (!f) return;
+      document.getElementById('empFileName').textContent = f.name;
+      const r = new FileReader();
+      r.onload = ev => { document.getElementById('empresasTextarea').value = ev.target.result.trim(); previewEmpresas(); };
+      r.readAsText(f); e.target.value = '';
+    }
+
+    function previewEmpresas() {
+      const txt = document.getElementById('empresasTextarea').value;
+      const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
+      const prev = document.getElementById('empPreview');
+      const list = document.getElementById('empPreviewList');
+      if (!lines.length) { prev.style.display = 'none'; return; }
+      prev.style.display = 'block';
+      list.innerHTML = lines.map(l => {
+        const p = parseLinha(l);
+        const h = p.entrada && p.saida ? `<span style="color:var(--accent2)">${fmtH(Math.max(0, (toMin(p.saida) - toMin(p.entrada)) / 60))}/dia</span>` : '<span style="color:var(--text3)">sem horário</span>';
+        return `<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:6px;padding:5px 10px;font-family:'DM Mono',monospace;font-size:0.75rem">
+      <span>${p.name}</span>
+      <span style="color:var(--text3)">${p.entrada || '—'} → ${p.saida || '—'} &nbsp;${h}</span>
+    </div>`;
+      }).join('');
+    }
+
+    function salvarEmpresas() {
+      const txt = document.getElementById('empresasTextarea').value;
+      const vagas = Math.max(1, parseInt(document.getElementById('vagasDefault').value) || 1);
+      const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
+      if (!lines.length) { alert('Digite ao menos uma empresa.'); return; }
+      let added = 0;
+      lines.forEach(l => {
+        const p = parseLinha(l);
+        if (!p.name) return;
+        if (!empresas.find(e => e.name.toLowerCase() === p.name.toLowerCase())) {
+          empresas.push({ id: 'e' + Date.now() + Math.random().toString(36).slice(2), name: p.name, entrada: p.entrada, saida: p.saida, vagas });
+          added++;
+        }
+      });
+      empresas.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      saveEmpresas(); fecharModalEmpresas(); renderEmpresas();
+      if (added < lines.length) alert(`${added} empresa(s) adicionada(s). ${lines.length - added} duplicata(s) ignorada(s).`);
+    }
+
+    function importarTxt(e) {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = ev => {
+        document.getElementById('empresasTextarea').value = ev.target.result.trim();
+        abrirModalEmpresas();
+        previewEmpresas();
+      };
+      r.readAsText(f); e.target.value = '';
+    }
+
+    let editEmpId = null;
+    function editarEmpresa(id) {
+      const emp = empresas.find(e => e.id === id); if (!emp) return;
+      editEmpId = id;
+      document.getElementById('editEmpNome').value = emp.name;
+      document.getElementById('editEmpEntrada').value = emp.entrada || '';
+      document.getElementById('editEmpSaida').value = emp.saida || '';
+      document.getElementById('editEmpVagas').value = emp.vagas;
+      atualizarCalcHoras();
+      document.getElementById('modalEditEmpresa').classList.add('open');
+    }
+    function fecharModalEditEmp() { document.getElementById('modalEditEmpresa').classList.remove('open'); editEmpId = null; }
+
+    function atualizarCalcHoras() {
+      const e = document.getElementById('editEmpEntrada').value;
+      const s = document.getElementById('editEmpSaida').value;
+      const calc = document.getElementById('editEmpHorasCalc');
+      if (e && s) { const h = Math.max(0, (toMin(s) - toMin(e)) / 60); calc.textContent = h > 0 ? `⏱ ${fmtH(h)} por dia de estágio` : ''; }
+      else calc.textContent = '';
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('editEmpEntrada').addEventListener('input', atualizarCalcHoras);
+      document.getElementById('editEmpSaida').addEventListener('input', atualizarCalcHoras);
+    });
+
+    function confirmarEditEmpresa() {
+      const emp = empresas.find(e => e.id === editEmpId); if (!emp) return;
+      const nome = document.getElementById('editEmpNome').value.trim();
+      const vagas = Math.max(1, parseInt(document.getElementById('editEmpVagas').value) || 1);
+      if (!nome) { alert('Nome não pode ser vazio.'); return; }
+      const enc = S.get('est_enc', {});
+      const atual = (enc[editEmpId] || []).length;
+      if (vagas < atual) { alert(`Já há ${atual} aluno(s) encaminhado(s). Defina pelo menos ${atual} vagas.`); return; }
+      emp.name = nome;
+      emp.entrada = document.getElementById('editEmpEntrada').value;
+      emp.saida = document.getElementById('editEmpSaida').value;
+      emp.vagas = vagas;
+      empresas.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      saveEmpresas(); fecharModalEditEmp(); renderEmpresas();
+    }
+
+    let empresasFiltro = 'todos';
+    function setEmpresasFiltro(f, btn) {
+      empresasFiltro = f;
+      btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderEmpresas();
+    }
+
+    function renderEmpresas() {
+      const q = (document.getElementById('searchEmpresa').value || '').toLowerCase();
+      let fil = empresas.filter(e => e.name.toLowerCase().includes(q));
+
+      if (empresasFiltro !== 'todos') {
+        fil = fil.filter(emp => {
+          const hDia = calcHorasDia(emp);
+          if (empresasFiltro === '4') return hDia === 4;
+          if (empresasFiltro === '4.5') return hDia === 4.5;
+          if (empresasFiltro === '5') return hDia === 5;
+          if (empresasFiltro === 'outros') return hDia !== 4 && hDia !== 4.5 && hDia !== 5 && hDia > 0;
+          if (empresasFiltro === 'sem') return hDia === 0;
+          return true;
+        });
+      }
+
+      const grid = document.getElementById('empresasGrid');
+      const enc = S.get('est_enc', {});
+      document.getElementById('empresasCount').textContent = `${fil.length} empresa${fil.length !== 1 ? 's' : ''}`;
+      if (!empresas.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🏢</div><p>Nenhuma empresa cadastrada.<br><strong>Clique em "Adicionar empresas"</strong>.</p></div>`; return; }
+      if (!fil.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><p>Nenhuma empresa encontrada.</p></div>`; return; }
+      grid.innerHTML = '';
+      fil.forEach(emp => {
+        const usadas = (enc[emp.id] || []).length, full = usadas >= emp.vagas;
+        const div = document.createElement('div'); div.className = 'empresa-card';
+        const hDia = calcHorasDia(emp);
+        const horario = (emp.entrada && emp.saida) ? `${emp.entrada}–${emp.saida} · ${fmtH(hDia)}/dia` : 'Horário não definido';
+        div.innerHTML = `<div class="empresa-top">
+      <div class="empresa-name">${emp.name}</div>
+      <div class="empresa-vagas ${full ? 'vagas-full' : 'vagas-ok'}">${usadas}/${emp.vagas} vagas</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);margin-bottom:10px">⏱ ${horario}</div>
+    <div class="empresa-btns">
+      <button class="btn-emp edit" onclick="editarEmpresa('${emp.id}')">✎ editar</button>
+      <button class="btn-emp del" onclick="delEmpresa('${emp.id}')">✕ remover</button>
+    </div>`;
+        grid.appendChild(div);
+      });
+    }
+
+    function delEmpresa(id) {
+      openConfirm('Remover empresa', 'A empresa e todos os encaminhamentos vinculados serão removidos.', () => {
+        const enc = S.get('est_enc', {}); delete enc[id]; S.set('est_enc', enc);
+        empresas = empresas.filter(e => e.id !== id); saveEmpresas(); renderEmpresas();
+      });
+    }
+
+    /* ══════════════════════════
+       ENCAMINHAMENTO
+    ══════════════════════════ */
+    let dragId = null;
+
+    function disponiveisIds() {
+      const enc = S.get('est_enc', {});
+      const used = new Set();
+      Object.values(enc).forEach(arr => arr.forEach(id => used.add(id)));
+      return alunos.filter(a => !used.has(a.id)).map(a => a.id);
+    }
+
+    function renderEnc() { renderEncAlunos(); renderEncEmpresas(); }
+
+    function renderEncAlunos() {
+      const list = document.getElementById('encAlunosList');
+      const disp = alunos.filter(a => disponiveisIds().includes(a.id));
+      document.getElementById('encAlunosCount').textContent = `${disp.length} disponível${disp.length !== 1 ? 'is' : ''}`;
+      list.innerHTML = '';
+      if (!alunos.length) { list.innerHTML = `<p style="color:var(--text3);font-size:0.78rem;padding:16px 0">Cadastre alunos primeiro.</p>`; return; }
+      if (!disp.length) { list.innerHTML = `<p style="color:var(--accent2);font-size:0.78rem;font-family:'DM Mono',monospace;padding:16px 0">✓ Todos os alunos foram encaminhados!</p>`; return; }
+      disp.forEach(al => {
+        const card = document.createElement('div'); card.className = 'drag-card'; card.draggable = true; card.dataset.id = al.id;
+        const ph = al.photo ? `<img src="${al.photo}" alt="">` : `<div class="d-avatar">👤</div>`;
+        const cursoBadgeEnc = al.curso === 'Informática'
+          ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;padding:1px 6px;border-radius:3px;background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3)">Informática</span>`
+          : al.curso === 'Dev. Sistemas'
+            ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;padding:1px 6px;border-radius:3px;background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3)">Dev. Sistemas</span>`
+            : '';
+        card.innerHTML = `${ph}<div><div class="drag-name">${al.name}</div>${cursoBadgeEnc ? `<div style="margin-top:3px">${cursoBadgeEnc}</div>` : ''}<div class="drag-hint" style="margin-top:3px">arraste para encaminhar</div></div>`;
+        card.addEventListener('dragstart', e => { dragId = al.id; card.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+        card.addEventListener('dragend', () => { dragId = null; card.classList.remove('dragging'); });
+        list.appendChild(card);
+      });
+    }
+
+    function renderEncEmpresas() {
+      const list = document.getElementById('encEmpresasList');
+      const enc = S.get('est_enc', {});
+      document.getElementById('encEmpresasCount').textContent = `${empresas.length} empresa${empresas.length !== 1 ? 's' : ''}`;
+      list.innerHTML = '';
+      if (!empresas.length) { list.innerHTML = `<p style="color:var(--text3);font-size:0.78rem;padding:16px 0">Cadastre empresas primeiro.</p>`; return; }
+      empresas.forEach(emp => {
+        const arr = enc[emp.id] || [], usadas = arr.length, full = usadas >= emp.vagas;
+        const div = document.createElement('div'); div.className = 'enc-empresa' + (full ? ' full' : ''); div.dataset.empid = emp.id;
+        const badge = `<span class="enc-emp-vagas ${full ? 'vb-full' : 'vb-ok'}">${usadas}/${emp.vagas} vagas</span>`;
+        div.innerHTML = `<div class="enc-emp-header"><div class="enc-emp-name">${emp.name}</div>${badge}</div><div class="enc-drop-zone" id="dz-${emp.id}"></div>`;
+
+        // chips já encaminhados
+        const dz = div.querySelector('.enc-drop-zone');
+        if (!arr.length) { const h = document.createElement('div'); h.className = 'drop-hint'; h.textContent = full ? 'vagas esgotadas' : 'solte aqui'; dz.appendChild(h); }
+        arr.forEach(aid => { const al = alunos.find(a => a.id === aid); if (al) dz.appendChild(makeChip(al, emp.id)); });
+
+        // drag events
+        div.addEventListener('dragover', e => {
+          if (!dragId) return;
+          // permitir drop se há vaga OU se o aluno já estava em outra empresa (mover = libera vaga)
+          const enc2 = S.get('est_enc', {});
+          const already = (enc2[emp.id] || []).includes(dragId);
+          const wouldFree = Object.keys(enc2).some(k => k !== emp.id && (enc2[k] || []).includes(dragId));
+          const effectiveFull = full && !wouldFree && !already;
+          if (effectiveFull) return;
+          e.preventDefault(); div.classList.add('drag-over');
+        });
+        div.addEventListener('dragleave', e => { if (!div.contains(e.relatedTarget)) div.classList.remove('drag-over'); });
+        div.addEventListener('drop', e => {
+          e.preventDefault(); div.classList.remove('drag-over');
+          if (!dragId) return;
+          const enc2 = S.get('est_enc', {});
+          const a2 = enc2[emp.id] || [];
+          if (a2.length >= emp.vagas) { alert(`Vagas esgotadas em "${emp.name}".`); return; }
+          if (a2.includes(dragId)) return;
+          // remove de outra empresa se estava
+          Object.keys(enc2).forEach(k => { enc2[k] = (enc2[k] || []).filter(i => i !== dragId); });
+          a2.push(dragId); enc2[emp.id] = a2; S.set('est_enc', enc2);
+          renderEnc();
+        });
+
+        list.appendChild(div);
+      });
+    }
+
+    function makeChip(al, empId) {
+      const c = document.createElement('div'); c.className = 'placed-chip'; c.draggable = true; c.title = 'Arraste para outra empresa ou clique em ✕ para devolver';
+      const ph = al.photo ? `<img src="${al.photo}" alt="">` : `<div class="chip-av">👤</div>`;
+      const cBadge = al.curso === 'Informática'
+        ? `<span style="font-family:'DM Mono',monospace;font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3);pointer-events:none">Info</span>`
+        : al.curso === 'Dev. Sistemas'
+          ? `<span style="font-family:'DM Mono',monospace;font-size:0.55rem;padding:1px 5px;border-radius:3px;background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3);pointer-events:none">Dev</span>`
+          : '';
+      c.innerHTML = `${ph}<span class="chip-name">${al.name}</span>${cBadge ? `<span style="pointer-events:none">${cBadge}</span>` : ''}<span class="chip-drag-hint">↕ mover</span><button class="chip-x" title="Devolver para lista disponível" onclick="event.stopPropagation();removerEnc('${al.id}','${empId}')">✕</button>`;
+      c.addEventListener('dragstart', e => {
+        dragId = al.id;
+        c.style.opacity = '0.4';
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      c.addEventListener('dragend', () => {
+        dragId = null;
+        c.style.opacity = '';
+      });
+      return c;
+    }
+
+    function removerEnc(alunoId, empId) {
+      const enc = S.get('est_enc', {});
+      enc[empId] = (enc[empId] || []).filter(i => i !== alunoId);
+      S.set('est_enc', enc); renderEnc();
+    }
+
+    function exportarEncaminhamento() {
+      const enc = S.get('est_enc', {});
+      const rows = [['Empresa', 'Vagas', 'Aluno', 'Anotações']];
+      empresas.forEach(emp => {
+        const arr = enc[emp.id] || [];
+        if (!arr.length) { rows.push([emp.name, emp.vagas, '—', '']); return; }
+        arr.forEach(aid => { const al = alunos.find(a => a.id === aid); rows.push([emp.name, emp.vagas, al ? al.name : '(removido)', al ? al.curso || '' : '']); });
+      });
+      csvDown(rows, 'encaminhamentos.csv');
+    }
+
+    /* ══════════════════════════
+       CARGA HORÁRIA
+    ══════════════════════════ */
+    let cargaFiltro = 'todos';
+
+    function setCargaFiltro(f, btn) {
+      cargaFiltro = f;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCarga();
+    }
+
+    function fmtDate(d) {
+      if (!d) return '—';
+      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    /* statusAluno definido em renderCarga */
+
+    const MESES_CARGA = [
+      { key: 'ago', label: 'AGO', year: 2026, month: 8 },
+      { key: 'set', label: 'SET', year: 2026, month: 9 },
+      { key: 'out', label: 'OUT', year: 2026, month: 10 },
+      { key: 'nov', label: 'NOV', year: 2026, month: 11 },
+      { key: 'dez', label: 'DEZ', year: 2026, month: 12 },
+      { key: 'jan', label: 'JAN', year: 2027, month: 1 },
+    ];
+
+    // Retorna horas do aluno num mês específico (manual se existir, senão 0)
+    function horasMes(al, key) {
+      return Number((al.carga || {})['h_' + key] || 0);
+    }
+
+    // Total acumulado das horas manuais de todos os meses
+    function totalHorasManual(al) {
+      return MESES_CARGA.reduce((s, m) => s + horasMes(al, m.key), 0);
+    }
+
+    function statusAluno(al) {
+      const feitas = totalHorasManual(al);
+      const meta = Number((al.carga || {}).meta || 300);
+      if (feitas >= meta) return 'concluido';
+      if (feitas > 0) return 'andamento';
+      return 'pendente';
+    }
+
+    function getEmpresaDoAluno(alunoId) {
+      const enc = S.get('est_enc', {});
+      for (const [empId, arr] of Object.entries(enc)) {
+        if (arr.includes(alunoId)) return empresas.find(e => e.id === empId) || null;
+      }
+      return null;
+    }
+
+    function previsaoEncerramento(al) {
+      const ch = al.carga || {};
+      const meta = Number(ch.meta || 300);
+      const inicio = new Date((ch.inicio || '2026-08-10') + 'T00:00:00');
+
+      // Horas diárias da empresa encaminhada (para extrapolação)
+      const emp = getEmpresaDoAluno(al.id);
+      const hEmpresa = emp ? calcHorasDia(emp) : 0;
+
+      if (!hEmpresa) return null; // sem empresa/horário não calcula
+
+      // TODOS os dias marcados no calendário >= início, ordenados
+      // Cada dia vale hEmpresa horas (carga diária da empresa)
+      const diasCal = Object.keys(calState)
+        .map(k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); })
+        .filter(data => data >= inicio)
+        .sort((a, b) => a - b);
+
+      // Percorre os dias do calendário somando hEmpresa por dia até atingir a meta
+      let acumulado = 0;
+      for (const data of diasCal) {
+        acumulado += hEmpresa;
+        if (acumulado >= meta) {
+          return { concluido: false, data, extrapolado: false };
+        }
+      }
+
+      // Calendário não tem dias suficientes — extrapola a partir do último dia marcado
+      const ultimaRef = diasCal.length > 0
+        ? new Date(diasCal[diasCal.length - 1])
+        : new Date(inicio);
+
+      const aindaFalta = meta - acumulado;
+      const diasExtras = Math.ceil(aindaFalta / hEmpresa);
+      let cursor = new Date(ultimaRef);
+      let count = 0;
+      while (count < diasExtras) {
+        cursor.setDate(cursor.getDate() + 1);
+        const wd = cursor.getDay();
+        if (wd !== 0 && wd !== 6) count++;
+      }
+      return { concluido: false, data: cursor, extrapolado: true };
+    }
+
+    function salvarInicioAluno(alunoId, valor) {
+      const al = alunos.find(a => a.id === alunoId); if (!al) return;
+      if (!al.carga) al.carga = {};
+      al.carga.inicio = valor;
+      saveAlunos();
+      atualizarLinhaResumo(alunoId);
+    }
+
+    function salvarHoraMes(alunoId, mesKey, valor) {
+      const al = alunos.find(a => a.id === alunoId); if (!al) return;
+      if (!al.carga) al.carga = {};
+      const v = parseFloat(valor);
+      if (isNaN(v) || v < 0) al.carga['h_' + mesKey] = 0;
+      else al.carga['h_' + mesKey] = v;
+      saveAlunos();
+      // atualiza apenas as células de resumo da linha sem re-renderizar tudo
+      atualizarLinhaResumo(alunoId);
+    }
+
+    /* salvarConfirmacaoMes removido — funcionalidade de confirmação mensal descontinuada */
+
+    function atualizarLinhaResumo(alunoId) {
+      const al = alunos.find(a => a.id === alunoId); if (!al) return;
+      const ch = al.carga || {};
+      const meta = Number(ch.meta || 300);
+      const feitas = totalHorasManual(al);
+      const restam = Math.max(0, meta - feitas);
+      const pct = Math.min(100, Math.round((feitas / meta) * 100));
+      const st = statusAluno(al);
+      const prev = previsaoEncerramento(al);
+
+      const pfClass = pct >= 100 ? 'pf-concluido' : pct >= 60 ? 'pf-ok' : pct >= 30 ? 'pf-meio' : 'pf-baixo';
+      const sbClass = st === 'concluido' ? 'sb-concluido' : st === 'andamento' ? 'sb-andamento' : 'sb-pendente';
+      const sbLabel = st === 'concluido' ? '✓ concluído' : st === 'andamento' ? '↗ andamento' : '— pendente';
+
+      const row = document.getElementById('carga-row-' + alunoId); if (!row) return;
+      const cells = row.querySelectorAll('[data-resume]');
+      cells.forEach(c => {
+        const k = c.getAttribute('data-resume');
+        if (k === 'total') c.innerHTML = `<span class="total-cell">${fmtH(feitas)}<span class="tc-sub">de ${meta}h</span></span>`;
+        if (k === 'restam') c.innerHTML = `<span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:${restam === 0 ? 'var(--accent2)' : 'var(--text2)'}">${restam === 0 ? '—' : fmtH(restam)}</span>`;
+        if (k === 'prog') c.innerHTML = `<div class="prog-bar-wrap"><div class="prog-bar"><div class="prog-fill ${pfClass}" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div>`;
+        if (k === 'prev') {
+          const al2 = alunos.find(a => a.id === alunoId);
+          const prev2 = al2 ? previsaoEncerramento(al2) : null;
+          const ch2 = (al2?.carga) || {};
+          let ps = '<span class="prev-value pendente">—</span>';
+          if (prev2) {
+            if (prev2.concluido) ps = '<span class="prev-value ok">✓ concluído</span>';
+            else ps = `<span class="prev-value ok">${prev2.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev2.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>' : ''}`;
+          }
+          const iv = (ch2.inicio || '2026-08-10');
+          c.innerHTML = `<div class="ini-prev-cell"><div><div class="ini-label">INÍCIO</div><input type="date" class="ini-date-input" value="${iv}" onchange="salvarInicioAluno('${alunoId}',this.value)"></div><div><div class="ini-label">PREVISÃO</div><div style="display:flex;flex-direction:column;gap:1px">${ps}</div></div></div>`;
+        }
+        if (k === 'status') c.innerHTML = `<span class="status-badge ${sbClass}">${sbLabel}</span>`;
+      });
+      // atualizar summary
+      renderCargaSummary();
+    }
+
+    function renderCargaSummary() {
+      const summary = document.getElementById('cargaSummary');
+      const total = alunos.length;
+      const concluidos = alunos.filter(a => statusAluno(a) === 'concluido').length;
+      const andamento = alunos.filter(a => statusAluno(a) === 'andamento').length;
+      const pendentes = alunos.filter(a => statusAluno(a) === 'pendente').length;
+      const totalH = alunos.reduce((s, a) => s + totalHorasManual(a), 0);
+      summary.innerHTML = `
+    <div class="cs-card cs-total"><div class="cs-label">Total Alunos</div><div class="cs-value">${total}</div><div class="cs-sub">${fmtH(totalH)} horas acumuladas</div></div>
+    <div class="cs-card cs-andamento"><div class="cs-label">Em Andamento</div><div class="cs-value">${andamento}</div><div class="cs-sub">com horas lançadas</div></div>
+    <div class="cs-card cs-ok"><div class="cs-label">Concluídos</div><div class="cs-value">${concluidos}</div><div class="cs-sub">meta atingida</div></div>
+    <div class="cs-card cs-atrasado"><div class="cs-label">Sem Horas</div><div class="cs-value">${pendentes}</div><div class="cs-sub">aguardando lançamento</div></div>`;
+    }
+
+    function renderCarga() {
+      const q = (document.getElementById('searchCarga').value || '').toLowerCase();
+      let lista = alunos.filter(a => a.name.toLowerCase().includes(q));
+      if (cargaFiltro !== 'todos') lista = lista.filter(a => statusAluno(a) === cargaFiltro);
+
+      renderCargaSummary();
+
+      const container = document.getElementById('cargaTablesContainer');
+      if (!lista.length) {
+        container.innerHTML = `<div class="carga-table-wrap"><table class="carga-table"><tr><td style="text-align:center;padding:40px;color:var(--text3);font-size:0.84rem">Nenhum aluno encontrado.</td></tr></table></div>`;
+        return;
+      }
+
+      // Agrupa alunos por curso
+      const grupos = [
+        { key: 'Informática', label: 'Informática', badgeClass: 'curso-info', list: lista.filter(a => a.curso === 'Informática') },
+        { key: 'Dev. Sistemas', label: 'Desenvolvimento de Sistemas', badgeClass: 'curso-dev', list: lista.filter(a => a.curso === 'Dev. Sistemas') },
+        { key: 'Outros', label: 'Outros / Sem Curso', badgeClass: 'curso-out', list: lista.filter(a => a.curso !== 'Informática' && a.curso !== 'Dev. Sistemas') }
+      ];
+
+      container.innerHTML = '';
+
+      grupos.forEach(grupo => {
+        if (grupo.list.length === 0) return;
+
+        const section = document.createElement('div');
+        section.className = 'carga-curso-section';
+        section.style.marginBottom = '32px';
+
+        section.innerHTML = `
+          <h3 style="font-family:'DM Serif Display', serif; font-size:1.2rem; font-weight:400; margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+            <span class="curso-tag ${grupo.badgeClass}" style="font-size: 0.72rem; padding: 3px 10px; border-radius: 6px;">${grupo.label}</span>
+            <span style="font-size:0.7rem; color:var(--text3); font-family:'DM Mono', monospace; font-weight:400;">(${grupo.list.length} aluno${grupo.list.length !== 1 ? 's' : ''})</span>
+          </h3>
+          <div class="carga-table-wrap" style="margin-bottom:0;">
+            <table class="carga-table">
+              <thead>
+                <tr>
+                  <th style="min-width:180px">Aluno</th>
+                  <th class="th-ago mes-cell">AGO</th>
+                  <th class="th-set mes-cell">SET</th>
+                  <th class="th-out mes-cell">OUT</th>
+                  <th class="th-nov mes-cell">NOV</th>
+                  <th class="th-dez mes-cell">DEZ</th>
+                  <th class="th-jan mes-cell">JAN</th>
+                  <th style="min-width:90px">Total</th>
+                  <th style="min-width:90px">Restam</th>
+                  <th style="min-width:120px">Progresso</th>
+                  <th style="min-width:150px">Início / Previsão</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-${grupo.key.replace(/\s+/g, '-')}"></tbody>
+            </table>
+          </div>
+        `;
+
+        container.appendChild(section);
+
+        const tbody = section.querySelector('tbody');
+
+        grupo.list.forEach(al => {
+          const ch = al.carga || {};
+          const meta = Number(ch.meta || 300);
+          const feitas = totalHorasManual(al);
+          const restam = Math.max(0, meta - feitas);
+          const pct = Math.min(100, Math.round((feitas / meta) * 100));
+          const prev = previsaoEncerramento(al);
+          const st = statusAluno(al);
+
+          const pfClass = pct >= 100 ? 'pf-concluido' : pct >= 60 ? 'pf-ok' : pct >= 30 ? 'pf-meio' : 'pf-baixo';
+          const sbClass = st === 'concluido' ? 'sb-concluido' : st === 'andamento' ? 'sb-andamento' : 'sb-pendente';
+          const sbLabel = st === 'concluido' ? '✓ concluído' : st === 'andamento' ? '↗ andamento' : '— pendente';
+
+          let prevStr = '<span class="prev-value pendente">—</span>';
+          if (prev) {
+            if (prev.concluido) prevStr = `<span class="prev-value ok">✓ concluído</span>`;
+            else prevStr = `<span class="prev-value ok">${prev.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>' : ''}`;
+          }
+          const iniVal = (ch.inicio || '2026-08-10');
+          const prevHtml = `<div class="ini-prev-cell">
+            <div>
+              <div class="ini-label">INÍCIO</div>
+              <input type="date" class="ini-date-input" value="${iniVal}"
+                onchange="salvarInicioAluno('${al.id}',this.value)"
+                title="Data de início do estágio">
+            </div>
+            <div>
+              <div class="ini-label">PREVISÃO</div>
+              <div style="display:flex;flex-direction:column;gap:1px">${prevStr}</div>
+            </div>
+          </div>`;
+
+          const ph = al.photo
+            ? `<img class="aluno-thumb" src="${al.photo}" alt="">`
+            : `<span class="aluno-thumb-ph">👤</span>`;
+
+          const tr = document.createElement('tr');
+          tr.id = 'carga-row-' + al.id;
+
+          // células dos meses
+          const mesCells = MESES_CARGA.map(m => {
+            const hVal = horasMes(al, m.key);
+            const temH = hVal > 0;
+            return `<td class="mes-cell">
+              <div class="mes-input-wrap">
+                <input type="number" class="mes-horas-input ${temH ? 'tem-horas' : ''}"
+                  value="${temH ? hVal : ''}"
+                  placeholder="—"
+                  min="0" max="999" step="0.5"
+                  onchange="salvarHoraMes('${al.id}','${m.key}',this.value);this.classList.toggle('tem-horas',parseFloat(this.value)>0)"
+                  title="Horas de ${m.label}">
+              </div>
+            </td>`;
+          }).join('');
+
+          tr.innerHTML = `
+            <td style="white-space:nowrap">${ph}<span style="font-weight:500">${al.name}</span></td>
+            ${mesCells}
+            <td data-resume="total"><span class="total-cell">${fmtH(feitas)}<span class="tc-sub">de ${meta}h</span></span></td>
+            <td data-resume="restam"><span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:${restam === 0 ? 'var(--accent2)' : 'var(--text2)'}">${restam === 0 ? '—' : fmtH(restam)}</span></td>
+            <td data-resume="prog"><div class="prog-bar-wrap"><div class="prog-bar"><div class="prog-fill ${pfClass}" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div></td>
+            <td data-resume="prev">${prevHtml}</td>
+            <td data-resume="status"><span class="status-badge ${sbClass}">${sbLabel}</span></td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    let editCargaId = null;
+    function abrirModalCarga(id) {
+      const al = alunos.find(a => a.id === id); if (!al) return;
+      editCargaId = id;
+      document.getElementById('modalCargaNome').textContent = al.name;
+      const ch = al.carga || {};
+      document.getElementById('cargaMeta').value = ch.meta || 300;
+      document.getElementById('cargaInicio').value = ch.inicio || '2026-08-10';
+      document.getElementById('modalCarga').classList.add('open');
+    }
+    function fecharModalCarga() { document.getElementById('modalCarga').classList.remove('open'); editCargaId = null; }
+    function salvarCarga() {
+      const al = alunos.find(a => a.id === editCargaId); if (!al) return;
+      al.carga = {
+        ...(al.carga || {}),
+        meta: Number(document.getElementById('cargaMeta').value) || 300,
+        inicio: document.getElementById('cargaInicio').value || '2026-08-10',
+      };
+      saveAlunos(); fecharModalCarga(); renderCarga();
+    }
+
+    function exportarCarga() {
+      const cabMeses = MESES_CARGA.map(m => `${m.label} (h)`);
+      const rows = [['Aluno', 'Início', ...cabMeses, 'Total (h)', 'Meta (h)', 'Restam (h)', 'Progresso (%)', 'Previsão Encerramento', 'Status']];
+      alunos.forEach(al => {
+        const ch = al.carga || {};
+        const meta = Number(ch.meta || 300);
+        const feitas = totalHorasManual(al);
+        const restam = Math.max(0, meta - feitas);
+        const pct = Math.min(100, Math.round((feitas / meta) * 100));
+        const prev = previsaoEncerramento(al);
+        const st = statusAluno(al);
+        let prevStr = '—';
+        if (prev) prevStr = prev.concluido ? 'Concluído' : prev.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const hMeses = MESES_CARGA.map(m => horasMes(al, m.key) || '');
+        const inicio = ch.inicio || '2026-08-10';
+        rows.push([al.name, inicio, ...hMeses, feitas, meta, restam, pct + '%', prevStr, st]);
+      });
+      csvDown(rows, 'carga-horaria.csv');
+    }
+
+
+    /* ══════════════════════════
+       DASHBOARD HOME
+    ══════════════════════════ */
+    function renderDashboard() {
+      const enc = S.get('est_enc', {});
+      const encIds = new Set(Object.values(enc).flat());
+      const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+
+      // ── Métricas gerais ──────────────────────────────────────────
+      const totalAlunos = alunos.length;
+      const totalEmpresas = empresas.length;
+      const totalVagas = empresas.reduce((s, e) => s + (e.vagas || 1), 0);
+      const encaminhados = encIds.size;
+      const semEmpresa = totalAlunos - encaminhados;
+      const vagasOcupadas = Object.values(enc).reduce((s, arr) => s + arr.length, 0);
+      const vagasLivres = totalEmpresas ? empresas.reduce((s, e) => s + Math.max(0, (e.vagas || 1) - (enc[e.id] || []).length), 0) : 0;
+
+      // Carga horária
+      const concluidos = alunos.filter(a => statusAluno(a) === 'concluido').length;
+      const emAndamento = alunos.filter(a => statusAluno(a) === 'andamento').length;
+      const semHoras = alunos.filter(a => statusAluno(a) === 'pendente').length;
+      const totalH = alunos.reduce((s, a) => s + totalHorasManual(a), 0);
+
+      // ── Alunos críticos ──────────────────────────────────────────
+      // Crítico = encaminhado com empresa + empresa tem data fim + previsão > data fim
+      // OU encaminhado mas a previsão extrapola o calendário (não tem dias suficientes)
+      const criticos = [];
+      alunos.forEach(al => {
+        const emp = getEmpresaDoAluno(al.id);
+        if (!emp) {
+          // sem empresa = atenção
+          if (totalHorasManual(al) > 0) {
+            criticos.push({ al, emp: null, motivo: 'sem-empresa', prevData: null });
+          }
+          return;
+        }
+        const prev = previsaoEncerramento(al);
+        if (!prev || prev.concluido) return;
+
+        // Pega data fim do encaminhamento (campo 'fim' no encState)
+        // Como não temos data fim no estado atual, usamos 31/01/2027 como fim padrão do período
+        const fimPeriodo = new Date(2027, 0, 31); // 31 Jan 2027
+        if (prev.data > fimPeriodo) {
+          const diasAtraso = Math.round((prev.data - fimPeriodo) / (1000 * 60 * 60 * 24));
+          criticos.push({ al, emp, motivo: 'atraso', prevData: prev.data, diasAtraso, extrapolado: prev.extrapolado });
+        }
+      });
+      criticos.sort((a, b) => {
+        if (!a.prevData) return 1;
+        if (!b.prevData) return -1;
+        return b.prevData - a.prevData;
+      });
+
+      // ── KPI Cards ───────────────────────────────────────────────
+      const kpis = [
+        { icon: '👤', value: totalAlunos, label: 'Total de Alunos', sub: `${encaminhados} encaminhados · ${semEmpresa} sem empresa`, cls: 'kpi-blue', page: 'alunos' },
+        { icon: '🏢', value: totalEmpresas, label: 'Empresas Parceiras', sub: `${totalVagas} vagas · ${vagasLivres} disponíveis`, cls: 'kpi-orange', page: 'empresas' },
+        { icon: '🔀', value: encaminhados, label: 'Encaminhamentos', sub: `${vagasOcupadas} vagas ocupadas`, cls: 'kpi-teal', page: 'encaminhamento' },
+        { icon: '📊', value: emAndamento, label: 'Em Andamento', sub: `${fmtH(totalH)}h acumuladas no total`, cls: 'kpi-purple', page: 'carga' },
+        { icon: '✓', value: concluidos, label: 'Concluídos', sub: `meta de 300h atingida`, cls: 'kpi-green', page: 'carga' },
+        { icon: '⚠', value: criticos.length, label: 'Alunos Críticos', sub: `previsão além de 31/01/2027`, cls: criticos.length > 0 ? 'kpi-red' : 'kpi-green', page: 'carga' },
+      ];
+
+      const kpiGrid = document.getElementById('dashKpis');
+      kpiGrid.innerHTML = '';
+      kpis.forEach(k => {
+        const card = document.createElement('div');
+        card.className = `kpi-card ${k.cls}`;
+        card.onclick = () => showPage(k.page);
+        card.innerHTML = `
+      <span class="kpi-icon">${k.icon}</span>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-sub">${k.sub}</div>`;
+        kpiGrid.appendChild(card);
+      });
+
+      // ── Críticos ─────────────────────────────────────────────────
+      const title = document.getElementById('dash-criticos-title');
+      const grid = document.getElementById('dashCriticos');
+
+      if (criticos.length === 0) {
+        title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">✓ nenhum no momento</span>`;
+        grid.innerHTML = `<div class="dash-empty"><div class="ei">✅</div><p>Todos os alunos encaminhados estão dentro do prazo.</p></div>`;
+      } else {
+        title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--danger);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">${criticos.length} aluno${criticos.length !== 1 ? 's' : ''}</span>`;
+        grid.innerHTML = '';
+        criticos.forEach(({ al, emp, motivo, prevData, diasAtraso, extrapolado }) => {
+          const feitas = totalHorasManual(al);
+          const meta = Number((al.carga || {}).meta || 300);
+          const pct = Math.min(100, Math.round((feitas / meta) * 100));
+          const pfCls = pct >= 60 ? '#5b8af0' : pct >= 30 ? '#f0a05b' : '#ef4444';
+          const ph = al.photo
+            ? `<img class="critico-photo" src="${al.photo}" alt="">`
+            : `<div class="critico-avatar">👤</div>`;
+          const cursoB = al.curso === 'Informática'
+            ? `<span class="critico-badge" style="background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3)">Informática</span>`
+            : al.curso === 'Dev. Sistemas'
+              ? `<span class="critico-badge" style="background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3)">Dev. Sistemas</span>`
+              : '';
+          const prevStr = prevData ? prevData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+          const badge = motivo === 'atraso'
+            ? `<span class="critico-badge cb-red">conclusão: ${prevStr}</span>${diasAtraso ? `<span class="critico-badge cb-orange">${diasAtraso}d de atraso</span>` : ''}`
+            : `<span class="critico-badge cb-gray">sem empresa</span>`;
+          const empNome = emp ? emp.name : '—';
+
+          const card = document.createElement('div');
+          card.className = 'critico-card';
+          card.onclick = () => showPage('carga');
+          card.innerHTML = `
+        ${ph}
+        <div class="critico-info">
+          <div class="critico-nome">${al.name}</div>
+          <div class="critico-empresa">${empNome}</div>
+          <div class="mini-prog">
+            <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${pfCls}"></div></div>
+            <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3)">${pct}%</span>
+          </div>
+          <div class="critico-badges" style="margin-top:5px">${cursoB}${badge}</div>
+        </div>`;
+          grid.appendChild(card);
+        });
+      }
+
+      // Timestamp
+      const upd = document.getElementById('dash-updated');
+      if (upd) upd.textContent = `Atualizado às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    /* ── UTILITÁRIOS ── */
+    let _confirmCb = null;
+    function openConfirm(title, msg, cb) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmMsg').textContent = msg;
+      _confirmCb = cb;
+      document.getElementById('confirmBtn').onclick = () => { if (_confirmCb) _confirmCb(); fecharConfirm(); };
+      document.getElementById('modalConfirm').classList.add('open');
+    }
+    function fecharConfirm() { document.getElementById('modalConfirm').classList.remove('open'); _confirmCb = null; }
+
+    function exportarPDF(modulo) {
+      // Remove print-active de todas as páginas
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('print-active'));
+      const pageId = modulo === 'horas' ? 'page-horas' : modulo === 'alunos' ? 'page-alunos' : 'page-carga';
+      const el = document.getElementById(pageId);
+      if (!el) return;
+      el.classList.add('print-active');
+      // Garante que a página está visível para impressão
+      const wasActive = el.classList.contains('active');
+      el.classList.add('active');
+      setTimeout(() => {
+        window.print();
+        // Restaura estado
+        setTimeout(() => {
+          el.classList.remove('print-active');
+          if (!wasActive) el.classList.remove('active');
+        }, 500);
+      }, 150);
+    }
+
+    function csvDown(rows, filename) {
+      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
+    }
+
+    // fechar modais clicando fora
+    ['modalEmpresas', 'modalEditEmpresa', 'modalConfirm', 'modalCarga'].forEach(id => {
+      document.getElementById(id).addEventListener('click', function (e) { if (e.target === this) this.classList.remove('open'); });
+    });
+
+    // Inicializa carregando dados do servidor antes de renderizar
+    initStorage().then(() => {
+      // Carregar dados do cache (preenchido pelo initStorage)
+      calState = S.get('est_cal', {});
+      alunos = S.get('est_alunos', []);
+      empresas = S.get('est_emp', []);
+
+      buildCal();
+      renderAlunos();
+      renderEmpresas();
+      renderDashboard();
+
+      // Indicador de conexão com servidor
+      fetch('/api/status')
+        .then(r => r.json())
+        .then(j => {
+          if (!j.ok) return;
+          const bar = document.createElement('div');
+          bar.style.cssText = [
+            'position:fixed', 'bottom:20px', 'left:20px', 'z-index:9999',
+            'background:#1f2435', 'border:1px solid #2a3045', 'color:#7dd3c0',
+            "font-family:'DM Mono',monospace", 'font-size:0.7rem',
+            'padding:7px 13px', 'border-radius:8px', 'opacity:0.9', 'transition:opacity 0.5s'
+          ].join(';');
+          bar.textContent = '✓ servidor local conectado';
+          document.body.appendChild(bar);
+          setTimeout(() => { bar.style.opacity = '0'; }, 3000);
+          setTimeout(() => { bar.remove(); }, 3600);
+        }).catch(() => { });
+    });
+  </script>
+</body>
+
+</html>
