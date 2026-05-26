@@ -3423,11 +3423,31 @@
       saveEmpresas(); fecharModalEditEmp(); renderEmpresas();
     }
 
+    let empresasFiltro = 'todos';
+
+    function setEmpresasFiltro(f, btn) {
+      empresasFiltro = f;
+      document.querySelectorAll('#page-empresas .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderEmpresas();
+    }
+
     function renderEmpresas() {
       const q = (document.getElementById('searchEmpresa')?.value || '').toLowerCase();
       const grid = document.getElementById('empresasGrid');
       if (!grid) return;
       let fil = empresas.filter(e => e.name.toLowerCase().includes(q));
+      
+      if (empresasFiltro !== 'todos') {
+        const val = parseFloat(empresasFiltro);
+        fil = fil.filter(e => calcHorasDia(e) === val);
+      }
+      
+      const countEl = document.getElementById('empresasCount');
+      if (countEl) {
+        countEl.textContent = `${fil.length} empresa${fil.length !== 1 ? 's' : ''}`;
+      }
+      
       grid.innerHTML = '';
       const isViewer = currentUser && currentUser.tipo === 'visualizador';
       const enc = S.get('est_enc', {});
@@ -3450,6 +3470,12 @@
 
     /* ── ENCAMINHAMENTO ── */
     let dragId = null;
+
+    function disponiveisIds() {
+      const enc = S.get('est_enc', {});
+      const assigned = new Set(Object.values(enc).flat());
+      return alunos.map(a => a.id).filter(id => !assigned.has(id));
+    }
 
     function renderEnc() {
       const list = document.getElementById('encAlunosList');
@@ -3570,6 +3596,27 @@
       const enc = S.get('est_enc', {});
       enc[empId] = (enc[empId] || []).filter(i => i !== alunoId);
       S.set('est_enc', enc); renderEnc();
+    }
+
+    function exportarEncaminhamento() {
+      const enc = S.get('est_enc', {});
+      let csv = 'Empresa,Aluno,Curso\n';
+      empresas.forEach(emp => {
+        const ids = enc[emp.id] || [];
+        ids.forEach(aid => {
+          const al = alunos.find(a => a.id === aid);
+          if (al) {
+            csv += `"${emp.name.replace(/"/g, '""')}","${al.name.replace(/"/g, '""')}","${(al.curso || '').replace(/"/g, '""')}"\n`;
+          }
+        });
+      });
+      const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", "encaminhamentos.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     /* ── CARGA HORÁRIA ── */
