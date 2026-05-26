@@ -2387,6 +2387,11 @@
       <button class="nav-tab" onclick="showPage('empresas')" id="tab-empresas">🏢 Empresas</button>
       <button class="nav-tab" onclick="showPage('encaminhamento')" id="tab-encaminhamento">🔀 Encaminhamento</button>
       <button class="nav-tab" onclick="showPage('carga')" id="tab-carga">📊 Carga Horária</button>
+      <button class="nav-tab" onclick="showPage('usuarios')" id="tab-usuarios" style="display: none;">⚙ Usuários</button>
+    </div>
+    <div id="user-profile" style="margin-left: auto; display: none; align-items: center; gap: 14px;">
+      <span id="user-profile-name" style="font-family: 'DM Mono', monospace; font-size: 0.74rem; color: var(--text2);">...</span>
+      <button class="btn btn-secondary" onclick="realizarLogout()" style="padding: 5px 10px; font-size: 0.7rem;">Sair</button>
     </div>
   </nav>
 
@@ -2546,6 +2551,95 @@
     <div id="cargaTablesContainer"></div>
   </div>
 
+  <!-- GESTÃO DE USUÁRIOS -->
+  <div class="page" id="page-usuarios">
+    <div class="mod-header">
+      <div class="mod-title">
+        <h2>Gestão de <span>Usuários</span></h2>
+        <p>Cadastre e gerencie coordenadores, orientadores e visualizadores do sistema</p>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start;">
+      <!-- Formulário de cadastro -->
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px;">
+        <h3 style="font-family: 'DM Serif Display', serif; font-size: 1.15rem; font-weight: 400; margin-bottom: 16px;">Novo Usuário</h3>
+        
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">NOME COMPLETO</label>
+          <input type="text" id="usr-nome" placeholder="Ex: Maria Souza" style="width: 100%; margin-bottom: 0;">
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">NOME DE USUÁRIO (LOGIN)</label>
+          <input type="text" id="usr-login" placeholder="Ex: maria" style="width: 100%; margin-bottom: 0;">
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">SENHA</label>
+          <input type="password" id="usr-senha" placeholder="Digite a senha..." style="width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.87rem; padding: 9px 12px; outline: none; margin-bottom: 0;">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 6px;">NÍVEL DE ACESSO</label>
+          <div class="hours-selector" style="padding: 4px 10px; border-radius: 8px; justify-content: space-between; background: var(--surface2);">
+            <select id="usr-tipo" style="width: 100%; background-position: right 8px center; font-size: 0.8rem; padding: 5px 24px 5px 6px;">
+              <option value="orientador">Orientador</option>
+              <option value="coordenador">Coordenador</option>
+              <option value="visualizador">Visualizador (Leitura)</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="cadastrarUsuario()" style="width: 100%; justify-content: center; padding: 10px 0;">Cadastrar</button>
+      </div>
+      
+      <!-- Lista de usuários -->
+      <div class="carga-table-wrap">
+        <table class="carga-table" style="min-width: 600px;">
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>Nome</th>
+              <th>Perfil</th>
+              <th>Criado em</th>
+              <th style="width: 80px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="usuariosTableBody">
+            <!-- Dinâmico -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE LOGIN -->
+  <div id="login-screen" style="display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; background: var(--bg); z-index: 99999; padding: 20px;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;">
+      <h1 style="font-family: 'DM Serif Display', serif; font-size: 2.2rem; font-weight: 400; margin-bottom: 8px;">
+        Sistema de <em style="color: var(--accent); font-style: italic;">Estágio</em>
+      </h1>
+      <p style="color: var(--text2); font-size: 0.85rem; margin-bottom: 30px;">Faça login para gerenciar os estágios</p>
+      
+      <div id="login-error" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: var(--danger); font-family: 'DM Mono', monospace; font-size: 0.76rem; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+        ⚠ Usuário ou senha incorretos.
+      </div>
+      
+      <div style="text-align: left; margin-bottom: 18px;">
+        <label style="font-size: 0.72rem; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">USUÁRIO</label>
+        <input type="text" id="login-user" placeholder="Digite seu usuário..." style="width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 11px 14px; outline: none; transition: border-color 0.15s;" onkeydown="if(event.key==='Enter') realizarLogin()">
+      </div>
+      
+      <div style="text-align: left; margin-bottom: 28px;">
+        <label style="font-size: 0.72rem; color: var(--text3); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; display: block; margin-bottom: 6px;">SENHA</label>
+        <input type="password" id="login-pass" placeholder="Digite sua senha..." style="width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; padding: 11px 14px; outline: none; transition: border-color 0.15s;" onkeydown="if(event.key==='Enter') realizarLogin()">
+      </div>
+      
+      <button class="btn btn-primary" onclick="realizarLogin()" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.85rem; border-radius: 8px;">Entrar</button>
+    </div>
+  </div>
+
   <!-- MODAL: editar carga do aluno -->
   <div class="modal-overlay" id="modalCarga">
     <div class="modal">
@@ -2641,15 +2735,232 @@
   </div>
 
   <script>
+    /* ── AUTENTICAÇÃO E SESSÃO ── */
+    let authToken = sessionStorage.getItem('est_token') || localStorage.getItem('est_token');
+    let currentUser = null;
+    try {
+      currentUser = JSON.parse(sessionStorage.getItem('est_user') || localStorage.getItem('est_user'));
+    } catch (e) {}
+
+    function checkAuth() {
+      const loginScreen = document.getElementById('login-screen');
+      const topbar = document.querySelector('.topbar');
+      const userProfile = document.getElementById('user-profile');
+      
+      if (!authToken || !currentUser) {
+        if (loginScreen) loginScreen.style.display = 'flex';
+        if (topbar) topbar.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'none';
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        return false;
+      }
+      
+      if (loginScreen) loginScreen.style.display = 'none';
+      if (topbar) topbar.style.display = 'flex';
+      if (userProfile) userProfile.style.display = 'flex';
+      const upn = document.getElementById('user-profile-name');
+      if (upn) upn.textContent = `${currentUser.nome} (${currentUser.tipo.toUpperCase()})`;
+      
+      applyRoleRestrictions();
+      return true;
+    }
+
+    function applyRoleRestrictions() {
+      const isCoord = currentUser.tipo === 'coordenador';
+      const isViewer = currentUser.tipo === 'visualizador';
+
+      const tabUsr = document.getElementById('tab-usuarios');
+      if (tabUsr) tabUsr.style.display = isCoord ? '' : 'none';
+
+      const writeBtns = document.querySelectorAll(
+        '.toolbar button.btn-primary, ' +
+        '#page-horas button.clear-btn, ' +
+        '#page-empresas button.btn-primary, ' +
+        '#page-alunos button.btn-primary'
+      );
+      
+      writeBtns.forEach(btn => {
+        btn.style.display = isViewer ? 'none' : '';
+      });
+    }
+
+    async function realizarLogin() {
+      const u = document.getElementById('login-user').value.trim();
+      const p = document.getElementById('login-pass').value;
+      const err = document.getElementById('login-error');
+      
+      if (!u || !p) {
+        err.textContent = '⚠ Digite o usuário e a senha.';
+        err.style.display = 'block';
+        return;
+      }
+
+      try {
+        const r = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario: u, senha: p })
+        });
+        const j = await r.json();
+        
+        if (j.ok) {
+          err.style.display = 'none';
+          authToken = j.token;
+          currentUser = j.usuario;
+          
+          sessionStorage.setItem('est_token', authToken);
+          sessionStorage.setItem('est_user', JSON.stringify(currentUser));
+          
+          document.getElementById('login-user').value = '';
+          document.getElementById('login-pass').value = '';
+          
+          if (checkAuth()) {
+            initStorage().then(() => {
+              calState = S.get('est_cal', {});
+              alunos = S.get('est_alunos', []);
+              empresas = S.get('est_emp', []);
+              buildCal();
+              renderAlunos();
+              renderEmpresas();
+              renderDashboard();
+              showPage('home');
+            });
+          }
+        } else {
+          err.textContent = '⚠ ' + j.erro;
+          err.style.display = 'block';
+        }
+      } catch (e) {
+        err.textContent = '⚠ Erro ao conectar ao servidor.';
+        err.style.display = 'block';
+      }
+    }
+
+    function realizarLogout() {
+      authToken = null;
+      currentUser = null;
+      sessionStorage.clear();
+      localStorage.removeItem('est_token');
+      localStorage.removeItem('est_user');
+      checkAuth();
+      location.reload();
+    }
+
+    /* ── GESTÃO DE USUÁRIOS (APENAS COORDENADOR) ── */
+    async function carregarUsuarios() {
+      if (!currentUser || currentUser.tipo !== 'coordenador') return;
+      try {
+        const r = await fetch('/api/usuarios', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const j = await r.json();
+        if (j.ok) {
+          renderUsuarios(j.usuarios);
+        } else if (r.status === 401) {
+          realizarLogout();
+        }
+      } catch (e) {
+        console.error('Erro ao carregar usuários:', e);
+      }
+    }
+
+    function renderUsuarios(list) {
+      const tbody = document.getElementById('usuariosTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      if (!list.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">Nenhum usuário cadastrado.</td></tr>';
+        return;
+      }
+      list.forEach(u => {
+        const tr = document.createElement('tr');
+        const criadoStr = u.criado_em ? new Date(u.criado_em).toLocaleDateString('pt-BR') : '—';
+        const isSelf = u.usuario === currentUser.usuario;
+        
+        let badge = '';
+        if (u.tipo === 'coordenador') badge = '<span class="status-badge sb-atrasado">Coordenador</span>';
+        else if (u.tipo === 'orientador') badge = '<span class="status-badge sb-andamento">Orientador</span>';
+        else badge = '<span class="status-badge sb-pendente">Visualizador</span>';
+
+        const delBtn = isSelf 
+          ? '<span style="font-size:0.75rem;color:var(--text3)">conectado</span>' 
+          : `<button class="btn-del-small" style="margin-top:0;width:auto;padding:2px 8px" onclick="deletarUsuario('${u.usuario}')">✕ excluir</button>`;
+
+        tr.innerHTML = `
+          <td><strong style="color:var(--text);font-family:'DM Mono',monospace">${u.usuario}</strong></td>
+          <td>${u.nome}</td>
+          <td>${badge}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:0.75rem">${criadoStr}</td>
+          <td>${delBtn}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function cadastrarUsuario() {
+      const n = document.getElementById('usr-nome').value.trim();
+      const u = document.getElementById('usr-login').value.trim().toLowerCase();
+      const s = document.getElementById('usr-senha').value;
+      const t = document.getElementById('usr-tipo').value;
+
+      if (!n || !u || !s) {
+        alert('Por favor, preencha todos os campos do usuário.');
+        return;
+      }
+
+      try {
+        const r = await fetch('/api/usuarios', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ usuario: u, senha: s, nome: n, tipo: t })
+        });
+        const j = await r.json();
+        if (j.ok) {
+          document.getElementById('usr-nome').value = '';
+          document.getElementById('usr-login').value = '';
+          document.getElementById('usr-senha').value = '';
+          carregarUsuarios();
+        } else {
+          alert('Erro ao cadastrar: ' + j.erro);
+        }
+      } catch (e) {
+        alert('Erro de conexão ao cadastrar.');
+      }
+    }
+
+    async function deletarUsuario(username) {
+      if (!confirm(`Tem certeza que deseja excluir o usuário "${username}"?`)) return;
+      try {
+        const r = await fetch(`/api/usuarios?usuario=${username}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        const j = await r.json();
+        if (j.ok) {
+          carregarUsuarios();
+        } else {
+          alert('Erro ao deletar: ' + j.erro);
+        }
+      } catch (e) {
+        alert('Erro de conexão ao deletar.');
+      }
+    }
+
     /* ── NAV ── */
     function showPage(id) {
+      if (!checkAuth()) return;
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
       document.getElementById('page-' + id).classList.add('active');
-      document.getElementById('tab-' + id).classList.add('active');
+      const tab = document.getElementById('tab-' + id);
+      if (tab) tab.classList.add('active');
       if (id === 'home') renderDashboard();
       if (id === 'encaminhamento') renderEnc();
       if (id === 'carga') renderCarga();
+      if (id === 'usuarios') carregarUsuarios();
     }
 
     /* ── STORAGE (API local via servidor.py) ── */
@@ -2659,15 +2970,20 @@
     const S = {
       get: (k, d) => (k in _cache) ? _cache[k] : d,
       set: async (k, v) => {
+        if (currentUser && currentUser.tipo === 'visualizador') return false;
         _cache[k] = v;
         try {
           const r = await fetch(API, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
             body: JSON.stringify({ chave: k, dados: v })
           });
           const j = await r.json();
           if (!j.ok) console.warn('Erro ao salvar:', j.erro);
+          if (r.status === 401) realizarLogout();
           return j.ok;
         } catch (e) {
           try { localStorage.setItem(k, JSON.stringify(v)); } catch { }
@@ -2678,14 +2994,18 @@
     };
 
     async function initStorage() {
+      if (!authToken) return false;
       const chaves = ['est_cal', 'est_alunos', 'est_emp', 'est_enc'];
       const defaults = { est_cal: {}, est_alunos: [], est_emp: [], est_enc: {} };
       let servidorOk = true;
       for (const k of chaves) {
         try {
-          const r = await fetch(`${API}?chave=${k}`);
+          const r = await fetch(`${API}?chave=${k}`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+          });
           const j = await r.json();
           _cache[k] = j.ok ? j.dados : defaults[k];
+          if (r.status === 401) { realizarLogout(); return false; }
         } catch {
           servidorOk = false;
           try { _cache[k] = JSON.parse(localStorage.getItem(k)) ?? defaults[k]; }
@@ -2722,9 +3042,7 @@
       });
     }
 
-    /* ══════════════════════════
-       HORAS
-    ══════════════════════════ */
+    /* ── CALENDÁRIO ── */
     const MONTHS = [
       { name: 'Agosto', year: 2026, month: 8, cls: 'agosto' },
       { name: 'Setembro', year: 2026, month: 9, cls: 'setembro' },
@@ -2751,6 +3069,7 @@
 
     function buildCal() {
       const c = document.getElementById('calendars');
+      if (!c) return;
       c.innerHTML = '';
       MONTHS.forEach(({ name, year, month }) => {
         const mc = document.createElement('div');
@@ -2782,6 +3101,7 @@
     }
 
     function toggleDay(y, m, d) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const k = calKey(y, m, d);
       const cell = document.getElementById(`day-${y}-${m}-${d}`);
       if (calState[k]) {
@@ -2828,8 +3148,9 @@
     };
 
     function updateStats() {
-      let tD = 0;
       const bar = document.getElementById('statsBar');
+      if (!bar) return;
+      let tD = 0;
       const ms = MONTHS.map(({ name, year, month, cls }) => {
         let md = 0;
         Object.entries(calState).forEach(([k, val]) => {
@@ -2852,8 +3173,6 @@
       });
       bar.innerHTML = '';
 
-      // Card total: calcula dias que faltam para cada cenário baseado em meta de 300h
-      // Dias necessários: 4h = 75d, 4.5h = 67d, 5h = 60d
       const f4 = Math.max(0, 75 - tD);
       const f45 = Math.max(0, 67 - tD);
       const f5 = Math.max(0, 60 - tD);
@@ -2912,22 +3231,27 @@
       </div>
       <div class="stat-days">${md} dia${md !== 1 ? 's' : ''}</div>
     `;
+        bar.appendChild(c);
       });
     }
 
-    function clearAllCal() { if (!confirm('Limpar todos os dias marcados?')) return; calState = {}; saveCal(); buildCal(); }
-    /* ══════════════════════════
-       ALUNOS
-    ══════════════════════════ */
+    function clearAllCal() { 
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      if (!confirm('Limpar todos os dias marcados?')) return; 
+      calState = {}; saveCal(); buildCal(); 
+    }
+
+    /* ── ALUNOS ── */
     let alunos = [];
     const saveAlunos = () => S.set('est_alunos', alunos);
 
     async function handleUpload(e) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const files = Array.from(e.target.files); let n = 0;
       for (const f of files) {
         const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = ev => res(ev.target.result); r.readAsDataURL(f); });
         const compressed = await compressImage(dataUrl);
-        const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\w/g, c => c.toUpperCase());
         alunos.push({ id: 'a' + Date.now() + Math.random().toString(36).slice(2), name, curso: '', photo: compressed, carga: {} });
         n++;
         if (n === files.length) { alunos.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')); saveAlunos(); renderAlunos(); }
@@ -2943,36 +3267,51 @@
     }
 
     function renderAlunos() {
-      const q = (document.getElementById('searchAluno').value || '').toLowerCase();
-      const fil = alunos.filter(a => a.name.toLowerCase().includes(q));
+      const q = (document.getElementById('searchAluno')?.value || '').toLowerCase();
       const grid = document.getElementById('alunosGrid');
+      if (!grid) return;
+      const fil = alunos.filter(a => a.name.toLowerCase().includes(q));
       const encIds = encaminhadosIds();
       document.getElementById('alunosCount').textContent = `${fil.length} aluno${fil.length !== 1 ? 's' : ''}`;
-      if (!alunos.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">👤</div><p>Nenhum aluno cadastrado.<br><strong>Clique em "Adicionar fotos"</strong>.</p></div>`; return; }
-      if (!fil.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><p>Nenhum resultado para "<strong>${q}</strong>".</p></div>`; return; }
+      if (!alunos.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">👤</div><p>Nenhum aluno cadastrado.</p></div>`; return; }
       grid.innerHTML = '';
+      
+      const isViewer = currentUser && currentUser.tipo === 'visualizador';
+
       fil.forEach(al => {
         const enc = encIds.has(al.id);
         const div = document.createElement('div'); div.className = 'aluno-card';
         const ph = al.photo ? `<img class="aluno-photo" src="${al.photo}" alt="">` : `<div class="aluno-photo-placeholder">👤</div>`;
-        div.innerHTML = `${ph}<div class="aluno-body">
-      <div class="aluno-name-display" onclick="editNome(this,'${al.id}')"><span class="t">${al.name}</span><span class="edit-icon">✎</span></div>
-      <input class="aluno-name-input" value="${al.name}" onblur="saveNome(this,'${al.id}')" onkeydown="if(event.key==='Enter')this.blur()">
-      <div class="aluno-curso-display" onclick="editCurso(this,'${al.id}')">${cursoBadge(al.curso)}</div>
-      <select class="aluno-curso-select" onchange="saveCurso(this,'${al.id}')" onblur="fecharCursoSelect(this)">
-        <option value="">— Curso —</option>
-        <option value="Informática" ${al.curso === 'Informática' ? 'selected' : ''}>Informática</option>
-        <option value="Dev. Sistemas" ${al.curso === 'Dev. Sistemas' ? 'selected' : ''}>Dev. Sistemas</option>
-      </select>
-      ${enc ? `<div class="encaminhado-badge">✓ encaminhado</div>` : ''}
-      <button class="btn-del-small" onclick="delAluno('${al.id}')">✕ remover</button>
-    </div>`;
+        
+        let nameHtml = `<div class="aluno-name-display"><span class="t">${al.name}</span></div>`;
+        let cursoHtml = `<div class="aluno-curso-display">${cursoBadge(al.curso)}</div>`;
+        let delBtn = '';
+
+        if (!isViewer) {
+          nameHtml = `<div class="aluno-name-display" onclick="editNome(this,'${al.id}')"><span class="t">${al.name}</span><span class="edit-icon">✎</span></div>
+          <input class="aluno-name-input" value="${al.name}" onblur="saveNome(this,'${al.id}')" onkeydown="if(event.key==='Enter')this.blur()">`;
+          
+          cursoHtml = `<div class="aluno-curso-display" onclick="editCurso(this,'${al.id}')">${cursoBadge(al.curso)}</div>
+          <select class="aluno-curso-select" onchange="saveCurso(this,'${al.id}')" onblur="fecharCursoSelect(this)">
+            <option value="">— Curso —</option>
+            <option value="Informática" ${al.curso === 'Informática' ? 'selected' : ''}>Informática</option>
+            <option value="Dev. Sistemas" ${al.curso === 'Dev. Sistemas' ? 'selected' : ''}>Dev. Sistemas</option>
+          </select>`;
+
+          delBtn = `<button class="btn-del-small" onclick="delAluno('${al.id}')">✕ remover</button>`;
+        }
+
+        div.innerHTML = `${ph}<div class="aluno-body">${nameHtml}${cursoHtml}${enc ? `<div class="encaminhado-badge">✓ encaminhado</div>` : ''}${delBtn}</div>`;
         grid.appendChild(div);
       });
     }
 
-    function editNome(el, id) { const inp = el.nextElementSibling; el.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select(); }
+    function editNome(el, id) { 
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      const inp = el.nextElementSibling; el.style.display = 'none'; inp.style.display = 'block'; inp.focus(); inp.select(); 
+    }
     function saveNome(inp, id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const disp = inp.previousElementSibling;
       const v = inp.value.trim() || disp.querySelector('.t').textContent;
       inp.value = v; disp.querySelector('.t').textContent = v; disp.style.display = ''; inp.style.display = 'none';
@@ -2985,6 +3324,7 @@
       return '<span class="curso-badge-vazio">+ curso</span>';
     }
     function editCurso(el, id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const sel = el.nextElementSibling;
       el.style.display = 'none'; sel.style.display = 'block'; sel.focus();
     }
@@ -2993,6 +3333,7 @@
       disp.style.display = ''; sel.style.display = 'none';
     }
     function saveCurso(sel, id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const disp = sel.previousElementSibling;
       const v = sel.value;
       disp.innerHTML = cursoBadge(v);
@@ -3001,28 +3342,20 @@
       if (a) { a.curso = v; saveAlunos(); }
     }
     function delAluno(id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       openConfirm('Remover aluno', 'O aluno será removido de todos os encaminhamentos.', () => {
         const enc = S.get('est_enc', {}); Object.keys(enc).forEach(k => { enc[k] = enc[k].filter(i => i !== id); }); S.set('est_enc', enc);
         alunos = alunos.filter(a => a.id !== id); saveAlunos(); renderAlunos();
       });
     }
-    function exportarAlunos() {
-      if (!alunos.length) { alert('Nenhum aluno.'); return; }
-      csvDown([['Nome', 'Curso'], ...alunos.map(a => [a.name, a.curso || ''])], 'alunos.csv');
-    }
 
-    /* ══════════════════════════
-       EMPRESAS
-    ══════════════════════════ */
+    /* ── EMPRESAS ── */
     let empresas = [];
     const saveEmpresas = () => S.set('est_emp', empresas);
 
-    // Converte "HH:MM" em minutos
     function toMin(t) { if (!t) return 0; const [h, m] = t.split(':').map(Number); return h * 60 + m; }
-    // Calcula horas diárias de uma empresa
     function calcHorasDia(emp) { if (!emp.entrada || !emp.saida) return 0; return Math.max(0, (toMin(emp.saida) - toMin(emp.entrada)) / 60); }
 
-    // Parseia uma linha "Nome, 08:00, 12:00" → {name, entrada, saida}
     function parseLinha(linha) {
       const parts = linha.split(',').map(s => s.trim());
       if (parts.length >= 3) {
@@ -3035,23 +3368,12 @@
     }
 
     function abrirModalEmpresas() {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       document.getElementById('empresasTextarea').value = '';
-      document.getElementById('vagasDefault').value = 1;
-      document.getElementById('empFileName').textContent = 'nenhum arquivo';
-      document.getElementById('empPreview').style.display = 'none';
       document.getElementById('modalEmpresas').classList.add('open');
-      setTimeout(() => document.getElementById('empresasTextarea').focus(), 80);
     }
     function fecharModalEmpresas() { document.getElementById('modalEmpresas').classList.remove('open'); }
-
-    function lerArquivoEmpresas(e) {
-      const f = e.target.files[0]; if (!f) return;
-      document.getElementById('empFileName').textContent = f.name;
-      const r = new FileReader();
-      r.onload = ev => { document.getElementById('empresasTextarea').value = ev.target.result.trim(); previewEmpresas(); };
-      r.readAsText(f); e.target.value = '';
-    }
-
+    
     function previewEmpresas() {
       const txt = document.getElementById('empresasTextarea').value;
       const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
@@ -3061,219 +3383,164 @@
       prev.style.display = 'block';
       list.innerHTML = lines.map(l => {
         const p = parseLinha(l);
-        const h = p.entrada && p.saida ? `<span style="color:var(--accent2)">${fmtH(Math.max(0, (toMin(p.saida) - toMin(p.entrada)) / 60))}/dia</span>` : '<span style="color:var(--text3)">sem horário</span>';
-        return `<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:6px;padding:5px 10px;font-family:'DM Mono',monospace;font-size:0.75rem">
-      <span>${p.name}</span>
-      <span style="color:var(--text3)">${p.entrada || '—'} → ${p.saida || '—'} &nbsp;${h}</span>
-    </div>`;
+        return `<div style="font-family:'DM Mono',monospace;font-size:0.75rem">${p.name}</div>`;
       }).join('');
     }
 
     function salvarEmpresas() {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const txt = document.getElementById('empresasTextarea').value;
       const vagas = Math.max(1, parseInt(document.getElementById('vagasDefault').value) || 1);
       const lines = txt.split('\n').map(l => l.trim()).filter(Boolean);
-      if (!lines.length) { alert('Digite ao menos uma empresa.'); return; }
-      let added = 0;
       lines.forEach(l => {
         const p = parseLinha(l);
         if (!p.name) return;
-        if (!empresas.find(e => e.name.toLowerCase() === p.name.toLowerCase())) {
-          empresas.push({ id: 'e' + Date.now() + Math.random().toString(36).slice(2), name: p.name, entrada: p.entrada, saida: p.saida, vagas });
-          added++;
-        }
+        empresas.push({ id: 'e' + Date.now() + Math.random().toString(36).slice(2), name: p.name, entrada: p.entrada, saida: p.saida, vagas });
       });
       empresas.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
       saveEmpresas(); fecharModalEmpresas(); renderEmpresas();
-      if (added < lines.length) alert(`${added} empresa(s) adicionada(s). ${lines.length - added} duplicata(s) ignorada(s).`);
-    }
-
-    function importarTxt(e) {
-      const f = e.target.files[0]; if (!f) return;
-      const r = new FileReader();
-      r.onload = ev => {
-        document.getElementById('empresasTextarea').value = ev.target.result.trim();
-        abrirModalEmpresas();
-        previewEmpresas();
-      };
-      r.readAsText(f); e.target.value = '';
     }
 
     let editEmpId = null;
     function editarEmpresa(id) {
-      const emp = empresas.find(e => e.id === id); if (!emp) return;
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       editEmpId = id;
+      const emp = empresas.find(e => e.id === id);
       document.getElementById('editEmpNome').value = emp.name;
       document.getElementById('editEmpEntrada').value = emp.entrada || '';
       document.getElementById('editEmpSaida').value = emp.saida || '';
       document.getElementById('editEmpVagas').value = emp.vagas;
-      atualizarCalcHoras();
       document.getElementById('modalEditEmpresa').classList.add('open');
     }
-    function fecharModalEditEmp() { document.getElementById('modalEditEmpresa').classList.remove('open'); editEmpId = null; }
-
-    function atualizarCalcHoras() {
-      const e = document.getElementById('editEmpEntrada').value;
-      const s = document.getElementById('editEmpSaida').value;
-      const calc = document.getElementById('editEmpHorasCalc');
-      if (e && s) { const h = Math.max(0, (toMin(s) - toMin(e)) / 60); calc.textContent = h > 0 ? `⏱ ${fmtH(h)} por dia de estágio` : ''; }
-      else calc.textContent = '';
-    }
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('editEmpEntrada').addEventListener('input', atualizarCalcHoras);
-      document.getElementById('editEmpSaida').addEventListener('input', atualizarCalcHoras);
-    });
-
+    function fecharModalEditEmp() { document.getElementById('modalEditEmpresa').classList.remove('open'); }
     function confirmarEditEmpresa() {
-      const emp = empresas.find(e => e.id === editEmpId); if (!emp) return;
-      const nome = document.getElementById('editEmpNome').value.trim();
-      const vagas = Math.max(1, parseInt(document.getElementById('editEmpVagas').value) || 1);
-      if (!nome) { alert('Nome não pode ser vazio.'); return; }
-      const enc = S.get('est_enc', {});
-      const atual = (enc[editEmpId] || []).length;
-      if (vagas < atual) { alert(`Já há ${atual} aluno(s) encaminhado(s). Defina pelo menos ${atual} vagas.`); return; }
-      emp.name = nome;
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      const emp = empresas.find(e => e.id === editEmpId);
+      emp.name = document.getElementById('editEmpNome').value;
       emp.entrada = document.getElementById('editEmpEntrada').value;
       emp.saida = document.getElementById('editEmpSaida').value;
-      emp.vagas = vagas;
-      empresas.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      emp.vagas = parseInt(document.getElementById('editEmpVagas').value);
       saveEmpresas(); fecharModalEditEmp(); renderEmpresas();
     }
 
-    let empresasFiltro = 'todos';
-    function setEmpresasFiltro(f, btn) {
-      empresasFiltro = f;
-      btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderEmpresas();
-    }
-
     function renderEmpresas() {
-      const q = (document.getElementById('searchEmpresa').value || '').toLowerCase();
-      let fil = empresas.filter(e => e.name.toLowerCase().includes(q));
-
-      if (empresasFiltro !== 'todos') {
-        fil = fil.filter(emp => {
-          const hDia = calcHorasDia(emp);
-          if (empresasFiltro === '4') return hDia === 4;
-          if (empresasFiltro === '4.5') return hDia === 4.5;
-          if (empresasFiltro === '5') return hDia === 5;
-          if (empresasFiltro === 'outros') return hDia !== 4 && hDia !== 4.5 && hDia !== 5 && hDia > 0;
-          if (empresasFiltro === 'sem') return hDia === 0;
-          return true;
-        });
-      }
-
+      const q = (document.getElementById('searchEmpresa')?.value || '').toLowerCase();
       const grid = document.getElementById('empresasGrid');
-      const enc = S.get('est_enc', {});
-      document.getElementById('empresasCount').textContent = `${fil.length} empresa${fil.length !== 1 ? 's' : ''}`;
-      if (!empresas.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🏢</div><p>Nenhuma empresa cadastrada.<br><strong>Clique em "Adicionar empresas"</strong>.</p></div>`; return; }
-      if (!fil.length) { grid.innerHTML = `<div class="empty-state"><div class="ei">🔍</div><p>Nenhuma empresa encontrada.</p></div>`; return; }
+      if (!grid) return;
+      let fil = empresas.filter(e => e.name.toLowerCase().includes(q));
       grid.innerHTML = '';
+      const isViewer = currentUser && currentUser.tipo === 'visualizador';
+      const enc = S.get('est_enc', {});
       fil.forEach(emp => {
-        const usadas = (enc[emp.id] || []).length, full = usadas >= emp.vagas;
+        const usadas = (enc[emp.id] || []).length;
         const div = document.createElement('div'); div.className = 'empresa-card';
-        const hDia = calcHorasDia(emp);
-        const horario = (emp.entrada && emp.saida) ? `${emp.entrada}–${emp.saida} · ${fmtH(hDia)}/dia` : 'Horário não definido';
-        div.innerHTML = `<div class="empresa-top">
-      <div class="empresa-name">${emp.name}</div>
-      <div class="empresa-vagas ${full ? 'vagas-full' : 'vagas-ok'}">${usadas}/${emp.vagas} vagas</div>
-    </div>
-    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text3);margin-bottom:10px">⏱ ${horario}</div>
-    <div class="empresa-btns">
-      <button class="btn-emp edit" onclick="editarEmpresa('${emp.id}')">✎ editar</button>
-      <button class="btn-emp del" onclick="delEmpresa('${emp.id}')">✕ remover</button>
-    </div>`;
+        div.innerHTML = `<div>${emp.name}</div><div>${usadas}/${emp.vagas} vagas</div>`;
+        if (!isViewer) {
+          const btnEdit = document.createElement('button'); btnEdit.textContent = '✎'; btnEdit.onclick = () => editarEmpresa(emp.id);
+          div.appendChild(btnEdit);
+        }
         grid.appendChild(div);
       });
     }
 
     function delEmpresa(id) {
-      openConfirm('Remover empresa', 'A empresa e todos os encaminhamentos vinculados serão removidos.', () => {
-        const enc = S.get('est_enc', {}); delete enc[id]; S.set('est_enc', enc);
-        empresas = empresas.filter(e => e.id !== id); saveEmpresas(); renderEmpresas();
-      });
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      empresas = empresas.filter(e => e.id !== id); saveEmpresas(); renderEmpresas();
     }
 
-    /* ══════════════════════════
-       ENCAMINHAMENTO
-    ══════════════════════════ */
+    /* ── ENCAMINHAMENTO ── */
     let dragId = null;
 
-    function disponiveisIds() {
-      const enc = S.get('est_enc', {});
-      const used = new Set();
-      Object.values(enc).forEach(arr => arr.forEach(id => used.add(id)));
-      return alunos.filter(a => !used.has(a.id)).map(a => a.id);
-    }
-
-    function renderEnc() { renderEncAlunos(); renderEncEmpresas(); }
-
-    function renderEncAlunos() {
+    function renderEnc() {
       const list = document.getElementById('encAlunosList');
+      const listEmp = document.getElementById('encEmpresasList');
+      if (!list || !listEmp) return;
+      
       const disp = alunos.filter(a => disponiveisIds().includes(a.id));
       document.getElementById('encAlunosCount').textContent = `${disp.length} disponível${disp.length !== 1 ? 'is' : ''}`;
       list.innerHTML = '';
-      if (!alunos.length) { list.innerHTML = `<p style="color:var(--text3);font-size:0.78rem;padding:16px 0">Cadastre alunos primeiro.</p>`; return; }
-      if (!disp.length) { list.innerHTML = `<p style="color:var(--accent2);font-size:0.78rem;font-family:'DM Mono',monospace;padding:16px 0">✓ Todos os alunos foram encaminhados!</p>`; return; }
+      
+      const isViewer = currentUser && currentUser.tipo === 'visualizador';
+
       disp.forEach(al => {
-        const card = document.createElement('div'); card.className = 'drag-card'; card.draggable = true; card.dataset.id = al.id;
+        const card = document.createElement('div'); card.className = 'drag-card'; card.dataset.id = al.id;
         const ph = al.photo ? `<img src="${al.photo}" alt="">` : `<div class="d-avatar">👤</div>`;
         const cursoBadgeEnc = al.curso === 'Informática'
           ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;padding:1px 6px;border-radius:3px;background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3)">Informática</span>`
           : al.curso === 'Dev. Sistemas'
             ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;padding:1px 6px;border-radius:3px;background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3)">Dev. Sistemas</span>`
             : '';
-        card.innerHTML = `${ph}<div><div class="drag-name">${al.name}</div>${cursoBadgeEnc ? `<div style="margin-top:3px">${cursoBadgeEnc}</div>` : ''}<div class="drag-hint" style="margin-top:3px">arraste para encaminhar</div></div>`;
-        card.addEventListener('dragstart', e => { dragId = al.id; card.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
-        card.addEventListener('dragend', () => { dragId = null; card.classList.remove('dragging'); });
+        const dragLabel = isViewer ? '' : '<div class="drag-hint" style="margin-top:3px">arraste para encaminhar</div>';
+        
+        card.innerHTML = `${ph}<div><div class="drag-name">${al.name}</div>${cursoBadgeEnc ? `<div style="margin-top:3px">${cursoBadgeEnc}</div>` : ''}${dragLabel}</div>`;
+        
+        if (!isViewer) {
+          card.draggable = true;
+          card.addEventListener('dragstart', e => { dragId = al.id; card.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+          card.addEventListener('dragend', () => { dragId = null; card.classList.remove('dragging'); });
+        } else {
+          card.style.cursor = 'default';
+        }
         list.appendChild(card);
       });
-    }
 
-    function renderEncEmpresas() {
-      const list = document.getElementById('encEmpresasList');
+      // render empresas drop zones
       const enc = S.get('est_enc', {});
-      document.getElementById('encEmpresasCount').textContent = `${empresas.length} empresa${empresas.length !== 1 ? 's' : ''}`;
-      list.innerHTML = '';
-      if (!empresas.length) { list.innerHTML = `<p style="color:var(--text3);font-size:0.78rem;padding:16px 0">Cadastre empresas primeiro.</p>`; return; }
+      document.getElementById('encEmpresasCount').textContent = `${empresas.length} empresa${empresas.length !== 1 ? 's':''}`;
+      listEmp.innerHTML = '';
+      
       empresas.forEach(emp => {
         const arr = enc[emp.id] || [], usadas = arr.length, full = usadas >= emp.vagas;
-        const div = document.createElement('div'); div.className = 'enc-empresa' + (full ? ' full' : ''); div.dataset.empid = emp.id;
-        const badge = `<span class="enc-emp-vagas ${full ? 'vb-full' : 'vb-ok'}">${usadas}/${emp.vagas} vagas</span>`;
+        const div = document.createElement('div'); div.className = 'enc-empresa' + (full ? ' full': ''); div.dataset.empid = emp.id;
+        const badge = `<span class="enc-emp-vagas ${full ? 'vb-full':'vb-ok'}">${usadas}/${emp.vagas} vagas</span>`;
         div.innerHTML = `<div class="enc-emp-header"><div class="enc-emp-name">${emp.name}</div>${badge}</div><div class="enc-drop-zone" id="dz-${emp.id}"></div>`;
 
-        // chips já encaminhados
         const dz = div.querySelector('.enc-drop-zone');
-        if (!arr.length) { const h = document.createElement('div'); h.className = 'drop-hint'; h.textContent = full ? 'vagas esgotadas' : 'solte aqui'; dz.appendChild(h); }
-        arr.forEach(aid => { const al = alunos.find(a => a.id === aid); if (al) dz.appendChild(makeChip(al, emp.id)); });
-
-        // drag events
-        div.addEventListener('dragover', e => {
-          if (!dragId) return;
-          // permitir drop se há vaga OU se o aluno já estava em outra empresa (mover = libera vaga)
-          const enc2 = S.get('est_enc', {});
-          const already = (enc2[emp.id] || []).includes(dragId);
-          const wouldFree = Object.keys(enc2).some(k => k !== emp.id && (enc2[k] || []).includes(dragId));
-          const effectiveFull = full && !wouldFree && !already;
-          if (effectiveFull) return;
-          e.preventDefault(); div.classList.add('drag-over');
-        });
-        div.addEventListener('dragleave', e => { if (!div.contains(e.relatedTarget)) div.classList.remove('drag-over'); });
-        div.addEventListener('drop', e => {
-          e.preventDefault(); div.classList.remove('drag-over');
-          if (!dragId) return;
-          const enc2 = S.get('est_enc', {});
-          const a2 = enc2[emp.id] || [];
-          if (a2.length >= emp.vagas) { alert(`Vagas esgotadas em "${emp.name}".`); return; }
-          if (a2.includes(dragId)) return;
-          // remove de outra empresa se estava
-          Object.keys(enc2).forEach(k => { enc2[k] = (enc2[k] || []).filter(i => i !== dragId); });
-          a2.push(dragId); enc2[emp.id] = a2; S.set('est_enc', enc2);
-          renderEnc();
+        if (!arr.length) { 
+          const h = document.createElement('div'); h.className = 'drop-hint'; 
+          h.textContent = isViewer ? 'vazio' : (full ? 'vagas esgotadas' : 'solte aqui'); 
+          dz.appendChild(h); 
+        }
+        arr.forEach(aid => { 
+          const al = alunos.find(a => a.id === aid); 
+          if (al) {
+            const chip = makeChip(al, emp.id);
+            if (isViewer) {
+              chip.draggable = false;
+              chip.style.cursor = 'default';
+              const xBtn = chip.querySelector('.chip-x');
+              if (xBtn) xBtn.remove();
+              const hint = chip.querySelector('.chip-drag-hint');
+              if (hint) hint.remove();
+            }
+            dz.appendChild(chip); 
+          }
         });
 
-        list.appendChild(div);
+        if (!isViewer) {
+          div.addEventListener('dragover', e => {
+            if (!dragId) return;
+            const enc2 = S.get('est_enc', {});
+            const already = (enc2[emp.id] || []).includes(dragId);
+            const wouldFree = Object.keys(enc2).some(k => k !== emp.id && (enc2[k] || []).includes(dragId));
+            const effectiveFull = full && !wouldFree && !already;
+            if (effectiveFull) return;
+            e.preventDefault(); div.classList.add('drag-over');
+          });
+          div.addEventListener('dragleave', e => { if (!div.contains(e.relatedTarget)) div.classList.remove('drag-over'); });
+          div.addEventListener('drop', e => {
+            e.preventDefault(); div.classList.remove('drag-over');
+            if (!dragId) return;
+            const enc2 = S.get('est_enc', {});
+            const a2 = enc2[emp.id] || [];
+            if (a2.length >= emp.vagas) { alert(`Vagas esgotadas em "${emp.name}".`); return; }
+            if (a2.includes(dragId)) return;
+            Object.keys(enc2).forEach(k => { enc2[k] = (enc2[k] || []).filter(i => i !== dragId); });
+            a2.push(dragId); enc2[emp.id] = a2; S.set('est_enc', enc2);
+            renderEnc();
+          });
+        }
+        listEmp.appendChild(div);
       });
     }
 
@@ -3299,40 +3566,21 @@
     }
 
     function removerEnc(alunoId, empId) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const enc = S.get('est_enc', {});
       enc[empId] = (enc[empId] || []).filter(i => i !== alunoId);
       S.set('est_enc', enc); renderEnc();
     }
 
-    function exportarEncaminhamento() {
-      const enc = S.get('est_enc', {});
-      const rows = [['Empresa', 'Vagas', 'Aluno', 'Anotações']];
-      empresas.forEach(emp => {
-        const arr = enc[emp.id] || [];
-        if (!arr.length) { rows.push([emp.name, emp.vagas, '—', '']); return; }
-        arr.forEach(aid => { const al = alunos.find(a => a.id === aid); rows.push([emp.name, emp.vagas, al ? al.name : '(removido)', al ? al.curso || '' : '']); });
-      });
-      csvDown(rows, 'encaminhamentos.csv');
-    }
-
-    /* ══════════════════════════
-       CARGA HORÁRIA
-    ══════════════════════════ */
+    /* ── CARGA HORÁRIA ── */
     let cargaFiltro = 'todos';
 
     function setCargaFiltro(f, btn) {
       cargaFiltro = f;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#page-carga .filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderCarga();
     }
-
-    function fmtDate(d) {
-      if (!d) return '—';
-      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    }
-
-    /* statusAluno definido em renderCarga */
 
     const MESES_CARGA = [
       { key: 'ago', label: 'AGO', year: 2026, month: 8 },
@@ -3343,12 +3591,10 @@
       { key: 'jan', label: 'JAN', year: 2027, month: 1 },
     ];
 
-    // Retorna horas do aluno num mês específico (manual se existir, senão 0)
     function horasMes(al, key) {
       return Number((al.carga || {})['h_' + key] || 0);
     }
 
-    // Total acumulado das horas manuais de todos os meses
     function totalHorasManual(al) {
       return MESES_CARGA.reduce((s, m) => s + horasMes(al, m.key), 0);
     }
@@ -3374,20 +3620,16 @@
       const meta = Number(ch.meta || 300);
       const inicio = new Date((ch.inicio || '2026-08-10') + 'T00:00:00');
 
-      // Horas diárias da empresa encaminhada (para extrapolação)
       const emp = getEmpresaDoAluno(al.id);
       const hEmpresa = emp ? calcHorasDia(emp) : 0;
 
-      if (!hEmpresa) return null; // sem empresa/horário não calcula
+      if (!hEmpresa) return null;
 
-      // TODOS os dias marcados no calendário >= início, ordenados
-      // Cada dia vale hEmpresa horas (carga diária da empresa)
       const diasCal = Object.keys(calState)
         .map(k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); })
         .filter(data => data >= inicio)
         .sort((a, b) => a - b);
 
-      // Percorre os dias do calendário somando hEmpresa por dia até atingir a meta
       let acumulado = 0;
       for (const data of diasCal) {
         acumulado += hEmpresa;
@@ -3396,7 +3638,6 @@
         }
       }
 
-      // Calendário não tem dias suficientes — extrapola a partir do último dia marcado
       const ultimaRef = diasCal.length > 0
         ? new Date(diasCal[diasCal.length - 1])
         : new Date(inicio);
@@ -3414,6 +3655,7 @@
     }
 
     function salvarInicioAluno(alunoId, valor) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const al = alunos.find(a => a.id === alunoId); if (!al) return;
       if (!al.carga) al.carga = {};
       al.carga.inicio = valor;
@@ -3422,17 +3664,15 @@
     }
 
     function salvarHoraMes(alunoId, mesKey, valor) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const al = alunos.find(a => a.id === alunoId); if (!al) return;
       if (!al.carga) al.carga = {};
       const v = parseFloat(valor);
       if (isNaN(v) || v < 0) al.carga['h_' + mesKey] = 0;
       else al.carga['h_' + mesKey] = v;
       saveAlunos();
-      // atualiza apenas as células de resumo da linha sem re-renderizar tudo
       atualizarLinhaResumo(alunoId);
     }
-
-    /* salvarConfirmacaoMes removido — funcionalidade de confirmação mensal descontinuada */
 
     function atualizarLinhaResumo(alunoId) {
       const al = alunos.find(a => a.id === alunoId); if (!al) return;
@@ -3442,7 +3682,6 @@
       const restam = Math.max(0, meta - feitas);
       const pct = Math.min(100, Math.round((feitas / meta) * 100));
       const st = statusAluno(al);
-      const prev = previsaoEncerramento(al);
 
       const pfClass = pct >= 100 ? 'pf-concluido' : pct >= 60 ? 'pf-ok' : pct >= 30 ? 'pf-meio' : 'pf-baixo';
       const sbClass = st === 'concluido' ? 'sb-concluido' : st === 'andamento' ? 'sb-andamento' : 'sb-pendente';
@@ -3461,20 +3700,20 @@
           const ch2 = (al2?.carga) || {};
           let ps = '<span class="prev-value pendente">—</span>';
           if (prev2) {
-            if (prev2.concluido) ps = '<span class="prev-value ok">✓ concluído</span>';
-            else ps = `<span class="prev-value ok">${prev2.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev2.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>' : ''}`;
+            ps = `<span class="prev-value ok">${prev2.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev2.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>' : ''}`;
           }
           const iv = (ch2.inicio || '2026-08-10');
-          c.innerHTML = `<div class="ini-prev-cell"><div><div class="ini-label">INÍCIO</div><input type="date" class="ini-date-input" value="${iv}" onchange="salvarInicioAluno('${alunoId}',this.value)"></div><div><div class="ini-label">PREVISÃO</div><div style="display:flex;flex-direction:column;gap:1px">${ps}</div></div></div>`;
+          const isViewer = currentUser && currentUser.tipo === 'visualizador';
+          c.innerHTML = `<div class="ini-prev-cell"><div><div class="ini-label">INÍCIO</div><input type="date" class="ini-date-input" value="${iv}" ${isViewer ? 'disabled':''} onchange="salvarInicioAluno('${alunoId}',this.value)"></div><div><div class="ini-label">PREVISÃO</div><div style="display:flex;flex-direction:column;gap:1px">${ps}</div></div></div>`;
         }
         if (k === 'status') c.innerHTML = `<span class="status-badge ${sbClass}">${sbLabel}</span>`;
       });
-      // atualizar summary
       renderCargaSummary();
     }
 
     function renderCargaSummary() {
       const summary = document.getElementById('cargaSummary');
+      if (!summary) return;
       const total = alunos.length;
       const concluidos = alunos.filter(a => statusAluno(a) === 'concluido').length;
       const andamento = alunos.filter(a => statusAluno(a) === 'andamento').length;
@@ -3488,19 +3727,19 @@
     }
 
     function renderCarga() {
-      const q = (document.getElementById('searchCarga').value || '').toLowerCase();
+      const q = (document.getElementById('searchCarga')?.value || '').toLowerCase();
       let lista = alunos.filter(a => a.name.toLowerCase().includes(q));
       if (cargaFiltro !== 'todos') lista = lista.filter(a => statusAluno(a) === cargaFiltro);
 
       renderCargaSummary();
 
       const container = document.getElementById('cargaTablesContainer');
+      if (!container) return;
       if (!lista.length) {
         container.innerHTML = `<div class="carga-table-wrap"><table class="carga-table"><tr><td style="text-align:center;padding:40px;color:var(--text3);font-size:0.84rem">Nenhum aluno encontrado.</td></tr></table></div>`;
         return;
       }
 
-      // Agrupa alunos por curso
       const grupos = [
         { key: 'Informática', label: 'Informática', badgeClass: 'curso-info', list: lista.filter(a => a.curso === 'Informática') },
         { key: 'Dev. Sistemas', label: 'Desenvolvimento de Sistemas', badgeClass: 'curso-dev', list: lista.filter(a => a.curso === 'Dev. Sistemas') },
@@ -3508,6 +3747,7 @@
       ];
 
       container.innerHTML = '';
+      const isViewer = currentUser && currentUser.tipo === 'visualizador';
 
       grupos.forEach(grupo => {
         if (grupo.list.length === 0) return;
@@ -3519,7 +3759,7 @@
         section.innerHTML = `
           <h3 style="font-family:'DM Serif Display', serif; font-size:1.2rem; font-weight:400; margin-bottom:12px; display:flex; align-items:center; gap:10px;">
             <span class="curso-tag ${grupo.badgeClass}" style="font-size: 0.72rem; padding: 3px 10px; border-radius: 6px;">${grupo.label}</span>
-            <span style="font-size:0.7rem; color:var(--text3); font-family:'DM Mono', monospace; font-weight:400;">(${grupo.list.length} aluno${grupo.list.length !== 1 ? 's' : ''})</span>
+            <span style="font-size:0.7rem; color:var(--text3); font-family:'DM Mono', monospace; font-weight:400;">(${grupo.list.length} aluno${grupo.list.length !== 1 ? 's':''})</span>
           </h3>
           <div class="carga-table-wrap" style="margin-bottom:0;">
             <table class="carga-table">
@@ -3545,7 +3785,6 @@
         `;
 
         container.appendChild(section);
-
         const tbody = section.querySelector('tbody');
 
         grupo.list.forEach(al => {
@@ -3563,15 +3802,16 @@
 
           let prevStr = '<span class="prev-value pendente">—</span>';
           if (prev) {
-            if (prev.concluido) prevStr = `<span class="prev-value ok">✓ concluído</span>`;
-            else prevStr = `<span class="prev-value ok">${prev.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>' : ''}`;
+            prevStr = `<span class="prev-value ok">${prev.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>${prev.extrapolado ? '<span style="font-size:0.6rem;color:var(--text3);font-family:DM Mono,monospace"> estimado</span>':''}`;
           }
+          
           const iniVal = (ch.inicio || '2026-08-10');
           const prevHtml = `<div class="ini-prev-cell">
             <div>
               <div class="ini-label">INÍCIO</div>
               <input type="date" class="ini-date-input" value="${iniVal}"
                 onchange="salvarInicioAluno('${al.id}',this.value)"
+                ${isViewer ? 'disabled':''}
                 title="Data de início do estágio">
             </div>
             <div>
@@ -3587,16 +3827,16 @@
           const tr = document.createElement('tr');
           tr.id = 'carga-row-' + al.id;
 
-          // células dos meses
           const mesCells = MESES_CARGA.map(m => {
             const hVal = horasMes(al, m.key);
             const temH = hVal > 0;
             return `<td class="mes-cell">
               <div class="mes-input-wrap">
-                <input type="number" class="mes-horas-input ${temH ? 'tem-horas' : ''}"
+                <input type="number" class="mes-horas-input ${temH ? 'tem-horas':''}"
                   value="${temH ? hVal : ''}"
                   placeholder="—"
                   min="0" max="999" step="0.5"
+                  ${isViewer ? 'disabled':''}
                   onchange="salvarHoraMes('${al.id}','${m.key}',this.value);this.classList.toggle('tem-horas',parseFloat(this.value)>0)"
                   title="Horas de ${m.label}">
               </div>
@@ -3607,7 +3847,7 @@
             <td style="white-space:nowrap">${ph}<span style="font-weight:500">${al.name}</span></td>
             ${mesCells}
             <td data-resume="total"><span class="total-cell">${fmtH(feitas)}<span class="tc-sub">de ${meta}h</span></span></td>
-            <td data-resume="restam"><span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:${restam === 0 ? 'var(--accent2)' : 'var(--text2)'}">${restam === 0 ? '—' : fmtH(restam)}</span></td>
+            <td data-resume="restam"><span style="font-family:'DM Mono',monospace;font-size:0.8rem;color:${restam === 0 ? 'var(--accent2)':'var(--text2)'}">${restam === 0 ? '—' : fmtH(restam)}</span></td>
             <td data-resume="prog"><div class="prog-bar-wrap"><div class="prog-bar"><div class="prog-fill ${pfClass}" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div></td>
             <td data-resume="prev">${prevHtml}</td>
             <td data-resume="status"><span class="status-badge ${sbClass}">${sbLabel}</span></td>`;
@@ -3618,6 +3858,7 @@
 
     let editCargaId = null;
     function abrirModalCarga(id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const al = alunos.find(a => a.id === id); if (!al) return;
       editCargaId = id;
       document.getElementById('modalCargaNome').textContent = al.name;
@@ -3628,6 +3869,7 @@
     }
     function fecharModalCarga() { document.getElementById('modalCarga').classList.remove('open'); editCargaId = null; }
     function salvarCarga() {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
       const al = alunos.find(a => a.id === editCargaId); if (!al) return;
       al.carga = {
         ...(al.carga || {}),
@@ -3637,36 +3879,11 @@
       saveAlunos(); fecharModalCarga(); renderCarga();
     }
 
-    function exportarCarga() {
-      const cabMeses = MESES_CARGA.map(m => `${m.label} (h)`);
-      const rows = [['Aluno', 'Início', ...cabMeses, 'Total (h)', 'Meta (h)', 'Restam (h)', 'Progresso (%)', 'Previsão Encerramento', 'Status']];
-      alunos.forEach(al => {
-        const ch = al.carga || {};
-        const meta = Number(ch.meta || 300);
-        const feitas = totalHorasManual(al);
-        const restam = Math.max(0, meta - feitas);
-        const pct = Math.min(100, Math.round((feitas / meta) * 100));
-        const prev = previsaoEncerramento(al);
-        const st = statusAluno(al);
-        let prevStr = '—';
-        if (prev) prevStr = prev.concluido ? 'Concluído' : prev.data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        const hMeses = MESES_CARGA.map(m => horasMes(al, m.key) || '');
-        const inicio = ch.inicio || '2026-08-10';
-        rows.push([al.name, inicio, ...hMeses, feitas, meta, restam, pct + '%', prevStr, st]);
-      });
-      csvDown(rows, 'carga-horaria.csv');
-    }
-
-
-    /* ══════════════════════════
-       DASHBOARD HOME
-    ══════════════════════════ */
+    /* ── DASHBOARD HOME ── */
     function renderDashboard() {
       const enc = S.get('est_enc', {});
       const encIds = new Set(Object.values(enc).flat());
-      const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
 
-      // ── Métricas gerais ──────────────────────────────────────────
       const totalAlunos = alunos.length;
       const totalEmpresas = empresas.length;
       const totalVagas = empresas.reduce((s, e) => s + (e.vagas || 1), 0);
@@ -3675,20 +3892,15 @@
       const vagasOcupadas = Object.values(enc).reduce((s, arr) => s + arr.length, 0);
       const vagasLivres = totalEmpresas ? empresas.reduce((s, e) => s + Math.max(0, (e.vagas || 1) - (enc[e.id] || []).length), 0) : 0;
 
-      // Carga horária
       const concluidos = alunos.filter(a => statusAluno(a) === 'concluido').length;
       const emAndamento = alunos.filter(a => statusAluno(a) === 'andamento').length;
       const semHoras = alunos.filter(a => statusAluno(a) === 'pendente').length;
       const totalH = alunos.reduce((s, a) => s + totalHorasManual(a), 0);
 
-      // ── Alunos críticos ──────────────────────────────────────────
-      // Crítico = encaminhado com empresa + empresa tem data fim + previsão > data fim
-      // OU encaminhado mas a previsão extrapola o calendário (não tem dias suficientes)
       const criticos = [];
       alunos.forEach(al => {
         const emp = getEmpresaDoAluno(al.id);
         if (!emp) {
-          // sem empresa = atenção
           if (totalHorasManual(al) > 0) {
             criticos.push({ al, emp: null, motivo: 'sem-empresa', prevData: null });
           }
@@ -3697,9 +3909,7 @@
         const prev = previsaoEncerramento(al);
         if (!prev || prev.concluido) return;
 
-        // Pega data fim do encaminhamento (campo 'fim' no encState)
-        // Como não temos data fim no estado atual, usamos 31/01/2027 como fim padrão do período
-        const fimPeriodo = new Date(2027, 0, 31); // 31 Jan 2027
+        const fimPeriodo = new Date(2027, 0, 31);
         if (prev.data > fimPeriodo) {
           const diasAtraso = Math.round((prev.data - fimPeriodo) / (1000 * 60 * 60 * 24));
           criticos.push({ al, emp, motivo: 'atraso', prevData: prev.data, diasAtraso, extrapolado: prev.extrapolado });
@@ -3711,7 +3921,6 @@
         return b.prevData - a.prevData;
       });
 
-      // ── KPI Cards ───────────────────────────────────────────────
       const kpis = [
         { icon: '👤', value: totalAlunos, label: 'Total de Alunos', sub: `${encaminhados} encaminhados · ${semEmpresa} sem empresa`, cls: 'kpi-blue', page: 'alunos' },
         { icon: '🏢', value: totalEmpresas, label: 'Empresas Parceiras', sub: `${totalVagas} vagas · ${vagasLivres} disponíveis`, cls: 'kpi-orange', page: 'empresas' },
@@ -3722,67 +3931,69 @@
       ];
 
       const kpiGrid = document.getElementById('dashKpis');
-      kpiGrid.innerHTML = '';
-      kpis.forEach(k => {
-        const card = document.createElement('div');
-        card.className = `kpi-card ${k.cls}`;
-        card.onclick = () => showPage(k.page);
-        card.innerHTML = `
-      <span class="kpi-icon">${k.icon}</span>
-      <div class="kpi-value">${k.value}</div>
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-sub">${k.sub}</div>`;
-        kpiGrid.appendChild(card);
-      });
-
-      // ── Críticos ─────────────────────────────────────────────────
-      const title = document.getElementById('dash-criticos-title');
-      const grid = document.getElementById('dashCriticos');
-
-      if (criticos.length === 0) {
-        title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">✓ nenhum no momento</span>`;
-        grid.innerHTML = `<div class="dash-empty"><div class="ei">✅</div><p>Todos os alunos encaminhados estão dentro do prazo.</p></div>`;
-      } else {
-        title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--danger);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">${criticos.length} aluno${criticos.length !== 1 ? 's' : ''}</span>`;
-        grid.innerHTML = '';
-        criticos.forEach(({ al, emp, motivo, prevData, diasAtraso, extrapolado }) => {
-          const feitas = totalHorasManual(al);
-          const meta = Number((al.carga || {}).meta || 300);
-          const pct = Math.min(100, Math.round((feitas / meta) * 100));
-          const pfCls = pct >= 60 ? '#5b8af0' : pct >= 30 ? '#f0a05b' : '#ef4444';
-          const ph = al.photo
-            ? `<img class="critico-photo" src="${al.photo}" alt="">`
-            : `<div class="critico-avatar">👤</div>`;
-          const cursoB = al.curso === 'Informática'
-            ? `<span class="critico-badge" style="background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3)">Informática</span>`
-            : al.curso === 'Dev. Sistemas'
-              ? `<span class="critico-badge" style="background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3)">Dev. Sistemas</span>`
-              : '';
-          const prevStr = prevData ? prevData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
-          const badge = motivo === 'atraso'
-            ? `<span class="critico-badge cb-red">conclusão: ${prevStr}</span>${diasAtraso ? `<span class="critico-badge cb-orange">${diasAtraso}d de atraso</span>` : ''}`
-            : `<span class="critico-badge cb-gray">sem empresa</span>`;
-          const empNome = emp ? emp.name : '—';
-
+      if (kpiGrid) {
+        kpiGrid.innerHTML = '';
+        kpis.forEach(k => {
           const card = document.createElement('div');
-          card.className = 'critico-card';
-          card.onclick = () => showPage('carga');
+          card.className = `kpi-card ${k.cls}`;
+          card.onclick = () => showPage(k.page);
           card.innerHTML = `
-        ${ph}
-        <div class="critico-info">
-          <div class="critico-nome">${al.name}</div>
-          <div class="critico-empresa">${empNome}</div>
-          <div class="mini-prog">
-            <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${pfCls}"></div></div>
-            <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3)">${pct}%</span>
-          </div>
-          <div class="critico-badges" style="margin-top:5px">${cursoB}${badge}</div>
-        </div>`;
-          grid.appendChild(card);
+        <span class="kpi-icon">${k.icon}</span>
+        <div class="kpi-value">${k.value}</div>
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-sub">${k.sub}</div>`;
+          kpiGrid.appendChild(card);
         });
       }
 
-      // Timestamp
+      const title = document.getElementById('dash-criticos-title');
+      const grid = document.getElementById('dashCriticos');
+
+      if (grid) {
+        if (criticos.length === 0) {
+          if (title) title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--accent2);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">✓ nenhum no momento</span>`;
+          grid.innerHTML = `<div class="dash-empty"><div class="ei">✅</div><p>Todos os alunos encaminhados estão dentro do prazo.</p></div>`;
+        } else {
+          if (title) title.innerHTML = `Alunos em Situação Crítica <span style="font-size:0.7rem;color:var(--danger);font-family:'DM Mono',monospace;font-weight:400;text-transform:none;letter-spacing:0">${criticos.length} aluno${criticos.length !== 1 ? 's':''}</span>`;
+          grid.innerHTML = '';
+          criticos.forEach(({ al, emp, motivo, prevData, diasAtraso }) => {
+            const feitas = totalHorasManual(al);
+            const meta = Number((al.carga || {}).meta || 300);
+            const pct = Math.min(100, Math.round((feitas / meta) * 100));
+            const pfCls = pct >= 60 ? '#5b8af0' : pct >= 30 ? '#f0a05b' : '#ef4444';
+            const ph = al.photo
+              ? `<img class="critico-photo" src="${al.photo}" alt="">`
+              : `<div class="critico-avatar">👤</div>`;
+            const cursoB = al.curso === 'Informática'
+              ? `<span class="critico-badge" style="background:rgba(91,138,240,0.15);color:var(--accent);border:1px solid rgba(91,138,240,0.3)">Informática</span>`
+              : al.curso === 'Dev. Sistemas'
+                ? `<span class="critico-badge" style="background:rgba(125,211,192,0.15);color:var(--accent2);border:1px solid rgba(125,211,192,0.3)">Dev. Sistemas</span>`
+                : '';
+            const prevStr = prevData ? prevData.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+            const badge = motivo === 'atraso'
+              ? `<span class="critico-badge cb-red">conclusão: ${prevStr}</span>${diasAtraso ? `<span class="critico-badge cb-orange">${diasAtraso}d de atraso</span>` : ''}`
+              : `<span class="critico-badge cb-gray">sem empresa</span>`;
+            const empNome = emp ? emp.name : '—';
+
+            const card = document.createElement('div');
+            card.className = 'critico-card';
+            card.onclick = () => showPage('carga');
+            card.innerHTML = `
+          ${ph}
+          <div class="critico-info">
+            <div class="critico-nome">${al.name}</div>
+            <div class="critico-empresa">${empNome}</div>
+            <div class="mini-prog">
+              <div class="mini-bar"><div class="mini-fill" style="width:${pct}%;background:${pfCls}"></div></div>
+              <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text3)">${pct}%</span>
+            </div>
+            <div class="critico-badges" style="margin-top:5px">${cursoB}${badge}</div>
+          </div>`;
+            grid.appendChild(card);
+          });
+        }
+      }
+
       const upd = document.getElementById('dash-updated');
       if (upd) upd.textContent = `Atualizado às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
     }
@@ -3793,24 +4004,20 @@
       document.getElementById('confirmTitle').textContent = title;
       document.getElementById('confirmMsg').textContent = msg;
       _confirmCb = cb;
-      document.getElementById('confirmBtn').onclick = () => { if (_confirmCb) _confirmCb(); fecharConfirm(); };
       document.getElementById('modalConfirm').classList.add('open');
     }
-    function fecharConfirm() { document.getElementById('modalConfirm').classList.remove('open'); _confirmCb = null; }
+    function fecharConfirm() { document.getElementById('modalConfirm').classList.remove('open'); }
 
     function exportarPDF(modulo) {
-      // Remove print-active de todas as páginas
       document.querySelectorAll('.page').forEach(p => p.classList.remove('print-active'));
       const pageId = modulo === 'horas' ? 'page-horas' : modulo === 'alunos' ? 'page-alunos' : 'page-carga';
       const el = document.getElementById(pageId);
       if (!el) return;
       el.classList.add('print-active');
-      // Garante que a página está visível para impressão
       const wasActive = el.classList.contains('active');
       el.classList.add('active');
       setTimeout(() => {
         window.print();
-        // Restaura estado
         setTimeout(() => {
           el.classList.remove('print-active');
           if (!wasActive) el.classList.remove('active');
@@ -3818,49 +4025,28 @@
       }, 150);
     }
 
-    function csvDown(rows, filename) {
-      const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
-      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); URL.revokeObjectURL(url);
-    }
-
-    // fechar modais clicando fora
     ['modalEmpresas', 'modalEditEmpresa', 'modalConfirm', 'modalCarga'].forEach(id => {
-      document.getElementById(id).addEventListener('click', function (e) { if (e.target === this) this.classList.remove('open'); });
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.addEventListener('click', function (e) { if (e.target === this) this.classList.remove('open'); });
+      }
     });
 
-    // Inicializa carregando dados do servidor antes de renderizar
-    initStorage().then(() => {
-      // Carregar dados do cache (preenchido pelo initStorage)
-      calState = S.get('est_cal', {});
-      alunos = S.get('est_alunos', []);
-      empresas = S.get('est_emp', []);
+    // Ponto de entrada inicial
+    if (checkAuth()) {
+      initStorage().then(() => {
+        calState = S.get('est_cal', {});
+        alunos = S.get('est_alunos', []);
+        empresas = S.get('est_emp', []);
 
-      buildCal();
-      renderAlunos();
-      renderEmpresas();
-      renderDashboard();
+        buildCal();
+        renderAlunos();
+        renderEmpresas();
+        renderDashboard();
+      });
+    }
+  
 
-      // Indicador de conexão com servidor
-      fetch('/api/status')
-        .then(r => r.json())
-        .then(j => {
-          if (!j.ok) return;
-          const bar = document.createElement('div');
-          bar.style.cssText = [
-            'position:fixed', 'bottom:20px', 'left:20px', 'z-index:9999',
-            'background:#1f2435', 'border:1px solid #2a3045', 'color:#7dd3c0',
-            "font-family:'DM Mono',monospace", 'font-size:0.7rem',
-            'padding:7px 13px', 'border-radius:8px', 'opacity:0.9', 'transition:opacity 0.5s'
-          ].join(';');
-          bar.textContent = '✓ servidor local conectado';
-          document.body.appendChild(bar);
-          setTimeout(() => { bar.style.opacity = '0'; }, 3000);
-          setTimeout(() => { bar.remove(); }, 3600);
-        }).catch(() => { });
-    });
-  </script>
+</script>
 </body>
-
 </html>
