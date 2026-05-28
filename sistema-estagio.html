@@ -3451,21 +3451,56 @@
       grid.innerHTML = '';
       const isViewer = currentUser && currentUser.tipo === 'visualizador';
       const enc = S.get('est_enc', {});
+      if (!fil.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="ei">🏢</div><p>Nenhuma empresa encontrada.</p></div>`;
+        return;
+      }
+
       fil.forEach(emp => {
         const usadas = (enc[emp.id] || []).length;
-        const div = document.createElement('div'); div.className = 'empresa-card';
-        div.innerHTML = `<div>${emp.name}</div><div>${usadas}/${emp.vagas} vagas</div>`;
+        const full = usadas >= emp.vagas;
+        const div = document.createElement('div');
+        div.className = 'empresa-card';
+        
+        let btnsHtml = '';
         if (!isViewer) {
-          const btnEdit = document.createElement('button'); btnEdit.textContent = '✎'; btnEdit.onclick = () => editarEmpresa(emp.id);
-          div.appendChild(btnEdit);
+          btnsHtml = `
+            <div class="empresa-btns" style="margin-top: 12px;">
+              <button class="btn-emp edit" onclick="editarEmpresa('${emp.id}')">✎ editar</button>
+              <button class="btn-emp del" onclick="confirmarDeletarEmpresa('${emp.id}')">✕ excluir</button>
+            </div>
+          `;
         }
+
+        div.innerHTML = `
+          <div class="empresa-top">
+            <div class="empresa-name">${emp.name}</div>
+            <div class="empresa-vagas ${full ? 'vagas-full' : 'vagas-ok'}">${usadas}/${emp.vagas} vagas</div>
+          </div>
+          ${btnsHtml}
+        `;
         grid.appendChild(div);
       });
     }
 
-    function delEmpresa(id) {
+    function confirmarDeletarEmpresa(id) {
       if (currentUser && currentUser.tipo === 'visualizador') return;
-      empresas = empresas.filter(e => e.id !== id); saveEmpresas(); renderEmpresas();
+      const emp = empresas.find(e => e.id === id);
+      if (!emp) return;
+      
+      openConfirm('Remover empresa', `Tem certeza que deseja remover a empresa "${emp.name}"? Os encaminhamentos desta empresa serão desfeitos.`, () => {
+        // Remove encaminhamentos da empresa
+        const enc = S.get('est_enc', {});
+        delete enc[id];
+        S.set('est_enc', enc);
+        
+        // Remove a empresa da lista global e salva
+        empresas = empresas.filter(e => e.id !== id);
+        saveEmpresas();
+        
+        // Rerenderiza a visualização
+        renderEmpresas();
+      });
     }
 
     /* ── ENCAMINHAMENTO ── */
@@ -4054,6 +4089,15 @@
       document.getElementById('modalConfirm').classList.add('open');
     }
     function fecharConfirm() { document.getElementById('modalConfirm').classList.remove('open'); }
+    
+    // Configura o evento do botão de confirmação genérico
+    const confirmBtn = document.getElementById('confirmBtn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => {
+        if (_confirmCb) _confirmCb();
+        fecharConfirm();
+      });
+    }
 
     function exportarPDF(modulo) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('print-active'));
