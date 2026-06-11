@@ -2387,6 +2387,7 @@
       <button class="nav-tab" onclick="showPage('empresas')" id="tab-empresas">🏢 Empresas</button>
       <button class="nav-tab" onclick="showPage('encaminhamento')" id="tab-encaminhamento">🔀 Encaminhamento</button>
       <button class="nav-tab" onclick="showPage('carga')" id="tab-carga">📊 Carga Horária</button>
+      <button class="nav-tab" onclick="window.open('/convocacao.html', '_blank')" id="tab-convocacao">⚽ Convocação</button>
       <button class="nav-tab" onclick="showPage('usuarios')" id="tab-usuarios" style="display: none;">⚙ Usuários</button>
     </div>
     <div id="user-profile" style="margin-left: auto; display: none; align-items: center; gap: 14px;">
@@ -2506,7 +2507,10 @@
         <h2><span>Encaminhamento</span></h2>
         <p>Arraste o aluno da esquerda e solte na empresa à direita</p>
       </div>
-      <button class="btn btn-secondary" onclick="exportarEncaminhamento()">↓ Exportar CSV</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-secondary" onclick="exportarEncaminhamento()">↓ Exportar CSV</button>
+        <button class="btn btn-primary" onclick="window.open('/convocacao.html', '_blank')" style="background: var(--accent2); color: var(--bg); font-weight: bold;">⚽ Convocação Oficial</button>
+      </div>
     </div>
     <div class="enc-layout">
       <div class="enc-col">

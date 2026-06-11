@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convocação Oficial — Estágios 2025</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@600;800&display=swap');
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --verde: #009c3b;
+      --verde-dark: #005c22;
+      --amarelo: #ffdf00;
+      --amarelo-dark: #ccb000;
+      --azul: #002776;
+      --azul-dark: #001744;
+      --branco: #ffffff;
+      --gold-gradient: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+      --silver-gradient: linear-gradient(135deg, #d3d3d3 0%, #ffffff 50%, #a9a9a9 100%);
+      --glass-bg: rgba(10, 25, 47, 0.75);
+      --glass-border: rgba(255, 223, 0, 0.25);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+      background: #020617;
+      color: var(--branco);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ─── BANNER DE PATROCÍNIOS (BACKDROP COLETIVA DE IMPRENSA) ─── */
+    .press-backdrop {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, #0b1f13 0%, #030a05 100%);
+      opacity: 0.95;
+      z-index: -2;
+    }
+
+    .press-logo-grid {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 20px;
+      padding: 40px;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .press-logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: #fff;
+      border: 1px solid #fff;
+      border-radius: 4px;
+      padding: 5px;
+      transform: rotate(-10deg);
+    }
+
+    /* ─── SETUP SCREEN (SALA DE IMPRENSA) ─── */
+    #setup-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      z-index: 10;
+      position: relative;
+    }
+
+    .setup-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .cbf-badge-main {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 15px rgba(255, 223, 0, 0.6));
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .setup-header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      background: linear-gradient(180deg, var(--branco) 30%, var(--amarelo) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+      line-height: 0.95;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .setup-header p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .setup-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 780px;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--glass-shadow);
+    }
+
+    .setup-card h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--amarelo);
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255, 223, 0, 0.2);
+      padding-bottom: 0.5rem;
+    }
+
+    .empresa-block {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .empresa-block:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 223, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .empresa-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .empresa-header input[type=text] {
+      flex: 1;
+      background: rgba(0, 39, 118, 0.2);
+      border: 1px solid rgba(255, 223, 0, 0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--amarelo);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 1.5px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .empresa-header input[type=text]:focus {
+      border-color: var(--amarelo);
+      background: rgba(0, 39, 118, 0.4);
+      box-shadow: 0 0 10px rgba(255, 223, 0, 0.2);
+    }
+
+    .btn-del-empresa {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-del-empresa:hover {
+      background: rgba(239, 68, 68, 0.35);
+      color: #ffffff;
+    }
+
+    .alunos-da-empresa {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .aluno-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .aluno-row input[type=text] {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 9px 13px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .aluno-row input[type=text]:focus {
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .photo-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(255, 223, 0, 0.08);
+      border: 1px dashed rgba(255, 223, 0, 0.4);
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      color: var(--amarelo);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .photo-label:hover {
+      background: rgba(255, 223, 0, 0.15);
+      border-color: var(--amarelo);
+    }
+
+    .photo-label.ok {
+      background: rgba(0, 156, 59, 0.15);
+      border-color: var(--verde);
+      color: #86efac;
+    }
+
+    .photo-label input {
+      display: none;
+    }
+
+    .btn-del-aluno {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-del-aluno:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: white;
+    }
+
+    .btn-add-aluno {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-add-aluno:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-add-empresa {
+      width: 100%;
+      max-width: 780px;
+      padding: 14px;
+      background: rgba(0, 156, 59, 0.1);
+      border: 1.5px dashed rgba(0, 156, 59, 0.4);
+      border-radius: 14px;
+      color: #86efac;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-add-empresa:hover {
+      background: rgba(0, 156, 59, 0.2);
+      border-color: var(--verde);
+      transform: translateY(-1px);
+    }
+
+    .btn-start {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 780px;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--verde), #004d1b);
+      border: 2px solid var(--amarelo);
+      border-radius: 14px;
+      color: var(--amarelo);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 24px rgba(0, 156, 59, 0.4);
+    }
+
+    .btn-start:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 156, 59, 0.6);
+      filter: brightness(1.1);
+    }
+
+    .btn-start:active {
+      transform: translateY(-1px);
+    }
+
+    /* ─── CAMPO TACTICAL VIEW (TELA DE APRESENTAÇÃO) ─── */
+    #field-screen {
+      display: none;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-bottom: 120px;
+      /* espacinho para a barra de noticias */
+    }
+
+    .field-bg {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.75)), url('estadio_bg.png') no-repeat center center/cover;
+      z-index: 0;
+    }
+
+    .field-lines {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    .field-lines svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .field-vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.8) 100%);
+    }
+
+    /* ─── CHYRON / BARRA DE TRANSMISSÃO DE TV ─── */
+    .tv-chyron {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #020617;
+      border-top: 3px solid var(--amarelo);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .chyron-badge {
+      background: linear-gradient(135deg, var(--amarelo) 0%, #ccb000 100%);
+      color: var(--azul-dark);
+      font-weight: 800;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .chyron-badge::after {
+      content: '';
+      position: absolute;
+      right: -15px;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-top: 60px solid var(--amarelo);
+      border-right: 15px solid transparent;
+    }
+
+    .chyron-ticker {
+      flex: 1;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 25px;
+    }
+
+    .ticker-text-wrapper {
+      display: inline-block;
+      white-space: nowrap;
+      animation: tickerLoop 35s linear infinite;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    @keyframes tickerLoop {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    .ticker-item {
+      display: inline-block;
+      margin-right: 50px;
+    }
+
+    .ticker-item span {
+      color: var(--amarelo);
+      margin-right: 10px;
+    }
+
+    /* ─── PLACAR DE TV (TV SCOREBOARD) ─── */
+    .tv-scoreboard {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      z-index: 100;
+      background: rgba(2, 6, 23, 0.95);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .score-cbf {
+      background: var(--azul);
+      padding: 8px 12px;
+      color: var(--amarelo);
+      font-weight: 800;
+      border-right: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .score-info {
+      padding: 8px 14px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .score-count {
+      background: var(--verde);
+      padding: 8px 12px;
+      color: #fff;
+      font-weight: 800;
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* ─── EMPRESA BANNER ─── */
+    .empresa-banner {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      text-align: center;
+      padding: 2.5rem 1rem 1rem;
+    }
+
+    .empresa-badge {
+      display: inline-block;
+      background: rgba(2, 6, 23, 0.85);
+      border: 2.5px solid var(--amarelo);
+      border-radius: 20px;
+      padding: 0.75rem 3rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .empresa-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 223, 0, 0.15), transparent);
+      transform: skewX(-30deg);
+      animation: shineReflect 4s infinite linear;
+    }
+
+    @keyframes shineReflect {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .empresa-badge .label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .empresa-badge .nome {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 3px;
+      line-height: 1.05;
+    }
+
+    .conveying-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--branco);
+      opacity: 0.6;
+      letter-spacing: 5px;
+      margin-top: 0.4rem;
+    }
+
+    /* ─── ÁREA DE FIGURINHAS (TACTICAL GRID) ─── */
+    .stickers-area {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 50px;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto 2rem;
+    }
+
+    /* ─── FIGURINHA PREMIUM (STICKER PANINI WORLD CUP) ─── */
+    .sticker-wrap {
+      width: 280px;
+      height: 390px;
+      perspective: 1500px;
+      cursor: pointer;
+      flex-shrink: 0;
+      border-radius: 20px;
+    }
+
+    .sticker-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      border-radius: 20px;
+    }
+
+    .sticker-inner.revealed {
+      transform: rotateY(0deg);
+    }
+
+    .sticker-inner.hidden-back {
+      transform: rotateY(180deg);
+    }
+
+    .sf,
+    .sb {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    /* VERSO DO CARD (BACKPACK) */
+    .sb {
+      transform: rotateY(180deg);
+      background: radial-gradient(circle at center, var(--azul) 0%, var(--azul-dark) 100%);
+      border: 3px solid var(--amarelo);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .sb-cbf-crest {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 8px rgba(255, 223, 0, 0.4));
+    }
+
+    .sb-text {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--amarelo);
+      font-size: 0.95rem;
+      letter-spacing: 1.5px;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .sb-stars {
+      color: var(--amarelo);
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      margin-top: 6px;
+    }
+
+    /* FRENTE DO CARD (FIGURINHA REVELADA) */
+    .sf {
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-dark) 60%, var(--azul-dark) 100%);
+      border: 3px solid transparent;
+      border-image: var(--gold-gradient) 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .sticker-hologram {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(125deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.15) 30%,
+          rgba(255, 223, 0, 0.2) 45%,
+          rgba(0, 156, 59, 0.2) 55%,
+          rgba(0, 39, 118, 0.15) 70%,
+          rgba(255, 255, 255, 0) 100%);
+      background-size: 200% 200%;
+      background-position: 0% 0%;
+      pointer-events: none;
+      mix-blend-mode: color-dodge;
+      opacity: 0.5;
+      z-index: 5;
+      transition: opacity 0.3s ease;
+    }
+
+    .sf-top {
+      background: var(--amarelo);
+      padding: 4px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    .sf-serie {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.6rem;
+      color: var(--azul-dark);
+      letter-spacing: 1px;
+      font-weight: bold;
+    }
+
+    .sf-stars-row {
+      color: var(--azul-dark);
+      font-size: 0.45rem;
+    }
+
+    .sf-flag {
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    .sf-photo {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #112e13 0%, #030c04 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sf-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .sf-photo .jersey-svg {
+      width: 90%;
+      height: 90%;
+      display: block;
+    }
+
+    .sf-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.6) 60%, transparent 100%);
+      padding: 35px 12px 10px;
+      text-align: center;
+    }
+
+    .sf-name {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #fff;
+      font-size: 1.7rem;
+      letter-spacing: 2.2px;
+      line-height: 1.1;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .sf-lbl {
+      font-size: 0.65rem;
+      color: var(--amarelo);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .sf-empresa-mini {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--branco);
+      font-size: 1.15rem;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    /* FOOTER STATS DO CARD */
+    .sf-bot {
+      background: var(--azul);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    .sf-pos {
+      font-family: 'Bebas Neue', sans-serif;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+
+    .sf-num {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--amarelo);
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .sf-stats {
+      display: flex;
+      gap: 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .sf-stats span strong {
+      color: var(--amarelo);
+    }
+
+    /* ─── ANIMAÇÃO ENTRADA STICKER ─── */
+    @keyframes dropIn {
+      from {
+        transform: translateY(-80px) scale(0.6);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .sticker-wrap.entering {
+      animation: dropIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    /* ─── BOTÕES DO CAMPO ─── */
+    .field-actions {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .btn-convocar {
+      padding: 18px 60px;
+      background: linear-gradient(135deg, var(--amarelo) 0%, #d89600 100%);
+      border: 2.5px solid var(--branco);
+      border-radius: 50px;
+      color: var(--azul-dark);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 4px;
+      cursor: pointer;
+      box-shadow: 0 0 35px rgba(255, 223, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .btn-convocar:hover:not(:disabled) {
+      transform: scale(1.06);
+      box-shadow: 0 0 45px rgba(255, 223, 0, 0.7), 0 10px 25px rgba(0, 0, 0, 0.6);
+      filter: brightness(1.1);
+    }
+
+    .btn-convocar:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    .btn-convocar:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-prox-empresa {
+      padding: 14px 44px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-prox-empresa:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--amarelo);
+      color: var(--amarelo);
+    }
+
+    /* Botão de Mute Música */
+    .btn-mute-music {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      z-index: 100;
+      background: rgba(2, 6, 23, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #fff;
+      padding: 8px 14px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-mute-music:hover {
+      border-color: var(--amarelo);
+      color: var(--amarelo);
+    }
+
+    /* ─── PACOTE DE FIGURINHAS REALÍSTICO (ANIMADO) ─── */
+    .pack-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.9);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .pack-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .pack-container {
+      position: relative;
+      width: 280px;
+      height: 390px;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .pack-wrapper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background: linear-gradient(135deg, #0b2210 0%, #164222 50%, #0b2210 100%);
+      border: 5px solid var(--amarelo);
+      border-radius: 16px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 20px;
+      overflow: hidden;
+      transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* Textura metalizada brilhante no pacote */
+    .pack-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 20%, rgba(255, 255, 255, 0.15) 30%, transparent 40%);
+      transform: skewX(-30deg) translateX(-150%);
+      animation: shineReflect 3s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Bordas picotadas (crimped edges) estilo pacotinho */
+    .crimped-edge-top,
+    .crimped-edge-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background-image: repeating-linear-gradient(90deg, var(--amarelo-dark), var(--amarelo-dark) 4px, transparent 4px, transparent 8px);
+      z-index: 10;
+    }
+
+    .crimped-edge-top {
+      top: 0;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .crimped-edge-bottom {
+      bottom: 0;
+      border-top: 2px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .pack-cbf-crest {
+      font-size: 4.5rem;
+      filter: drop-shadow(0 0 10px rgba(255, 223, 0, 0.5));
+      margin-top: 10px;
+    }
+
+    .pack-title {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--amarelo);
+      font-size: 2.1rem;
+      letter-spacing: 2.5px;
+      line-height: 1;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .pack-stars {
+      color: var(--amarelo);
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+    }
+
+    .pack-footer {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--branco);
+      opacity: 0.8;
+      font-weight: 800;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    /* Animações do Pacote abrindo */
+    @keyframes packShake {
+
+      0%,
+      100% {
+        transform: rotate(0) scale(1);
+      }
+
+      20%,
+      60% {
+        transform: rotate(-5deg) scale(1.02);
+      }
+
+      40%,
+      80% {
+        transform: rotate(5deg) scale(1.02);
+      }
+    }
+
+    @keyframes packRipTop {
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-150px) rotate(-15deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes packRipBottom {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(200px);
+        opacity: 0;
+      }
+    }
+
+    .pack-container.shaking .pack-wrapper {
+      animation: packShake 0.6s ease-in-out;
+    }
+
+    /* Quando rasga, dividimos as metades e sumimos */
+    .pack-container.ripping .pack-top-half {
+      animation: packRipTop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .pack-container.ripping .pack-bottom-half {
+      animation: packRipBottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .pack-top-half,
+    .pack-bottom-half {
+      position: absolute;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+      height: 50%;
+      background: linear-gradient(135deg, #0b2210 0%, #164222 50%, #0b2210 100%);
+      border: 5px solid var(--amarelo);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      transition: all 0.2s;
+    }
+
+    .pack-top-half {
+      top: 0;
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      padding-top: 25px;
+    }
+
+    .pack-bottom-half {
+      bottom: 0;
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      justify-content: flex-end;
+      padding-bottom: 25px;
+    }
+
+    /* Efeito de feixe de luz brilhante saindo de dentro */
+    .pack-glow-beam {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 223, 0, 0.6) 0%, rgba(0, 156, 59, 0.4) 30%, transparent 70%);
+      opacity: 0;
+      transform: scale(0.1);
+      transition: all 0.5s ease-out;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .pack-container.ripping .pack-glow-beam {
+      opacity: 1;
+      transform: scale(3.5);
+    }
+
+    /* A figurinha gigante que brota do pacote */
+    .pack-sticker-showcase {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.1) rotateY(180deg);
+      z-index: 20;
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    .pack-container.revealed-card .pack-sticker-showcase {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.3) rotateY(0);
+    }
+
+    /* ─── TELA FINAL DE CAMPEÃO ─── */
+    #final-screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .cup-glow-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 223, 0, 0.15) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: -1;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    .cup-illustration {
+      font-size: 7rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 30px rgba(255, 223, 0, 0.8));
+      animation: rotateCup 6s infinite linear;
+    }
+
+    @keyframes rotateCup {
+      0% {
+        transform: rotateY(0);
+      }
+
+      50% {
+        transform: rotateY(180deg);
+      }
+
+      100% {
+        transform: rotateY(360deg);
+      }
+    }
+
+    #final-screen h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 5px;
+      text-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      line-height: 0.95;
+    }
+
+    #final-screen p {
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 1rem;
+      font-size: 1.3rem;
+      max-width: 550px;
+    }
+
+    .stars-five {
+      color: var(--amarelo);
+      font-size: 2.2rem;
+      margin-top: 1.5rem;
+      letter-spacing: 10px;
+      text-shadow: 0 0 10px rgba(255, 223, 0, 0.6);
+    }
+
+    .btn-restart {
+      margin-top: 2.5rem;
+      padding: 16px 48px;
+      background: rgba(255, 223, 0, 0.12);
+      border: 2px solid var(--amarelo);
+      border-radius: 12px;
+      color: var(--amarelo);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(255, 223, 0, 0.15);
+    }
+
+    .btn-restart:hover {
+      background: var(--amarelo);
+      color: var(--azul-dark);
+      box-shadow: 0 8px 25px rgba(255, 223, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+  <div class="press-backdrop"></div>
+  <div class="press-logo-grid" id="press-logos"></div>
+
+  <!-- ═══════════ SETUP ═══════════ -->
+  <div id="setup-screen">
+    <div class="setup-header">
+      <div class="cbf-badge-main">🏆</div>
+      <h1>CONVOCAÇÃO OFICIAL<br>DE ESTAGIÁRIOS</h1>
+      <p>Comissão Técnica — Temporada 2025</p>
+    </div>
+
+    <div class="setup-card">
+      <h2>🏭 ESCALAÇÃO DE EMPRESAS & ALUNOS</h2>
+      <div id="empresas-list" style="max-height: 48vh; overflow-y: auto; padding-right: 8px;"></div>
+    </div>
+
+    <button class="btn-add-empresa" onclick="addEmpresa()">➕ Adicionar Empresa</button>
+    <button class="btn-start" onclick="startPresentation()">🏆 CONFIRMAR ESCALAÇÃO & INICIAR</button>
+  </div>
+
+  <!-- ═══════════ CAMPO ═══════════ -->
+  <div id="field-screen">
+    <div class="field-bg"></div>
+    <div class="field-lines">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect x="50" y="50" width="900" height="600" fill="none" stroke="white" stroke-width="2" />
+        <line x1="500" y1="50" x2="500" y2="650" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="90" fill="none" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="4" fill="white" />
+        <rect x="50" y="200" width="130" height="300" fill="none" stroke="white" stroke-width="2" />
+        <rect x="50" y="270" width="55" height="160" fill="none" stroke="white" stroke-width="2" />
+        <rect x="820" y="200" width="130" height="300" fill="none" stroke="white" stroke-width="2" />
+        <rect x="895" y="270" width="55" height="160" fill="none" stroke="white" stroke-width="2" />
+        <path d="M 180 270 A 90 90 0 0 1 180 430" fill="none" stroke="white" stroke-width="2" />
+        <path d="M 820 270 A 90 90 0 0 0 820 430" fill="none" stroke="white" stroke-width="2" />
+      </svg>
+    </div>
+    <div class="field-vignette"></div>
+
+    <!-- TV Scoreboard Overlay -->
+    <div class="tv-scoreboard">
+      <div class="score-cbf">BR 🇧🇷</div>
+      <div class="score-info" id="score-company-name">EMPRESA</div>
+      <div class="score-count" id="score-convocados-count">00/00</div>
+    </div>
+
+    <button class="btn-mute-music" id="btn-mute-music" onclick="toggleMusic()">🔊 TORCIDA: LIGADA</button>
+
+    <div class="empresa-banner" id="empresa-banner">
+      <div class="empresa-badge">
+        <span class="label">convocação para</span>
+        <div class="nome" id="empresa-nome-display">—</div>
+      </div>
+      <div class="conveying-label">TURMA 2025</div>
+    </div>
+
+    <div class="stickers-area" id="stickers-area"></div>
+
+    <div class="field-actions">
+      <button class="btn-convocar" id="btn-convocar" onclick="convocarProximo()">⚽ REVELAR JOGADOR</button>
+      <button class="btn-prox-empresa" id="btn-prox-empresa" onclick="proximaEmpresa()">PRÓXIMA EMPRESA →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ ABERTURA DE PACOTE (PACK OPENING SCREEN) ═══════════ -->
+  <div id="pack-opening-overlay" class="pack-overlay">
+    <div class="pack-glow-beam" id="pack-glow-beam"></div>
+    <div class="pack-container" id="pack-container">
+
+      <!-- Metade Superior do Pacote -->
+      <div class="pack-top-half">
+        <div class="crimped-edge-top"></div>
+        <div class="pack-stars">⭐⭐⭐⭐⭐</div>
+        <div class="pack-title">ESTÁGIOS 2025</div>
+      </div>
+
+      <!-- Metade Inferior do Pacote -->
+      <div class="pack-bottom-half">
+        <div class="pack-cbf-crest">🇧🇷</div>
+        <div class="pack-footer">PACOTE DE FIGURINHAS</div>
+        <div class="crimped-edge-bottom"></div>
+      </div>
+
+      <!-- Sticker Oculto que sai do Pacote -->
+      <div class="pack-sticker-showcase" id="pack-sticker-showcase"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════ TV CHYRON (RODAPÉ DE NOTÍCIAS) ═══════════ -->
+  <div class="tv-chyron">
+    <div class="chyron-badge">CONVOCAÇÃO AO VIVO</div>
+    <div class="chyron-ticker">
+      <div class="ticker-text-wrapper" id="chyron-ticker-content">
+        <!-- Inserido dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FINAL ═══════════ -->
+  <div id="final-screen">
+    <div class="cup-glow-bg"></div>
+    <div class="cup-illustration">🏆</div>
+    <h1>ELENCO<br>CONVOCADO!</h1>
+    <p>Todos os novos estagiários foram integrados com sucesso. Boa sorte na jornada e que tragam grandes resultados!
+    </p>
+    <div class="stars-five">⭐⭐⭐⭐⭐</div>
+    <button class="btn-restart" onclick="goSetup()">↩ REALIZAR NOVA CONVOCAÇÃO</button>
+  </div>
+
+  <script>
+    /* ─── DADOS DO SISTEMA ─── */
+    let empresas = [];
+    let currentEmpIdx = 0;
+    let currentAlunoIdx = 0;
+    let isAnimatingPack = false;
+
+    /* ─── GERADOR DE BACKDROP PATROCÍNIOS ─── */
+    function renderPressLogos() {
+      const container = document.getElementById('press-logos');
+      container.innerHTML = '';
+      const textOptions = ['ESTÁGIO 2025', 'CBF', 'BRASIL', '🏆', 'OFFICIAL', 'SELEÇÃO'];
+      for (let i = 0; i < 64; i++) {
+        const item = document.createElement('div');
+        item.className = 'press-logo-item';
+        item.textContent = textOptions[i % textOptions.length];
+        container.appendChild(item);
+      }
+    }
+    renderPressLogos();
+
+    /* ─── SINTETIZADOR DE ÁUDIO (WEB AUDIO API) ─── */
+    const sfx = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      },
+      playWhistle() {
+        this.init();
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        const playSingle = (time, duration) => {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(1800, time);
+          osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(2000, time);
+
+          // Modulator (flutter trill)
+          const mod = ctx.createOscillator();
+          const modGain = ctx.createGain();
+          mod.frequency.setValueAtTime(32, time);
+          modGain.gain.setValueAtTime(45, time);
+
+          mod.connect(modGain);
+          modGain.connect(osc1.frequency);
+          modGain.connect(osc2.frequency);
+
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1900, time);
+          filter.Q.setValueAtTime(8, time);
+
+          gain.gain.setValueAtTime(0, time);
+          gain.gain.linearRampToValueAtTime(0.2, time + 0.03);
+          gain.gain.setValueAtTime(0.2, time + duration - 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          mod.start(time);
+          osc1.start(time);
+          osc2.start(time);
+
+          mod.stop(time + duration);
+          osc1.stop(time + duration);
+          osc2.stop(time + duration);
+        };
+
+        // Apito duplo clássico de futebol (curto + longo)
+        playSingle(now, 0.15);
+        playSingle(now + 0.22, 0.6);
+      },
+      playTear() {
+        this.init();
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        // Tearing white noise
+        const bufferSize = ctx.sampleRate * 0.4;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(3000, now);
+        filter.frequency.exponentialRampToValueAtTime(150, now + 0.35);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.35, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        noise.start(now);
+        noise.stop(now + 0.4);
+      },
+      playChime() {
+        this.init();
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        // Acorde de gaita holográfica brilhante
+        const notes = [659.25, 880, 1109, 1318.51, 1760]; // E5, A5, C#6, E6, A6
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+
+          gain.gain.setValueAtTime(0, now + idx * 0.04);
+          gain.gain.linearRampToValueAtTime(0.06, now + idx * 0.04 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.45);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + idx * 0.04);
+          osc.stop(now + idx * 0.04 + 0.5);
+        });
+      },
+      playStadiumHorn() {
+        this.init();
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        const playHornPulse = (time, duration) => {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(290, time);
+
+          osc2.type = 'sawtooth';
+          osc2.frequency.setValueAtTime(293, time);
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1000, time);
+
+          gain.gain.setValueAtTime(0, time);
+          gain.gain.linearRampToValueAtTime(0.12, time + 0.05);
+          gain.gain.setValueAtTime(0.12, time + duration - 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc1.start(time);
+          osc2.start(time);
+          osc1.stop(time + duration);
+          osc2.stop(time + duration);
+        };
+
+        playHornPulse(now, 0.35);
+        playHornPulse(now + 0.45, 0.7);
+      },
+      playCrowdRoar() {
+        this.init();
+        const ctx = this.ctx;
+        const now = ctx.currentTime;
+
+        const bufferSize = ctx.sampleRate * 2.8;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(500, now);
+        filter.Q.setValueAtTime(1.2, now);
+
+        filter.frequency.linearRampToValueAtTime(800, now + 0.4);
+        filter.frequency.linearRampToValueAtTime(550, now + 1.2);
+        filter.frequency.exponentialRampToValueAtTime(280, now + 2.8);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.3, now + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 2.8);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        noise.start(now);
+        noise.stop(now + 2.8);
+      }
+    };
+
+    /* ─── AMBIENTE DE TORCIDA DE FUTEBOL (SINTETIZADO) ─── */
+    const music = {
+      ctx: null,
+      isPlaying: false,
+      masterGain: null,
+      isMuted: false,
+      nodes: [],
+      whistleInterval: null,
+      
+      init() {
+        if (this.ctx) return;
+        sfx.init();
+        this.ctx = sfx.ctx;
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.22; // Nível confortável de fundo
+        this.masterGain.connect(this.ctx.destination);
+      },
+      
+      play() {
+        this.init();
+        if (this.isPlaying) return;
+        
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        this.isPlaying = true;
+        this.nodes = [];
+        
+        // Função para gerar ondas de ruído de torcida oscilando em volume/frequência
+        const createCrowdWave = (baseFreq, lfoSpeed, depth, vol) => {
+          const bufferSize = this.ctx.sampleRate * 2.0;
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+          noise.loop = true;
+          
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.value = baseFreq;
+          filter.Q.value = 1.0;
+          
+          const gainNode = this.ctx.createGain();
+          gainNode.gain.value = vol;
+          
+          // LFO para oscilar a frequência do filtro (torcida vibrando)
+          const lfoFilter = this.ctx.createOscillator();
+          const lfoFilterGain = this.ctx.createGain();
+          lfoFilter.type = 'sine';
+          lfoFilter.frequency.value = lfoSpeed;
+          lfoFilterGain.gain.value = depth;
+          
+          lfoFilter.connect(lfoFilterGain);
+          lfoFilterGain.connect(filter.frequency);
+          
+          // LFO para oscilar o volume (gritos que sobem e descem)
+          const lfoVolume = this.ctx.createOscillator();
+          const lfoVolumeGain = this.ctx.createGain();
+          lfoVolume.type = 'sine';
+          lfoVolume.frequency.value = lfoSpeed * 1.3;
+          lfoVolumeGain.gain.value = vol * 0.45;
+          
+          lfoVolume.connect(lfoVolumeGain);
+          lfoVolumeGain.connect(gainNode.gain);
+          
+          noise.connect(filter);
+          filter.connect(gainNode);
+          gainNode.connect(this.masterGain);
+          
+          lfoFilter.start();
+          lfoVolume.start();
+          noise.start();
+          
+          this.nodes.push(noise, filter, gainNode, lfoFilter, lfoFilterGain, lfoVolume, lfoVolumeGain);
+        };
+        
+        // 1. Som grave (murmúrio de estádio lotado)
+        createCrowdWave(400, 0.08, 110, 0.16);
+        // 2. Som médio (gritos e burburinho disperso)
+        createCrowdWave(680, 0.05, 170, 0.12);
+        // 3. Som agudo (ambiente geral de arquibancada)
+        createCrowdWave(1150, 0.13, 250, 0.06);
+        
+        // Apitos dispersos ao fundo de vez em quando
+        this.whistleInterval = setInterval(() => {
+          if (this.isMuted || !this.isPlaying) return;
+          const osc = this.ctx.createOscillator();
+          const oscGain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1200 + Math.random() * 600, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(1400, this.ctx.currentTime + 0.25);
+          
+          oscGain.gain.setValueAtTime(0, this.ctx.currentTime);
+          oscGain.gain.linearRampToValueAtTime(0.012, this.ctx.currentTime + 0.08);
+          oscGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.45);
+          
+          osc.connect(oscGain);
+          oscGain.connect(this.masterGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.55);
+        }, 4500);
+      },
+      
+      stop() {
+        if (!this.isPlaying) return;
+        this.isPlaying = false;
+        clearInterval(this.whistleInterval);
+        this.nodes.forEach(node => {
+          try {
+            node.stop();
+          } catch (e) {}
+        });
+        this.nodes = [];
+      },
+      
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain) {
+          this.masterGain.gain.value = this.isMuted ? 0 : 0.22;
+        }
+        return this.isMuted;
+      }
+    };
+
+    function toggleMusic() {
+      const isMuted = music.toggleMute();
+      const btn = document.getElementById('btn-mute-music');
+      if (isMuted) {
+        btn.innerHTML = '🔇 MÚSICA: DESLIGADA';
+        btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        btn.style.color = '#fff';
+      } else {
+        btn.innerHTML = '🔊 MÚSICA: TAMBORZÃO';
+        btn.style.borderColor = 'var(--amarelo)';
+        btn.style.color = 'var(--amarelo)';
+      }
+    }
+
+    /* ─── NOTÍCIAS DINÂMICAS DO RODAPÉ (CHYRON SYSTEM) ─── */
+    function updateChyronText(companyName = null) {
+      const content = document.getElementById('chyron-ticker-content');
+      const news = [
+        `URGENTE: Nova convocação para a Seleção Oficial de Estagiários 2025!`,
+        `TITE ADVERTE: "A escalação valoriza a união tática e o esforço individual de cada estagiário."`,
+        `COMENTARISTA: Galvão Bueno exalta contratações: "Haja coração, amigo! Que contratação de peso!"`,
+        `MARTA COMPARTILHA MENSAGEM: "Entrem em campo com garra, programem com amor e façam história!"`,
+        `MERCADO DA BOLA: Estagiários de tecnologia superam testes médicos e já estão prontos para produção.`
+      ];
+
+      if (companyName) {
+        news.unshift(
+          `SQUAD CONFIRMADO: Revelando os convocados especiais para a empresa ${companyName.toUpperCase()}!`,
+          `CONTRATO FECHADO: Estagiários se apresentam na sede da ${companyName.toUpperCase()} a partir da próxima semana.`
+        );
+      }
+
+      // Duplicar a lista para loop infinito e sem quebras
+      const fullText = [...news, ...news].map(text => `<div class="ticker-item"><span>★</span> ${text}</div>`).join('');
+      content.innerHTML = fullText;
+    }
+
+    /* ─── SETUP / CONTROLE DE ESTADO ─── */
+    function addEmpresa() {
+      empresas.push({ id: Date.now(), nome: '', alunos: [] });
+      renderSetup();
+    }
+
+    function removeEmpresa(id) {
+      empresas = empresas.filter(e => e.id !== id);
+      renderSetup();
+    }
+
+    function addAlunoToEmpresa(empId) {
+      const emp = empresas.find(e => e.id === empId);
+      if (emp) {
+        if (emp.alunos.length >= 3) {
+          alert('Cada empresa pode ter no máximo 3 convocados!');
+          return;
+        }
+        emp.alunos.push({ id: Date.now(), nome: '', photoUrl: null });
+      }
+      renderSetup();
+    }
+
+    function removeAluno(empId, alunoId) {
+      const emp = empresas.find(e => e.id === empId);
+      if (emp) emp.alunos = emp.alunos.filter(a => a.id !== alunoId);
+      renderSetup();
+    }
+
+    function handlePhoto(event, ei, ai) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        empresas[ei].alunos[ai].photoUrl = e.target.result;
+        renderSetup();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderSetup() {
+      const list = document.getElementById('empresas-list');
+      list.innerHTML = '';
+      empresas.forEach((emp, ei) => {
+        const div = document.createElement('div');
+        div.className = 'empresa-block';
+        div.innerHTML = `
+      <div class="empresa-header">
+        <input type="text" placeholder="Nome da Empresa (Ex: Google, TechCorp)" value="${emp.nome}"
+          oninput="empresas[${ei}].nome=this.value">
+        <button class="btn-del-empresa" onclick="removeEmpresa(${emp.id})">×</button>
+      </div>
+      <div class="alunos-da-empresa" id="alunos-${emp.id}"></div>
+      ${emp.alunos.length < 3
+            ? `<button class="btn-add-aluno" onclick="addAlunoToEmpresa(${emp.id})">➕ Adicionar Estagiário</button>`
+            : `<div style="text-align:center; color:var(--amarelo); font-size:0.75rem; margin-top:8px; font-weight:600; padding:6px; background:rgba(255,223,0,0.08); border-radius:8px; border:1px solid rgba(255,223,0,0.15);">⚠️ Limite de 3 convocados por empresa atingido</div>`
+          }
+    `;
+        list.appendChild(div);
+        const alunosCont = div.querySelector(`#alunos-${emp.id}`);
+        emp.alunos.forEach((al, ai) => {
+          const row = document.createElement('div');
+          row.className = 'aluno-row';
+          row.innerHTML = `
+        <input type="text" placeholder="Nome do Aluno" value="${al.nome}"
+          oninput="empresas[${ei}].alunos[${ai}].nome=this.value">
+        <label class="photo-label ${al.photoUrl ? 'ok' : ''}" id="pl-${al.id}">
+          <input type="file" accept="image/*" onchange="handlePhoto(event,${ei},${ai})">
+          ${al.photoUrl ? '✓ Foto Carregada' : '📷 Enviar Foto'}
+        </label>
+        <button class="btn-del-aluno" onclick="removeAluno(${emp.id},${al.id})">×</button>
+      `;
+          alunosCont.appendChild(row);
+        });
+      });
+    }
+
+    function startPresentation() {
+      const valid = empresas.filter(e => e.nome.trim() && e.alunos.some(a => a.nome.trim()));
+      if (!valid.length) {
+        alert('Por favor, adicione pelo menos uma empresa com estagiários cadastrados!');
+        return;
+      }
+      empresas = valid.map(e => ({
+        ...e,
+        alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3) // Garante no máximo 3 alunos por empresa
+      }));
+
+      currentEmpIdx = 0;
+      currentAlunoIdx = 0;
+
+      sfx.playWhistle();
+      music.play(); // Toca a batida do tamborzão de funk
+
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('field-screen').style.display = 'flex';
+      loadEmpresa(currentEmpIdx);
+    }
+
+    /* ─── APRESENTAÇÃO DE SELEÇÃO ─── */
+    function loadEmpresa(idx) {
+      currentAlunoIdx = 0;
+      const emp = empresas[idx];
+
+      const banner = document.getElementById('empresa-banner');
+      banner.classList.remove('show');
+      void banner.offsetWidth; // Force reflow
+      banner.classList.add('show');
+
+      document.getElementById('empresa-nome-display').textContent = emp.nome.toUpperCase();
+      document.getElementById('score-company-name').textContent = emp.nome.substring(0, 15).toUpperCase();
+      document.getElementById('stickers-area').innerHTML = '';
+      document.getElementById('score-convocados-count').textContent = `00 / ${String(emp.alunos.length).padStart(2, '0')}`;
+
+      const btnC = document.getElementById('btn-convocar');
+      const btnP = document.getElementById('btn-prox-empresa');
+      btnC.style.display = 'block';
+      btnC.disabled = false;
+      btnP.style.display = 'none';
+
+      updateChyronText(emp.nome);
+    }
+
+    /* POSIÇÕES DE FUTEBOL DILUÍDAS NO TIME */
+    const POSITIONS = ['GOLEIRO', 'LATERAL ESQ.', 'LATERAL DIR.', 'ZAGUEIRO', 'VOLANTE', 'MEIO-CAMPO', 'ATACANTE', 'PONTA'];
+
+    function buildJerseySVG(name, num) {
+      const firstName = name.split(' ')[0].toUpperCase();
+      return `
+    <svg viewBox="0 0 100 100" class="jersey-svg" xmlns="http://www.w3.org/2000/svg">
+      <!-- Jersey Body -->
+      <path d="M 30,90 L 30,42 L 10,40 L 22,18 L 42,22 L 50,30 L 58,22 L 78,18 L 90,40 L 70,42 L 70,90 Z" fill="#ffdf00" stroke="#009c3b" stroke-width="3"/>
+      <!-- V-Collar -->
+      <path d="M 42,22 C 45,31 55,31 58,22" fill="none" stroke="#009c3b" stroke-width="4.5"/>
+      <!-- Green Stripes on Sleeves -->
+      <path d="M 10,40 L 22,18" stroke="#009c3b" stroke-width="4"/>
+      <path d="M 90,40 L 78,18" stroke="#009c3b" stroke-width="4"/>
+      <!-- CBF Emblem Mini -->
+      <circle cx="38" cy="42" r="4" fill="#002776"/>
+      <polygon points="38,39 40,43 36,43" fill="#ffdf00"/>
+      <!-- Name on Jersey Back -->
+      <text x="50" y="55" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#002776" text-anchor="middle" font-weight="bold" letter-spacing="0.5">${firstName}</text>
+      <!-- Number on Back -->
+      <text x="50" y="80" font-family="'Orbitron', sans-serif" font-size="20" fill="#002776" text-anchor="middle" font-weight="900">${num}</text>
+    </svg>
+  `;
+    }
+
+    function buildStickerHTML(aluno, num, revealed = true) {
+      const position = POSITIONS[(num - 1) % POSITIONS.length];
+      const statEng = 95 + (aluno.id % 5);
+      const statCod = 93 + (aluno.nome.length % 7);
+      const statCaf = 96 + (num % 4);
+
+      if (aluno.photoUrl) {
+        // Foto já pré-produzida no estilo figurinha (ocupa o card inteiro)
+        return `
+          <div class="sticker-inner ${revealed ? 'revealed' : 'hidden-back'}">
+            <div class="sb">
+              <div class="sb-cbf-crest">🇧🇷</div>
+              <div class="sb-text">ESTAGIÁRIO<br>CONVOCADO</div>
+              <div class="sb-stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="sf" style="padding: 0; border: none; background: transparent; display: block;">
+              <div class="sticker-hologram"></div>
+              <img src="${aluno.photoUrl}" alt="${aluno.nome}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px; display: block;">
+            </div>
+          </div>
+        `;
+      } else {
+        // Caso contrário, gera a figurinha padrão com a camiseta vetorial
+        return `
+          <div class="sticker-inner ${revealed ? 'revealed' : 'hidden-back'}">
+            <div class="sb">
+              <div class="sb-cbf-crest">🇧🇷</div>
+              <div class="sb-text">ESTAGIÁRIO<br>CONVOCADO</div>
+              <div class="sb-stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="sf">
+              <div class="sticker-hologram"></div>
+              <div class="sf-top">
+                <span class="sf-serie">ESTÁGIO 2025</span>
+                <span class="sf-stars-row">⭐⭐⭐⭐⭐</span>
+                <span class="sf-flag">🇧🇷</span>
+              </div>
+              <div class="sf-photo">
+                ${buildJerseySVG(aluno.nome, num)}
+                <div class="sf-overlay">
+                  <div class="sf-name">${aluno.nome.toUpperCase()}</div>
+                  <div class="sf-lbl">CONVOCADO PARA</div>
+                  <div class="sf-empresa-mini">${empresas[currentEmpIdx].nome.toUpperCase()}</div>
+                </div>
+              </div>
+              <div class="sf-bot">
+                <span class="sf-pos">${position}</span>
+                <div class="sf-stats">
+                  <span>ENG: <strong>${statEng}</strong></span>
+                  <span>COD: <strong>${statCod}</strong></span>
+                  <span>CAF: <strong>${statCaf}</strong></span>
+                </div>
+                <span class="sf-num">#${String(num).padStart(2, '0')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    /* ─── ANIMAÇÃO COMPLETA DE ABERTURA DE PACOTE (CINEMATIC) ─── */
+    function convocarProximo() {
+      if (isAnimatingPack) return;
+
+      const emp = empresas[currentEmpIdx];
+      if (currentAlunoIdx >= emp.alunos.length) return;
+
+      isAnimatingPack = true;
+      const aluno = emp.alunos[currentAlunoIdx];
+      const num = currentAlunoIdx + 1;
+      const total = emp.alunos.length;
+
+      // Elementos do Pacote
+      const overlay = document.getElementById('pack-opening-overlay');
+      const container = document.getElementById('pack-container');
+      const showcase = document.getElementById('pack-sticker-showcase');
+      const beam = document.getElementById('pack-glow-beam');
+
+      // Resetar classes do pacote
+      container.className = 'pack-container';
+      showcase.innerHTML = buildStickerHTML(aluno, num, false); // Começa virado de costas
+
+      // Exibir Overlay e tocar efeito sonoro de entrada
+      overlay.classList.add('active');
+      sfx.playTear();
+
+      // Sequência de Animações
+      setTimeout(() => {
+        // 1. Tremer pacote
+        container.classList.add('shaking');
+      }, 400);
+
+      setTimeout(() => {
+        // 2. Rasgar pacote e tocar o apito do árbitro
+        container.classList.remove('shaking');
+        container.classList.add('ripping');
+        sfx.playWhistle();
+      }, 1000);
+
+      setTimeout(() => {
+        // 3. Revelar figurinha gigante girando do pacote
+        container.classList.add('revealed-card');
+        // Virar o cromo para a frente
+        const innerShowcase = showcase.querySelector('.sticker-inner');
+        if (innerShowcase) {
+          innerShowcase.classList.remove('hidden-back');
+          innerShowcase.classList.add('revealed');
+        }
+        sfx.playChime();
+        sfx.playStadiumHorn(); // Som da comemoração de torcida e corneta
+        sfx.playCrowdRoar();  // Barulho da torcida comemorando
+        launchConfetti(50);
+      }, 1600);
+
+      setTimeout(() => {
+        // 4. Animação de viagem: voar do pacote para a escalação no campo
+        // Criar slot físico no campo para receber o voo
+        const targetArea = document.getElementById('stickers-area');
+        const tempSlot = document.createElement('div');
+        tempSlot.className = 'sticker-wrap entering';
+        tempSlot.style.visibility = 'hidden'; // Oculto enquanto voa
+        tempSlot.innerHTML = buildStickerHTML(aluno, num, true);
+        targetArea.appendChild(tempSlot);
+
+        // Obter coordenadas
+        const targetRect = tempSlot.getBoundingClientRect();
+        const showcaseRect = showcase.getBoundingClientRect();
+
+        // Criar clone voador
+        const flyClone = document.createElement('div');
+        flyClone.className = 'sticker-wrap';
+        flyClone.style.position = 'fixed';
+        flyClone.style.zIndex = '9999';
+        flyClone.style.top = showcaseRect.top + 'px';
+        flyClone.style.left = showcaseRect.left + 'px';
+        flyClone.style.width = showcaseRect.width + 'px';
+        flyClone.style.height = showcaseRect.height + 'px';
+        flyClone.innerHTML = buildStickerHTML(aluno, num, true);
+
+        document.body.appendChild(flyClone);
+
+        // Iniciar interpolação física de voo
+        overlay.classList.remove('active');
+
+        // Aplicar transição CSS de voo
+        flyClone.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        setTimeout(() => {
+          flyClone.style.top = targetRect.top + 'px';
+          flyClone.style.left = targetRect.left + 'px';
+          flyClone.style.width = targetRect.width + 'px';
+          flyClone.style.height = targetRect.height + 'px';
+          flyClone.style.transform = 'none';
+        }, 50);
+
+        // Quando o voo acaba
+        setTimeout(() => {
+          tempSlot.style.visibility = 'visible';
+          apply3DTilt(tempSlot);
+          flyClone.remove();
+
+          // Atualizar o placar
+          currentAlunoIdx++;
+          document.getElementById('score-convocados-count').textContent = `${String(currentAlunoIdx).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+
+          isAnimatingPack = false;
+
+          // Verificar se encerrou os convocados da empresa atual
+          if (currentAlunoIdx >= total) {
+            document.getElementById('btn-convocar').disabled = true;
+            document.getElementById('btn-convocar').style.display = 'none';
+
+            const btnP = document.getElementById('btn-prox-empresa');
+            btnP.style.display = 'block';
+            btnP.textContent = currentEmpIdx < empresas.length - 1 ? 'PRÓXIMA EMPRESA →' : '🏁 ENCERRAR CONVOCAÇÃO';
+            launchConfetti(120);
+          }
+        }, 850);
+
+      }, 3800);
+    }
+
+    function apply3DTilt(element) {
+      element.addEventListener('mousemove', (e) => {
+        const rect = element.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const xc = rect.width / 2;
+        const yc = rect.height / 2;
+        const angleX = (yc - y) / 7;
+        const angleY = (x - xc) / 7;
+
+        const inner = element.querySelector('.sticker-inner');
+        inner.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
+
+        const holo = element.querySelector('.sticker-hologram');
+        if (holo) {
+          holo.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`;
+          holo.style.opacity = '0.8';
+        }
+      });
+
+      element.addEventListener('mouseleave', () => {
+        const inner = element.querySelector('.sticker-inner');
+        inner.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+
+        const holo = element.querySelector('.sticker-hologram');
+        if (holo) {
+          holo.style.backgroundPosition = '0% 0%';
+          holo.style.opacity = '0.5';
+        }
+      });
+    }
+
+    function proximaEmpresa() {
+      if (currentEmpIdx < empresas.length - 1) {
+        currentEmpIdx++;
+        loadEmpresa(currentEmpIdx);
+      } else {
+        showFinal();
+      }
+    }
+
+    function showFinal() {
+      music.stop(); // Para a música no final
+      sfx.playWhistle();
+      document.getElementById('field-screen').style.display = 'none';
+      document.getElementById('final-screen').style.display = 'flex';
+      launchConfetti(280);
+    }
+
+    function goSetup() {
+      music.stop(); // Para a música se voltar para o setup
+      document.getElementById('field-screen').style.display = 'none';
+      document.getElementById('final-screen').style.display = 'none';
+      document.getElementById('setup-screen').style.display = 'flex';
+      renderSetup();
+    }
+
+    /* ─── CHUVA DE CONFETES BRASILEIROS (GREEN, YELLOW, BLUE, GOLD) ─── */
+    function launchConfetti(count = 80) {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const colors = ['#ffdf00', '#009c3b', '#002776', '#ffffff', '#bf953f', '#fcf6ba'];
+      const pieces = Array.from({ length: count }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 60,
+        w: 8 + Math.random() * 8,
+        h: 5 + Math.random() * 6,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.2,
+        vx: (Math.random() - 0.5) * 6,
+        vy: 3 + Math.random() * 4
+      }));
+
+      let frame;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.angle += p.spin;
+          p.vy += 0.05; // Gravidade
+
+          if (p.y < canvas.height + 20) alive = true;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.globalAlpha = Math.max(0, 1 - p.y / canvas.height * 0.7);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+
+        if (alive) {
+          frame = requestAnimationFrame(draw);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      cancelAnimationFrame(frame);
+      draw();
+    }
+
+    /* ─── CARREGAMENTO DE DADOS (SERVIDOR / LOCALSTORAGE) ─── */
+    const authToken = sessionStorage.getItem('est_token') || localStorage.getItem('est_token');
+
+    async function carregarDados() {
+      let dbEmpresas = [];
+      let dbAlunos = [];
+      let dbEnc = {};
+      let carregado = false;
+
+      // 1. Tentar carregar do Servidor/Supabase
+      if (authToken) {
+        try {
+          const headers = { 'Authorization': `Bearer ${authToken}` };
+          const [resEmp, resAlunos, resEnc] = await Promise.all([
+            fetch('/api/dados?chave=est_emp', { headers }),
+            fetch('/api/dados?chave=est_alunos', { headers }),
+            fetch('/api/dados?chave=est_enc', { headers })
+          ]);
+          
+          if (resEmp.ok && resAlunos.ok && resEnc.ok) {
+            const jsonEmp = await resEmp.json();
+            const jsonAlunos = await resAlunos.json();
+            const jsonEnc = await resEnc.json();
+            
+            if (jsonEmp.ok && jsonAlunos.ok && jsonEnc.ok) {
+              dbEmpresas = jsonEmp.dados || [];
+              dbAlunos = jsonAlunos.dados || [];
+              dbEnc = jsonEnc.dados || {};
+              carregado = true;
+              console.log("Dados carregados com sucesso do Supabase/Railway.");
+            }
+          }
+        } catch (e) {
+          console.warn("Falha ao consultar servidor. Tentando localStorage...", e);
+        }
+      }
+
+      // 2. Fallback para localStorage (se offline ou sem token)
+      if (!carregado) {
+        try {
+          dbEmpresas = JSON.parse(localStorage.getItem('est_emp') || '[]');
+          dbAlunos = JSON.parse(localStorage.getItem('est_alunos') || '[]');
+          dbEnc = JSON.parse(localStorage.getItem('est_enc') || '{}');
+          if (dbEmpresas.length || dbAlunos.length) {
+            carregado = true;
+            console.log("Dados carregados com sucesso do localStorage.");
+          }
+        } catch (e) {
+          console.error("Erro ao ler do localStorage:", e);
+        }
+      }
+
+      // 3. Dados de demonstração padrão se tudo falhar
+      if (!carregado) {
+        console.log("Nenhum dado encontrado. Usando dados de demonstração.");
+        empresas = [
+          {
+            id: 1, nome: 'TechCorp Brasil', alunos: [
+              { id: 11, nome: 'Maria Silva', photoUrl: null },
+              { id: 12, nome: 'João Santos', photoUrl: null },
+              { id: 13, nome: 'Gabriel Oliveira', photoUrl: null }
+            ]
+          },
+          {
+            id: 2, nome: 'Inovação Digital', alunos: [
+              { id: 21, nome: 'Ana Costa', photoUrl: null },
+              { id: 22, nome: 'Lucas Almeida', photoUrl: null }
+            ]
+          }
+        ];
+      } else {
+        // Mapear para a estrutura da convocação
+        empresas = dbEmpresas.map(emp => {
+          const ids = dbEnc[emp.id] || [];
+          const listAlunos = ids.map(aid => {
+            const al = dbAlunos.find(a => a.id === aid);
+            return al ? {
+              id: al.id,
+              nome: al.name,
+              photoUrl: al.photo || null
+            } : null;
+          }).filter(Boolean);
+
+          return {
+            id: emp.id,
+            nome: emp.name,
+            alunos: listAlunos
+          };
+        }).filter(emp => emp.alunos.length > 0);
+      }
+
+      // Renderizar o setup inicial
+      renderSetup();
+      updateChyronText();
+    }
+
+    // Inicializar carregamento de dados
+    carregarDados();
+  </script>
+</body>
+
+</html>
