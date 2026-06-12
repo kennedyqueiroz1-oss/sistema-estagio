@@ -1005,33 +1005,41 @@
       pointer-events: all;
     }
 
-    .pack-container {
-      position: relative;
-      width: 280px;
-      height: 390px;
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
-
-    .pack-wrapper {
-      width: 100%;
-      height: 100%;
+    .pack-container .pack-top-half,
+    .pack-bottom-half {
       position: absolute;
+      left: 0;
+      right: 0;
+      overflow: hidden;
+      height: 50%;
       background: linear-gradient(135deg, #0b2210 0%, #164222 50%, #0b2210 100%);
       border: 5px solid var(--amarelo);
-      border-radius: 16px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 25px 20px;
-      overflow: hidden;
-      transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: all 0.2s;
     }
 
-    /* Textura metalizada brilhante no pacote */
-    .pack-wrapper::after {
+    .pack-top-half {
+      top: 0;
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      padding-top: 25px;
+      justify-content: flex-start;
+    }
+
+    .pack-bottom-half {
+      bottom: 0;
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      justify-content: flex-end;
+      padding-bottom: 25px;
+    }
+
+    /* Textura metalizada brilhante nas duas metades */
+    .pack-top-half::after,
+    .pack-bottom-half::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -1113,34 +1121,60 @@
       }
     }
 
-    @keyframes packFadeOut {
+    @keyframes packRipTop {
       0% {
+        transform: translateY(0) rotate(0);
         opacity: 1;
-        transform: scale(1) rotate(0);
       }
+
       100% {
+        transform: translateY(-150px) rotate(-15deg);
         opacity: 0;
-        transform: scale(0.6) rotate(-15deg);
       }
     }
 
-    .pack-container.shaking .pack-wrapper {
+    @keyframes packRipBottom {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(200px);
+        opacity: 0;
+      }
+    }
+
+    .pack-container.shaking .pack-top-half,
+    .pack-container.shaking .pack-bottom-half {
       animation: packShake 0.6s ease-in-out;
     }
 
-    /* Quando abre, o pacote inteiro desvanece e encolhe */
-    .pack-container.ripping .pack-wrapper {
-      animation: packFadeOut 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    /* Quando abre, o pacote se divide e some */
+    .pack-container.ripping .pack-top-half {
+      animation: packRipTop 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .pack-container.ripping .pack-bottom-half {
+      animation: packRipBottom 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
 
     /* Estilos para pacote com imagem customizada */
-    .has-custom-pack .pack-wrapper {
+    .has-custom-pack .pack-top-half,
+    .has-custom-pack .pack-bottom-half {
       background-image: var(--pack-image-url);
-      background-size: cover;
-      background-position: center;
+      background-size: 100% 200%;
       background-repeat: no-repeat;
       border: none;
       box-shadow: none;
+    }
+
+    .has-custom-pack .pack-top-half {
+      background-position: top center;
+    }
+
+    .has-custom-pack .pack-bottom-half {
+      background-position: bottom center;
     }
 
     .has-custom-pack .pack-stars,
@@ -1527,33 +1561,41 @@
   <!-- ═══════════ TELA DE ESPERA / AUDITÓRIO ═══════════ -->
   <div id="waiting-screen"
     style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; text-align: center;">
-    <div class="field-bg"></div>
-    <div class="field-lines">
-      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <rect x="50" y="50" width="900" height="600" fill="none" stroke="white" stroke-width="2" />
-        <line x1="500" y1="50" x2="500" y2="650" stroke="white" stroke-width="2" />
-        <circle cx="500" cy="350" r="90" fill="none" stroke="white" stroke-width="2" />
-        <circle cx="500" cy="350" r="4" fill="white" />
-      </svg>
-    </div>
-    <div class="field-vignette"></div>
-
-    <div class="setup-header" style="margin-bottom: 3.5rem; position: relative; z-index: 10;">
-      <div class="cbf-badge-main" style="font-size: 5rem; margin-bottom: 1.5rem;">🏆</div>
-      <h1
-        style="font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1.05; letter-spacing: 4px; background: linear-gradient(180deg, var(--branco) 30%, var(--amarelo) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);">
-        CONVOCAÇÃO OFICIAL<br>DOS ESTAGIÁRIOS
-      </h1>
-      <p
-        style="font-size: 1.4rem; letter-spacing: 3px; color: var(--amarelo); margin-top: 1rem; font-weight: 700; text-transform: uppercase;">
-        Temporada de 2026
-      </p>
+    <div
+      style="position: absolute; inset: 0; background: url('fundo_convocacao.png') no-repeat center center/cover; z-index: 0;">
     </div>
 
-    <button class="btn-convocar" onclick="iniciarApresentacaoReal()"
-      style="position: relative; z-index: 10; padding: 20px 80px; font-size: 2.2rem; letter-spacing: 5px; box-shadow: 0 0 50px rgba(255, 223, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.7);">
-      INICIAR
-    </button>
+    <style>
+      .btn-cbf-crest {
+        position: absolute;
+        top: 10%;
+        height: 28%;
+        left: 50%;
+        width: 14%;
+        transform: translateX(-50%);
+        z-index: 100;
+        background: transparent;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+      .btn-cbf-crest::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 223, 0, 0.25) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .btn-cbf-crest:hover::after {
+        opacity: 1;
+      }
+    </style>
+
+    <button class="btn-cbf-crest" onclick="iniciarApresentacaoReal()" title="Iniciar Convocação"></button>
   </div>
 
   <!-- Contêiner do Player Invisível do YouTube -->
@@ -1648,11 +1690,15 @@
     <div class="pack-glow-beam" id="pack-glow-beam"></div>
     <div class="pack-container" id="pack-container">
 
-      <!-- O Pacote Inteiro -->
-      <div class="pack-wrapper" id="pack-wrapper">
+      <!-- Metade Superior do Pacote -->
+      <div class="pack-top-half">
         <div class="crimped-edge-top"></div>
         <div class="pack-stars">⭐⭐⭐⭐⭐</div>
         <div class="pack-title">ESTÁGIOS 2026</div>
+      </div>
+
+      <!-- Metade Inferior do Pacote -->
+      <div class="pack-bottom-half">
         <div class="pack-cbf-crest">🇧🇷</div>
         <div class="pack-footer">PACOTE DE FIGURINHAS</div>
         <div class="crimped-edge-bottom"></div>
@@ -1902,7 +1948,7 @@
         this.init();
         const ctx = this.ctx;
         const now = ctx.currentTime;
-        
+
         // Define helper for low drum (Surdo)
         const surdo = (time, freq, volume = 0.5) => {
           const osc = ctx.createOscillator();
@@ -1952,34 +1998,34 @@
         // Rhythmic pattern sequence at 130 BPM
         // 16th note duration = 60 / (130 * 4) = 0.115s
         const step = 0.115;
-        
+
         // Loop the pattern twice for a total of 32 steps (~3.6 seconds of energetic Brazilian tamborzão!)
         for (let loop = 0; loop < 2; loop++) {
           const base = loop * 16 * step;
-          
+
           // Step 0: Heavy surdo (low pitch)
-          surdo(now + base + 0*step, 80, 0.6);
-          
+          surdo(now + base + 0 * step, 80, 0.6);
+
           // Step 3: Mid surdo
-          surdo(now + base + 3*step, 105, 0.45);
-          
+          surdo(now + base + 3 * step, 105, 0.45);
+
           // Step 4: Low surdo
-          surdo(now + base + 4*step, 75, 0.55);
-          
+          surdo(now + base + 4 * step, 75, 0.55);
+
           // Step 6: High caixa
-          caixa(now + base + 6*step, 0.18);
-          
+          caixa(now + base + 6 * step, 0.18);
+
           // Step 8: Heavy surdo
-          surdo(now + base + 8*step, 80, 0.6);
-          
+          surdo(now + base + 8 * step, 80, 0.6);
+
           // Step 11: Mid surdo
-          surdo(now + base + 11*step, 105, 0.45);
-          
+          surdo(now + base + 11 * step, 105, 0.45);
+
           // Step 12: Low surdo
-          surdo(now + base + 12*step, 75, 0.55);
-          
+          surdo(now + base + 12 * step, 75, 0.55);
+
           // Step 14: High caixa
-          caixa(now + base + 14*step, 0.18);
+          caixa(now + base + 14 * step, 0.18);
         }
       }
     };
@@ -2912,7 +2958,7 @@
             const jsonEmp = await resEmp.json();
             const jsonAlunos = await resAlunos.json();
             const jsonEnc = await resEnc.json();
-            
+
             let dbComissao = [];
             if (resComissao && resComissao.ok) {
               const jsonComissao = await resComissao.json();
@@ -2925,15 +2971,15 @@
               dbEmpresas = jsonEmp.dados || [];
               dbAlunos = jsonAlunos.dados || [];
               dbEnc = jsonEnc.dados || {};
-              
+
               if (dbComissao && dbComissao.length) {
                 comissaoTecnica = dbComissao;
               }
-              
+
               window.originalEmpresas = dbEmpresas;
               window.originalAlunos = dbAlunos;
               window.originalEnc = dbEnc;
-              
+
               carregado = true;
               console.log("Dados carregados com sucesso do Supabase/Railway.");
             }
@@ -2949,12 +2995,12 @@
           dbEmpresas = JSON.parse(localStorage.getItem('est_emp') || '[]');
           dbAlunos = JSON.parse(localStorage.getItem('est_alunos') || '[]');
           dbEnc = JSON.parse(localStorage.getItem('est_enc') || '{}');
-          
+
           const localComissao = JSON.parse(localStorage.getItem('est_comissao') || '[]');
           if (localComissao && localComissao.length) {
             comissaoTecnica = localComissao;
           }
-          
+
           window.originalEmpresas = dbEmpresas;
           window.originalAlunos = dbAlunos;
           window.originalEnc = dbEnc;
@@ -3179,7 +3225,7 @@
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${authToken}`
             };
-            
+
             const [resEmp, resAlunos, resEnc, resComissao] = await Promise.all([
               fetch('/api/dados', {
                 method: 'POST',
@@ -3277,7 +3323,7 @@
     function detectarPacoteCustomizado() {
       const formatos = ['pacote.png', 'pacote.jpg', 'pacote.jpeg', 'pacote.webp'];
       let detectado = false;
-      
+
       formatos.forEach(src => {
         if (detectado) return;
         const img = new Image();
