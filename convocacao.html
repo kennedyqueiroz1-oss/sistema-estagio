@@ -1502,6 +1502,15 @@
       </div>
     </div>
 
+    <div class="setup-card">
+      <h2>🎵 ÁUDIO DE ESPERA (OPCIONAL DO YOUTUBE)</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-size: 0.72rem; color: var(--amarelo); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">LINK DO VÍDEO DO YOUTUBE:</label>
+        <input type="text" id="yt-link-input" placeholder="Cole o link do YouTube (ex: https://www.youtube.com/watch?v=...)" style="width: 100%; background: rgba(0, 39, 118, 0.2); border: 1px solid rgba(255, 223, 0, 0.3); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: all 0.2s;">
+        <span style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.5); line-height: 1.3;">O áudio deste vídeo tocará em loop na tela de espera enquanto o público entra. Ao clicar em "Iniciar", o som do YouTube para automaticamente.</span>
+      </div>
+    </div>
+
     <button class="btn-add-empresa" onclick="addEmpresa()">➕ Adicionar Empresa</button>
     <button class="btn-start" onclick="startPresentation()">🏆 CONFIRMAR ESCALAÇÃO & INICIAR</button>
   </div>
@@ -1533,6 +1542,9 @@
       ⚽ INICIAR
     </button>
   </div>
+
+  <!-- Contêiner do Player Invisível do YouTube -->
+  <div id="yt-audio-player" style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none;"></div>
 
   <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
   <div id="comissao-screen"
@@ -2160,11 +2172,34 @@
       currentAlunoIdx = 0;
       currentComissaoIdx = 0;
 
+      // Disparar áudio do YouTube na tela de espera, se configurado
+      const ytLink = document.getElementById('yt-link-input').value.trim();
+      ytVideoId = getYouTubeId(ytLink);
+      if (ytVideoId) {
+        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+          ytPlayer.unMute();
+          ytPlayer.setVolume(100);
+          ytPlayer.loadVideoById({
+            videoId: ytVideoId,
+            startSeconds: 0
+          });
+          ytPlayer.playVideo();
+        } else {
+          // Guardar para carregar assim que a API estiver pronta
+          window.pendingYtVideoId = ytVideoId;
+        }
+      }
+
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('waiting-screen').style.display = 'flex';
     }
 
     function iniciarApresentacaoReal() {
+      // Parar áudio do YouTube
+      if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
+        ytPlayer.stopVideo();
+      }
+
       sfx.playWhistle();
       music.play();
 
@@ -2959,6 +2994,60 @@
 
     // Inicializar carregamento de dados
     carregarDados();
+
+    // ─── INTEGRAÇÃO COM ÁUDIO DO YOUTUBE ───
+    let ytPlayer = null;
+    let ytVideoId = null;
+
+    // Carregar a API do YouTube IFrame de forma assíncrona
+    const ytScript = document.createElement('script');
+    ytScript.src = "https://www.youtube.com/iframe_api";
+    const firstScript = document.getElementsByTagName('script')[0];
+    firstScript.parentNode.insertBefore(ytScript, firstScript);
+
+    window.onYouTubeIframeAPIReady = function() {
+      ytPlayer = new YT.Player('yt-audio-player', {
+        height: '1px',
+        width: '1px',
+        videoId: '',
+        playerVars: {
+          'autoplay': 0,
+          'controls': 0,
+          'disablekb': 1,
+          'fs': 0,
+          'modestbranding': 1,
+          'rel': 0,
+          'showinfo': 0
+        },
+        events: {
+          'onReady': function(event) {
+            console.log("Player do YouTube pronto.");
+            event.target.unMute();
+            event.target.setVolume(100);
+            if (window.pendingYtVideoId) {
+              event.target.loadVideoById({
+                videoId: window.pendingYtVideoId,
+                startSeconds: 0
+              });
+              event.target.playVideo();
+              window.pendingYtVideoId = null;
+            }
+          },
+          'onStateChange': function(event) {
+            if (event.data === 0) { // Vídeo terminou -> Loop
+              event.target.playVideo();
+            }
+          }
+        }
+      });
+    };
+
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
   </script>
 </body>
 
