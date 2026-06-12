@@ -1113,27 +1113,14 @@
       }
     }
 
-    @keyframes packRipTop {
+    @keyframes packFadeOut {
       0% {
-        transform: translateY(0) rotate(0);
         opacity: 1;
+        transform: scale(1) rotate(0);
       }
-
       100% {
-        transform: translateY(-150px) rotate(-15deg);
         opacity: 0;
-      }
-    }
-
-    @keyframes packRipBottom {
-      0% {
-        transform: translateY(0);
-        opacity: 1;
-      }
-
-      100% {
-        transform: translateY(200px);
-        opacity: 0;
+        transform: scale(0.6) rotate(-15deg);
       }
     }
 
@@ -1141,63 +1128,19 @@
       animation: packShake 0.6s ease-in-out;
     }
 
-    /* Quando rasga, dividimos as metades e sumimos */
-    .pack-container.ripping .pack-top-half {
-      animation: packRipTop 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-
-    .pack-container.ripping .pack-bottom-half {
-      animation: packRipBottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-
-    .pack-top-half,
-    .pack-bottom-half {
-      position: absolute;
-      left: 0;
-      right: 0;
-      overflow: hidden;
-      height: 50%;
-      background: linear-gradient(135deg, #0b2210 0%, #164222 50%, #0b2210 100%);
-      border: 5px solid var(--amarelo);
-      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      transition: all 0.2s;
-    }
-
-    .pack-top-half {
-      top: 0;
-      border-bottom: none;
-      border-radius: 16px 16px 0 0;
-      padding-top: 25px;
-    }
-
-    .pack-bottom-half {
-      bottom: 0;
-      border-top: none;
-      border-radius: 0 0 16px 16px;
-      justify-content: flex-end;
-      padding-bottom: 25px;
+    /* Quando abre, o pacote inteiro desvanece e encolhe */
+    .pack-container.ripping .pack-wrapper {
+      animation: packFadeOut 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
 
     /* Estilos para pacote com imagem customizada */
-    .has-custom-pack .pack-top-half,
-    .has-custom-pack .pack-bottom-half {
+    .has-custom-pack .pack-wrapper {
       background-image: var(--pack-image-url);
-      background-size: 100% 200%;
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
       border: none;
       box-shadow: none;
-    }
-
-    .has-custom-pack .pack-top-half {
-      background-position: top center;
-    }
-
-    .has-custom-pack .pack-bottom-half {
-      background-position: bottom center;
     }
 
     .has-custom-pack .pack-stars,
@@ -1705,15 +1648,11 @@
     <div class="pack-glow-beam" id="pack-glow-beam"></div>
     <div class="pack-container" id="pack-container">
 
-      <!-- Metade Superior do Pacote -->
-      <div class="pack-top-half">
+      <!-- O Pacote Inteiro -->
+      <div class="pack-wrapper" id="pack-wrapper">
         <div class="crimped-edge-top"></div>
         <div class="pack-stars">⭐⭐⭐⭐⭐</div>
         <div class="pack-title">ESTÁGIOS 2026</div>
-      </div>
-
-      <!-- Metade Inferior do Pacote -->
-      <div class="pack-bottom-half">
         <div class="pack-cbf-crest">🇧🇷</div>
         <div class="pack-footer">PACOTE DE FIGURINHAS</div>
         <div class="crimped-edge-bottom"></div>
@@ -2392,7 +2331,7 @@
       if (titleEl) titleEl.textContent = 'COMISSÃO TÉCNICA';
       if (footerEl) footerEl.textContent = 'PACOTE ESPECIAL';
 
-      container.className = 'pack-container';
+      container.classList.remove('shaking', 'ripping', 'revealed-card');
 
       // Renderizar as 4 figurinhas inicialmente viradas de costas
       showcase.innerHTML = comissaoTecnica.map((ct, idx) => {
@@ -2728,7 +2667,7 @@
       const beam = document.getElementById('pack-glow-beam');
 
       // Resetar classes do pacote
-      container.className = 'pack-container';
+      container.classList.remove('shaking', 'ripping', 'revealed-card');
 
       // Restaurar textos padrão do pacote para os alunos
       const titleEl = container.querySelector('.pack-title');
