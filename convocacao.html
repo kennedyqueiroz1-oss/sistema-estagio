@@ -1182,6 +1182,33 @@
       padding-bottom: 25px;
     }
 
+    /* Estilos para pacote com imagem customizada */
+    .has-custom-pack .pack-top-half,
+    .has-custom-pack .pack-bottom-half {
+      background-image: var(--pack-image-url);
+      background-size: 100% 200%;
+      background-repeat: no-repeat;
+      border: none;
+      box-shadow: none;
+    }
+
+    .has-custom-pack .pack-top-half {
+      background-position: top center;
+    }
+
+    .has-custom-pack .pack-bottom-half {
+      background-position: bottom center;
+    }
+
+    .has-custom-pack .pack-stars,
+    .has-custom-pack .pack-title,
+    .has-custom-pack .pack-cbf-crest,
+    .has-custom-pack .pack-footer,
+    .has-custom-pack .crimped-edge-top,
+    .has-custom-pack .crimped-edge-bottom {
+      display: none !important;
+    }
+
     /* Efeito de feixe de luz brilhante saindo de dentro */
     .pack-glow-beam {
       position: absolute;
@@ -3308,8 +3335,29 @@
       }
     }
 
+    function detectarPacoteCustomizado() {
+      const formatos = ['pacote.png', 'pacote.jpg', 'pacote.jpeg', 'pacote.webp'];
+      let detectado = false;
+      
+      formatos.forEach(src => {
+        if (detectado) return;
+        const img = new Image();
+        img.onload = () => {
+          if (detectado) return;
+          detectado = true;
+          const container = document.getElementById('pack-container');
+          if (container) {
+            container.classList.add('has-custom-pack');
+            container.style.setProperty('--pack-image-url', `url('${src}')`);
+          }
+        };
+        img.src = src;
+      });
+    }
+
     // Inicializar carregamento de dados
     carregarDados();
+    detectarPacoteCustomizado();
 
     // ─── INTEGRAÇÃO COM ÁUDIO DO YOUTUBE ───
     let ytPlayer = null;
