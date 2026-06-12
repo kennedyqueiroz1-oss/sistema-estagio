@@ -1289,6 +1289,87 @@
       pointer-events: none;
       z-index: 2000;
     }
+
+    /* ─── COMISSÃO TECNICA: PACOTE DE 4 FIGURINHAS EM LEQUE ─── */
+    #comissao-stickers-area {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      max-width: 100%;
+      overflow-x: visible;
+    }
+
+    #comissao-stickers-area .sticker-wrap {
+      width: 240px;
+      height: 335px;
+      flex-shrink: 0;
+    }
+
+    #comissao-stickers-area .sf-name {
+      font-size: 1.4rem;
+    }
+
+    #comissao-stickers-area .sf-lbl {
+      font-size: 0.55rem;
+    }
+
+    #comissao-stickers-area .sf-empresa-mini {
+      font-size: 1rem;
+    }
+
+    #comissao-stickers-area .sf-pos {
+      font-size: 0.75rem;
+    }
+
+    #comissao-stickers-area .sf-num {
+      font-size: 1.1rem;
+    }
+
+    #comissao-stickers-area .sf-stats {
+      font-size: 0.7rem;
+      gap: 8px;
+    }
+
+    .pack-sticker-showcase {
+      width: 280px;
+      height: 390px;
+    }
+
+    .pack-sticker-showcase .fan-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+      transform-origin: bottom center;
+    }
+
+    /* Stack inicial das figurinhas no pacote */
+    .pack-container .pack-sticker-showcase .fan-card {
+      transform: scale(0.8) translate3d(0, 0, 0) rotate(0deg);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+    }
+
+    /* Animação em leque quando revelado */
+    .pack-container.revealed-card .pack-sticker-showcase .fan-card.card-1 {
+      transform: scale(0.8) translate3d(-190px, -20px, 0) rotate(-15deg);
+      z-index: 11;
+    }
+    .pack-container.revealed-card .pack-sticker-showcase .fan-card.card-2 {
+      transform: scale(0.82) translate3d(-65px, -5px, 5px) rotate(-5deg);
+      z-index: 12;
+    }
+    .pack-container.revealed-card .pack-sticker-showcase .fan-card.card-3 {
+      transform: scale(0.82) translate3d(65px, -5px, 10px) rotate(5deg);
+      z-index: 13;
+    }
+    .pack-container.revealed-card .pack-sticker-showcase .fan-card.card-4 {
+      transform: scale(0.8) translate3d(190px, -20px, 15px) rotate(15deg);
+      z-index: 14;
+    }
   </style>
 </head>
 
@@ -1313,7 +1394,9 @@
 
     <div class="setup-card">
       <h2>📋 COMISSÃO TÉCNICA (4 PROFESSORES)</h2>
-      <div id="comissao-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; max-height: 30vh; overflow-y: auto; padding-right: 8px;"></div>
+      <div id="comissao-list"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; max-height: 30vh; overflow-y: auto; padding-right: 8px;">
+      </div>
     </div>
 
     <button class="btn-add-empresa" onclick="addEmpresa()">➕ Adicionar Empresa</button>
@@ -1321,7 +1404,8 @@
   </div>
 
   <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
-  <div id="comissao-screen" style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: flex-start; padding-bottom: 120px; position: relative; overflow: hidden;">
+  <div id="comissao-screen"
+    style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: flex-start; padding-bottom: 120px; position: relative; overflow: hidden;">
     <div class="field-bg"></div>
     <div class="field-lines">
       <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -1336,7 +1420,9 @@
     <div class="empresa-banner" style="padding-top: 3rem; margin-bottom: 1.5rem;">
       <div class="empresa-badge" style="border-color: var(--branco);">
         <span class="label">apresentando a</span>
-        <div class="nome" style="background: var(--silver-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">COMISSÃO TÉCNICA</div>
+        <div class="nome"
+          style="background: var(--silver-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          COMISSÃO TÉCNICA</div>
       </div>
       <div class="conveying-label">TEMPORADA 2026</div>
     </div>
@@ -1344,8 +1430,9 @@
     <div class="stickers-area" id="comissao-stickers-area" style="gap: 30px; margin-bottom: 2rem;"></div>
 
     <div class="field-actions" style="margin-top: auto;">
-      <button class="btn-convocar" id="btn-comissao-convocar" onclick="revelarProximoComissao()">⚽ REVELAR INTEGRANTE</button>
-      <button class="btn-prox-empresa" id="btn-comissao-prosseguir" onclick="prosseguirParaEstagiarios()" style="display: none;">INICIAR ESCALAÇÃO DOS ALUNOS →</button>
+      <button class="btn-convocar" id="btn-comissao-convocar" onclick="revelarComissaoCompleta()">⚽ ABRIR PACOTE DA COMISSÃO</button>
+      <button class="btn-prox-empresa" id="btn-comissao-prosseguir" onclick="prosseguirParaEstagiarios()"
+        style="display: none;">INICIAR ESCALAÇÃO DOS ALUNOS →</button>
     </div>
   </div>
 
@@ -1381,7 +1468,9 @@
       <div class="empresa-badge">
         <span class="label">convocação para</span>
         <div class="nome" id="empresa-nome-display">—</div>
-        <div class="tecnico" id="empresa-tecnico-display" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--amarelo); margin-top: 6px; letter-spacing: 2px;">TÉCNICO DE ACOMPANHAMENTO: —</div>
+        <div class="tecnico" id="empresa-tecnico-display"
+          style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--amarelo); margin-top: 6px; letter-spacing: 2px;">
+          TÉCNICO DE ACOMPANHAMENTO: —</div>
       </div>
       <div class="conveying-label">TURMA 2026</div>
     </div>
@@ -1437,10 +1526,10 @@
     let isAnimatingPack = false;
 
     let comissaoTecnica = [
-      { id: 'ct1', nome: 'Cinthia', cargo: 'COMISSÃO TÉCNICA', photoUrl: null },
-      { id: 'ct2', nome: 'Verônica', cargo: 'TÉCNICA / PROFESSORA', photoUrl: null },
-      { id: 'ct3', nome: 'Reinaldo', cargo: 'TÉCNICO / PROFESSOR', photoUrl: null },
-      { id: 'ct4', nome: 'Kennedy', cargo: 'COMISSÃO TÉCNICA', photoUrl: null }
+      { id: 'ct1', nome: 'Cinthia', cargo: 'TÉCNICA', photoUrl: null },
+      { id: 'ct2', nome: 'Verônica', cargo: 'TÉCNICA', photoUrl: null },
+      { id: 'ct3', nome: 'Reinaldo', cargo: 'TÉCNICO', photoUrl: null },
+      { id: 'ct4', nome: 'Kennedy', cargo: 'TÉCNICO', photoUrl: null }
     ];
     let currentComissaoIdx = 0;
     let isShowingComissao = false;
@@ -1881,7 +1970,7 @@
       empresas.forEach((emp, ei) => {
         const div = document.createElement('div');
         div.className = 'empresa-block';
-        
+
         // Seletor de técnicos
         const optReinaldo = `<option value="Reinaldo" ${emp.tecnico === 'Reinaldo' ? 'selected' : ''}>Técnico: Reinaldo</option>`;
         const optVeronica = `<option value="Verônica" ${emp.tecnico === 'Verônica' ? 'selected' : ''}>Técnico: Verônica</option>`;
@@ -1947,10 +2036,10 @@
     function startComissaoPresentation() {
       isShowingComissao = true;
       currentComissaoIdx = 0;
-      
+
       document.getElementById('comissao-screen').style.display = 'flex';
       document.getElementById('comissao-stickers-area').innerHTML = '';
-      
+
       const btnC = document.getElementById('btn-comissao-convocar');
       const btnP = document.getElementById('btn-comissao-prosseguir');
       btnC.style.display = 'block';
@@ -1958,22 +2047,29 @@
       btnP.style.display = 'none';
     }
 
-    function revelarProximoComissao() {
+    function revelarComissaoCompleta() {
       if (isAnimatingPack) return;
-      if (currentComissaoIdx >= comissaoTecnica.length) return;
 
       isAnimatingPack = true;
-      const ct = comissaoTecnica[currentComissaoIdx];
-      const num = currentComissaoIdx + 1;
       const total = comissaoTecnica.length;
 
       const overlay = document.getElementById('pack-opening-overlay');
       const container = document.getElementById('pack-container');
       const showcase = document.getElementById('pack-sticker-showcase');
-      
+
+      // Modificar textos do pacote para Comissão Técnica
+      const titleEl = container.querySelector('.pack-title');
+      const footerEl = container.querySelector('.pack-footer');
+      if (titleEl) titleEl.textContent = 'COMISSÃO TÉCNICA';
+      if (footerEl) footerEl.textContent = 'PACOTE ESPECIAL';
+
       container.className = 'pack-container';
-      showcase.innerHTML = buildComissaoStickerHTML(ct, num, false);
       
+      // Renderizar as 4 figurinhas inicialmente viradas de costas
+      showcase.innerHTML = comissaoTecnica.map((ct, idx) => {
+        return `<div class="sticker-wrap fan-card card-${idx + 1}">${buildComissaoStickerHTML(ct, idx + 1, false)}</div>`;
+      }).join('');
+
       overlay.classList.add('active');
       sfx.playTear();
 
@@ -1989,67 +2085,99 @@
 
       setTimeout(() => {
         container.classList.add('revealed-card');
-        const innerShowcase = showcase.querySelector('.sticker-inner');
-        if (innerShowcase) {
-          innerShowcase.classList.remove('hidden-back');
-          innerShowcase.classList.add('revealed');
-        }
+        
+        // Virar todas as 4 figurinhas para a frente
+        const inners = showcase.querySelectorAll('.sticker-inner');
+        inners.forEach(inner => {
+          inner.classList.remove('hidden-back');
+          inner.classList.add('revealed');
+        });
+        
         sfx.playChime();
         sfx.playStadiumHorn();
         sfx.playCrowdRoar();
-        launchConfetti(50);
+        launchConfetti(80);
       }, 1600);
 
       setTimeout(() => {
         const targetArea = document.getElementById('comissao-stickers-area');
-        const tempSlot = document.createElement('div');
-        tempSlot.className = 'sticker-wrap entering';
-        tempSlot.style.visibility = 'hidden';
-        tempSlot.innerHTML = buildComissaoStickerHTML(ct, num, true);
-        targetArea.appendChild(tempSlot);
+        targetArea.innerHTML = ''; // Limpar caso já exista algo
+        
+        // Criar slots invisíveis na área final
+        const slots = [];
+        comissaoTecnica.forEach((ct, idx) => {
+          const slot = document.createElement('div');
+          slot.className = 'sticker-wrap entering';
+          slot.style.visibility = 'hidden';
+          slot.innerHTML = buildComissaoStickerHTML(ct, idx + 1, true);
+          targetArea.appendChild(slot);
+          slots.push(slot);
+        });
 
-        const targetRect = tempSlot.getBoundingClientRect();
-        const showcaseRect = showcase.getBoundingClientRect();
-
-        const flyClone = document.createElement('div');
-        flyClone.className = 'sticker-wrap';
-        flyClone.style.position = 'fixed';
-        flyClone.style.zIndex = '9999';
-        flyClone.style.top = showcaseRect.top + 'px';
-        flyClone.style.left = showcaseRect.left + 'px';
-        flyClone.style.width = showcaseRect.width + 'px';
-        flyClone.style.height = showcaseRect.height + 'px';
-        flyClone.innerHTML = buildComissaoStickerHTML(ct, num, true);
-
-        document.body.appendChild(flyClone);
+        // Fechar o overlay
         overlay.classList.remove('active');
-        flyClone.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
 
-        setTimeout(() => {
-          flyClone.style.top = targetRect.top + 'px';
-          flyClone.style.left = targetRect.left + 'px';
-          flyClone.style.width = targetRect.width + 'px';
-          flyClone.style.height = targetRect.height + 'px';
-          flyClone.style.transform = 'none';
-        }, 50);
+        // Restaurar textos padrão do pacote para os alunos
+        if (titleEl) titleEl.textContent = 'ESTÁGIOS 2026';
+        if (footerEl) footerEl.textContent = 'PACOTE DE FIGURINHAS';
 
-        setTimeout(() => {
-          tempSlot.style.visibility = 'visible';
-          apply3DTilt(tempSlot);
-          flyClone.remove();
+        const fanCards = showcase.querySelectorAll('.fan-card');
 
-          currentComissaoIdx++;
-          isAnimatingPack = false;
+        // Disparar o voo em cascata
+        fanCards.forEach((fanCard, idx) => {
+          setTimeout(() => {
+            const ct = comissaoTecnica[idx];
+            const slot = slots[idx];
 
-          if (currentComissaoIdx >= total) {
-            document.getElementById('btn-comissao-convocar').disabled = true;
-            document.getElementById('btn-comissao-convocar').style.display = 'none';
+            const fanRect = fanCard.getBoundingClientRect();
+            const targetRect = slot.getBoundingClientRect();
 
-            const btnP = document.getElementById('btn-comissao-prosseguir');
-            btnP.style.display = 'block';
-            launchConfetti(120);
-          }
-        }, 850);
+            const flyClone = document.createElement('div');
+            flyClone.className = 'sticker-wrap';
+            flyClone.style.position = 'fixed';
+            flyClone.style.zIndex = '9999';
+            flyClone.style.top = fanRect.top + 'px';
+            flyClone.style.left = fanRect.left + 'px';
+            flyClone.style.width = fanRect.width + 'px';
+            flyClone.style.height = fanRect.height + 'px';
+            
+            // Copiar rotação/transformação computada para o início do voo
+            const computedStyle = window.getComputedStyle(fanCard);
+            flyClone.style.transform = computedStyle.transform;
+
+            flyClone.innerHTML = buildComissaoStickerHTML(ct, idx + 1, true);
+            document.body.appendChild(flyClone);
+
+            // Animação de transição
+            flyClone.style.transition = 'all 0.9s cubic-bezier(0.25, 1, 0.5, 1)';
+
+            setTimeout(() => {
+              flyClone.style.top = targetRect.top + 'px';
+              flyClone.style.left = targetRect.left + 'px';
+              flyClone.style.width = targetRect.width + 'px';
+              flyClone.style.height = targetRect.height + 'px';
+              flyClone.style.transform = 'none'; // Aplanar ao pousar
+            }, 50);
+
+            setTimeout(() => {
+              slot.style.visibility = 'visible';
+              apply3DTilt(slot);
+              flyClone.remove();
+
+              // Se for o último pouso, liberar interface
+              if (idx === total - 1) {
+                isAnimatingPack = false;
+                document.getElementById('btn-comissao-convocar').disabled = true;
+                document.getElementById('btn-comissao-convocar').style.display = 'none';
+
+                const btnP = document.getElementById('btn-comissao-prosseguir');
+                btnP.style.display = 'block';
+                launchConfetti(150);
+              }
+            }, 950);
+
+          }, idx * 150); // Cascata a cada 150ms
+        });
 
       }, 3800);
     }
@@ -2072,7 +2200,7 @@
       banner.classList.add('show');
 
       document.getElementById('empresa-nome-display').textContent = emp.nome.toUpperCase();
-      
+
       const tec = emp.tecnico || 'Reinaldo';
       document.getElementById('empresa-tecnico-display').textContent = `TÉCNICO DE ACOMPANHAMENTO: ${tec.toUpperCase()}`;
 
@@ -2255,6 +2383,13 @@
 
       // Resetar classes do pacote
       container.className = 'pack-container';
+      
+      // Restaurar textos padrão do pacote para os alunos
+      const titleEl = container.querySelector('.pack-title');
+      const footerEl = container.querySelector('.pack-footer');
+      if (titleEl) titleEl.textContent = 'ESTÁGIOS 2026';
+      if (footerEl) footerEl.textContent = 'PACOTE DE FIGURINHAS';
+
       showcase.innerHTML = buildStickerHTML(aluno, num, false); // Começa virado de costas
 
       // Exibir Overlay e tocar efeito sonoro de entrada
