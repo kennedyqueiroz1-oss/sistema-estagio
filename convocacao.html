@@ -3168,10 +3168,31 @@
         }
 
         // Salvar localmente como redundância / offline
-        localStorage.setItem('est_emp', JSON.stringify(newDbEmpresas));
-        localStorage.setItem('est_alunos', JSON.stringify(newDbAlunos));
-        localStorage.setItem('est_enc', JSON.stringify(newDbEnc));
-        localStorage.setItem('est_comissao', JSON.stringify(newComissao));
+        let salvoLocal = true;
+        try {
+          localStorage.setItem('est_emp', JSON.stringify(newDbEmpresas));
+        } catch (e) {
+          console.warn("Falha ao salvar est_emp no localStorage:", e);
+          salvoLocal = false;
+        }
+        try {
+          localStorage.setItem('est_alunos', JSON.stringify(newDbAlunos));
+        } catch (e) {
+          console.warn("Falha ao salvar est_alunos no localStorage:", e);
+          salvoLocal = false;
+        }
+        try {
+          localStorage.setItem('est_enc', JSON.stringify(newDbEnc));
+        } catch (e) {
+          console.warn("Falha ao salvar est_enc no localStorage:", e);
+          salvoLocal = false;
+        }
+        try {
+          localStorage.setItem('est_comissao', JSON.stringify(newComissao));
+        } catch (e) {
+          console.warn("Falha ao salvar est_comissao no localStorage:", e);
+          salvoLocal = false;
+        }
 
         // Atualizar variáveis originais em memória
         window.originalEmpresas = newDbEmpresas;
@@ -3179,9 +3200,17 @@
         window.originalEnc = newDbEnc;
 
         if (salvoServidor) {
-          alert('💾 Alterações salvas com sucesso no banco de dados (Supabase) e localmente!');
+          if (salvoLocal) {
+            alert('💾 Alterações salvas com sucesso no banco de dados (Supabase) e localmente!');
+          } else {
+            alert('💾 Alterações salvas com sucesso no banco de dados (Supabase)!\n(Nota: O limite de armazenamento do navegador foi excedido localmente devido ao tamanho das imagens, mas os dados foram salvos no servidor online com sucesso.)');
+          }
         } else {
-          alert('💾 Alterações salvas com sucesso localmente (modo offline)!');
+          if (salvoLocal) {
+            alert('💾 Alterações salvas com sucesso localmente (modo offline)!');
+          } else {
+            alert('❌ Não foi possível salvar os dados no servidor e o limite de armazenamento local foi excedido. Tente reduzir o tamanho das fotos.');
+          }
         }
 
       } catch (err) {
