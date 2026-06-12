@@ -1311,8 +1311,42 @@
       <div id="empresas-list" style="max-height: 48vh; overflow-y: auto; padding-right: 8px;"></div>
     </div>
 
+    <div class="setup-card">
+      <h2>📋 COMISSÃO TÉCNICA (4 PROFESSORES)</h2>
+      <div id="comissao-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; max-height: 30vh; overflow-y: auto; padding-right: 8px;"></div>
+    </div>
+
     <button class="btn-add-empresa" onclick="addEmpresa()">➕ Adicionar Empresa</button>
     <button class="btn-start" onclick="startPresentation()">🏆 CONFIRMAR ESCALAÇÃO & INICIAR</button>
+  </div>
+
+  <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
+  <div id="comissao-screen" style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: flex-start; padding-bottom: 120px; position: relative; overflow: hidden;">
+    <div class="field-bg"></div>
+    <div class="field-lines">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect x="50" y="50" width="900" height="600" fill="none" stroke="white" stroke-width="2" />
+        <line x1="500" y1="50" x2="500" y2="650" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="90" fill="none" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="4" fill="white" />
+      </svg>
+    </div>
+    <div class="field-vignette"></div>
+
+    <div class="empresa-banner" style="padding-top: 3rem; margin-bottom: 1.5rem;">
+      <div class="empresa-badge" style="border-color: var(--branco);">
+        <span class="label">apresentando a</span>
+        <div class="nome" style="background: var(--silver-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">COMISSÃO TÉCNICA</div>
+      </div>
+      <div class="conveying-label">TEMPORADA 2026</div>
+    </div>
+
+    <div class="stickers-area" id="comissao-stickers-area" style="gap: 30px; margin-bottom: 2rem;"></div>
+
+    <div class="field-actions" style="margin-top: auto;">
+      <button class="btn-convocar" id="btn-comissao-convocar" onclick="revelarProximoComissao()">⚽ REVELAR INTEGRANTE</button>
+      <button class="btn-prox-empresa" id="btn-comissao-prosseguir" onclick="prosseguirParaEstagiarios()" style="display: none;">INICIAR ESCALAÇÃO DOS ALUNOS →</button>
+    </div>
   </div>
 
   <!-- ═══════════ CAMPO ═══════════ -->
@@ -1347,6 +1381,7 @@
       <div class="empresa-badge">
         <span class="label">convocação para</span>
         <div class="nome" id="empresa-nome-display">—</div>
+        <div class="tecnico" id="empresa-tecnico-display" style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(1rem, 2.5vw, 1.4rem); color: var(--amarelo); margin-top: 6px; letter-spacing: 2px;">TÉCNICO DE ACOMPANHAMENTO: —</div>
       </div>
       <div class="conveying-label">TURMA 2026</div>
     </div>
@@ -1400,6 +1435,15 @@
     let currentEmpIdx = 0;
     let currentAlunoIdx = 0;
     let isAnimatingPack = false;
+
+    let comissaoTecnica = [
+      { id: 'ct1', nome: 'Reinaldo', cargo: 'TÉCNICO / PROFESSOR', photoUrl: null },
+      { id: 'ct2', nome: 'Verônica', cargo: 'TÉCNICA / PROFESSORA', photoUrl: null },
+      { id: 'ct3', nome: 'Professor 3', cargo: 'COMISSÃO TÉCNICA', photoUrl: null },
+      { id: 'ct4', nome: 'Professor 4', cargo: 'COMISSÃO TÉCNICA', photoUrl: null }
+    ];
+    let currentComissaoIdx = 0;
+    let isShowingComissao = false;
 
     /* ─── GERADOR DE BACKDROP PATROCÍNIOS ─── */
     function renderPressLogos() {
@@ -1794,16 +1838,62 @@
       reader.readAsDataURL(file);
     }
 
+    function renderSetupComissao() {
+      const list = document.getElementById('comissao-list');
+      if (!list) return;
+      list.innerHTML = '';
+      comissaoTecnica.forEach((ct, cti) => {
+        const div = document.createElement('div');
+        div.className = 'empresa-block';
+        div.style.margin = '0';
+        div.style.padding = '1rem';
+        div.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <strong style="color: var(--amarelo); font-size: 0.9rem;">Professor ${cti + 1}</strong>
+            <input type="text" placeholder="Nome do Professor" value="${ct.nome}"
+              oninput="comissaoTecnica[${cti}].nome=this.value" style="background: rgba(0, 39, 118, 0.2); border: 1px solid rgba(255, 223, 0, 0.3); border-radius: 8px; padding: 6px 10px; color: #fff; font-size: 0.9rem;">
+            <input type="text" placeholder="Cargo/Função" value="${ct.cargo}"
+              oninput="comissaoTecnica[${cti}].cargo=this.value" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 10px; color: #aaa; font-size: 0.8rem;">
+            <label class="photo-label ${ct.photoUrl ? 'ok' : ''}" style="padding: 6px 10px; font-size: 0.75rem;">
+              <input type="file" accept="image/*" onchange="handleComissaoPhoto(event, ${cti})">
+              ${ct.photoUrl ? '✓ Foto Carregada' : '📷 Enviar Foto'}
+            </label>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function handleComissaoPhoto(event, idx) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        comissaoTecnica[idx].photoUrl = e.target.result;
+        renderSetupComissao();
+      };
+      reader.readAsDataURL(file);
+    }
+
     function renderSetup() {
       const list = document.getElementById('empresas-list');
       list.innerHTML = '';
       empresas.forEach((emp, ei) => {
         const div = document.createElement('div');
         div.className = 'empresa-block';
+        
+        // Seletor de técnicos
+        const optReinaldo = `<option value="Reinaldo" ${emp.tecnico === 'Reinaldo' ? 'selected' : ''}>Técnico: Reinaldo</option>`;
+        const optVeronica = `<option value="Verônica" ${emp.tecnico === 'Verônica' ? 'selected' : ''}>Técnico: Verônica</option>`;
+
         div.innerHTML = `
-      <div class="empresa-header">
+      <div class="empresa-header" style="flex-wrap: wrap; gap: 8px;">
         <input type="text" placeholder="Nome da Empresa (Ex: Google, TechCorp)" value="${emp.nome}"
-          oninput="empresas[${ei}].nome=this.value">
+          oninput="empresas[${ei}].nome=this.value" style="flex: 1; min-width: 200px;">
+        <select onchange="empresas[${ei}].tecnico=this.value" style="background: rgba(0, 39, 118, 0.3); border: 1px solid rgba(255, 223, 0, 0.4); border-radius: 10px; padding: 10px; color: var(--amarelo); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 1px; outline: none; cursor: pointer;">
+          ${optReinaldo}
+          ${optVeronica}
+        </select>
         <button class="btn-del-empresa" onclick="removeEmpresa(${emp.id})">×</button>
       </div>
       <div class="alunos-da-empresa" id="alunos-${emp.id}"></div>
@@ -1839,18 +1929,136 @@
       }
       empresas = valid.map(e => ({
         ...e,
-        alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3) // Garante no máximo 3 alunos por empresa
+        tecnico: e.tecnico || 'Reinaldo',
+        alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3)
       }));
 
       currentEmpIdx = 0;
       currentAlunoIdx = 0;
+      currentComissaoIdx = 0;
 
       sfx.playWhistle();
-      music.play(); // Toca a batida do tamborzão de funk
+      music.play();
 
       document.getElementById('setup-screen').style.display = 'none';
+      startComissaoPresentation();
+    }
+
+    function startComissaoPresentation() {
+      isShowingComissao = true;
+      currentComissaoIdx = 0;
+      
+      document.getElementById('comissao-screen').style.display = 'flex';
+      document.getElementById('comissao-stickers-area').innerHTML = '';
+      
+      const btnC = document.getElementById('btn-comissao-convocar');
+      const btnP = document.getElementById('btn-comissao-prosseguir');
+      btnC.style.display = 'block';
+      btnC.disabled = false;
+      btnP.style.display = 'none';
+    }
+
+    function revelarProximoComissao() {
+      if (isAnimatingPack) return;
+      if (currentComissaoIdx >= comissaoTecnica.length) return;
+
+      isAnimatingPack = true;
+      const ct = comissaoTecnica[currentComissaoIdx];
+      const num = currentComissaoIdx + 1;
+      const total = comissaoTecnica.length;
+
+      const overlay = document.getElementById('pack-opening-overlay');
+      const container = document.getElementById('pack-container');
+      const showcase = document.getElementById('pack-sticker-showcase');
+      
+      container.className = 'pack-container';
+      showcase.innerHTML = buildComissaoStickerHTML(ct, num, false);
+      
+      overlay.classList.add('active');
+      sfx.playTear();
+
+      setTimeout(() => {
+        container.classList.add('shaking');
+      }, 400);
+
+      setTimeout(() => {
+        container.classList.remove('shaking');
+        container.classList.add('ripping');
+        sfx.playWhistle();
+      }, 1000);
+
+      setTimeout(() => {
+        container.classList.add('revealed-card');
+        const innerShowcase = showcase.querySelector('.sticker-inner');
+        if (innerShowcase) {
+          innerShowcase.classList.remove('hidden-back');
+          innerShowcase.classList.add('revealed');
+        }
+        sfx.playChime();
+        sfx.playStadiumHorn();
+        sfx.playCrowdRoar();
+        launchConfetti(50);
+      }, 1600);
+
+      setTimeout(() => {
+        const targetArea = document.getElementById('comissao-stickers-area');
+        const tempSlot = document.createElement('div');
+        tempSlot.className = 'sticker-wrap entering';
+        tempSlot.style.visibility = 'hidden';
+        tempSlot.innerHTML = buildComissaoStickerHTML(ct, num, true);
+        targetArea.appendChild(tempSlot);
+
+        const targetRect = tempSlot.getBoundingClientRect();
+        const showcaseRect = showcase.getBoundingClientRect();
+
+        const flyClone = document.createElement('div');
+        flyClone.className = 'sticker-wrap';
+        flyClone.style.position = 'fixed';
+        flyClone.style.zIndex = '9999';
+        flyClone.style.top = showcaseRect.top + 'px';
+        flyClone.style.left = showcaseRect.left + 'px';
+        flyClone.style.width = showcaseRect.width + 'px';
+        flyClone.style.height = showcaseRect.height + 'px';
+        flyClone.innerHTML = buildComissaoStickerHTML(ct, num, true);
+
+        document.body.appendChild(flyClone);
+        overlay.classList.remove('active');
+        flyClone.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        setTimeout(() => {
+          flyClone.style.top = targetRect.top + 'px';
+          flyClone.style.left = targetRect.left + 'px';
+          flyClone.style.width = targetRect.width + 'px';
+          flyClone.style.height = targetRect.height + 'px';
+          flyClone.style.transform = 'none';
+        }, 50);
+
+        setTimeout(() => {
+          tempSlot.style.visibility = 'visible';
+          apply3DTilt(tempSlot);
+          flyClone.remove();
+
+          currentComissaoIdx++;
+          isAnimatingPack = false;
+
+          if (currentComissaoIdx >= total) {
+            document.getElementById('btn-comissao-convocar').disabled = true;
+            document.getElementById('btn-comissao-convocar').style.display = 'none';
+
+            const btnP = document.getElementById('btn-comissao-prosseguir');
+            btnP.style.display = 'block';
+            launchConfetti(120);
+          }
+        }, 850);
+
+      }, 3800);
+    }
+
+    function prosseguirParaEstagiarios() {
+      isShowingComissao = false;
+      document.getElementById('comissao-screen').style.display = 'none';
       document.getElementById('field-screen').style.display = 'flex';
-      loadEmpresa(currentEmpIdx);
+      loadEmpresa(0);
     }
 
     /* ─── APRESENTAÇÃO DE SELEÇÃO ─── */
@@ -1864,6 +2072,10 @@
       banner.classList.add('show');
 
       document.getElementById('empresa-nome-display').textContent = emp.nome.toUpperCase();
+      
+      const tec = emp.tecnico || 'Reinaldo';
+      document.getElementById('empresa-tecnico-display').textContent = `TÉCNICO DE ACOMPANHAMENTO: ${tec.toUpperCase()}`;
+
       document.getElementById('score-company-name').textContent = emp.nome.substring(0, 15).toUpperCase();
       document.getElementById('stickers-area').innerHTML = '';
       document.getElementById('score-convocados-count').textContent = `00 / ${String(emp.alunos.length).padStart(2, '0')}`;
@@ -1955,6 +2167,67 @@
                   <span>CAF: <strong>${statCaf}</strong></span>
                 </div>
                 <span class="sf-num">#${String(num).padStart(2, '0')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function buildComissaoStickerHTML(ct, num, revealed = true) {
+      if (ct.photoUrl) {
+        return `
+          <div class="sticker-inner ${revealed ? 'revealed' : 'hidden-back'}">
+            <div class="sb">
+              <div class="sb-cbf-crest">🇧🇷</div>
+              <div class="sb-text">COMISSÃO<br>TÉCNICA</div>
+              <div class="sb-stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="sf" style="padding: 0; border: none; background: transparent; display: block;">
+              <div class="sticker-hologram"></div>
+              <img src="${ct.photoUrl}" alt="${ct.nome}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px; display: block;">
+            </div>
+          </div>
+        `;
+      } else {
+        const initials = ct.nome.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 3);
+        const jerseySvg = `
+          <svg viewBox="0 0 100 100" class="jersey-svg" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 30,90 L 30,42 L 10,40 L 22,18 L 42,22 L 50,30 L 58,22 L 78,18 L 90,40 L 70,42 L 70,90 Z" fill="#002776" stroke="#ffdf00" stroke-width="3"/>
+            <path d="M 42,22 C 45,31 55,31 58,22" fill="none" stroke="#ffdf00" stroke-width="4.5"/>
+            <text x="50" y="55" font-family="'Bebas Neue', sans-serif" font-size="11" fill="#ffdf00" text-anchor="middle" font-weight="bold" letter-spacing="0.5">${ct.nome.toUpperCase()}</text>
+            <text x="50" y="80" font-family="'Orbitron', sans-serif" font-size="16" fill="#ffdf00" text-anchor="middle" font-weight="900">${initials}</text>
+          </svg>
+        `;
+        return `
+          <div class="sticker-inner ${revealed ? 'revealed' : 'hidden-back'}">
+            <div class="sb">
+              <div class="sb-cbf-crest">🇧🇷</div>
+              <div class="sb-text">COMISSÃO<br>TÉCNICA</div>
+              <div class="sb-stars">⭐⭐⭐⭐⭐</div>
+            </div>
+            <div class="sf" style="background: linear-gradient(135deg, var(--azul) 0%, var(--azul-dark) 60%, #0c1833 100%);">
+              <div class="sticker-hologram"></div>
+              <div class="sf-top">
+                <span class="sf-serie" style="color: var(--amarelo);">COMISSÃO TÉCNICA</span>
+                <span class="sf-stars-row" style="color: var(--amarelo);">⭐⭐⭐⭐⭐</span>
+                <span class="sf-flag">🇧🇷</span>
+              </div>
+              <div class="sf-photo">
+                ${jerseySvg}
+                <div class="sf-overlay">
+                  <div class="sf-name" style="background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${ct.nome.toUpperCase()}</div>
+                  <div class="sf-lbl" style="color: #fff;">FUNÇÃO</div>
+                  <div class="sf-empresa-mini" style="color: var(--amarelo);">${ct.cargo.toUpperCase()}</div>
+                </div>
+              </div>
+              <div class="sf-bot" style="background: var(--verde);">
+                <span class="sf-pos" style="color: rgba(255,255,255,0.8);">PROFESSOR</span>
+                <div class="sf-stats">
+                  <span>TAC: <strong>99</strong></span>
+                  <span>EXP: <strong>98</strong></span>
+                </div>
+                <span class="sf-num" style="color: #fff;">#CT</span>
               </div>
             </div>
           </div>
@@ -2135,10 +2408,12 @@
 
     function goSetup() {
       music.stop(); // Para a música se voltar para o setup
+      document.getElementById('comissao-screen').style.display = 'none';
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'none';
       document.getElementById('setup-screen').style.display = 'flex';
       renderSetup();
+      renderSetupComissao();
     }
 
     /* ─── CHUVA DE CONFETES BRASILEIROS (GREEN, YELLOW, BLUE, GOLD) ─── */
@@ -2264,7 +2539,7 @@
         ];
       } else {
         // Mapear para a estrutura da convocação
-        empresas = dbEmpresas.map(emp => {
+        empresas = dbEmpresas.map((emp, ei) => {
           const ids = dbEnc[emp.id] || [];
           const listAlunos = ids.map(aid => {
             const al = dbAlunos.find(a => a.id === aid);
@@ -2278,6 +2553,7 @@
           return {
             id: emp.id,
             nome: emp.name,
+            tecnico: emp.tecnico || (ei % 2 === 0 ? 'Reinaldo' : 'Verônica'),
             alunos: listAlunos
           };
         }).filter(emp => emp.alunos.length > 0);
@@ -2285,6 +2561,7 @@
 
       // Renderizar o setup inicial
       renderSetup();
+      renderSetupComissao();
       updateChyronText();
     }
 
