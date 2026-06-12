@@ -1506,6 +1506,34 @@
     <button class="btn-start" onclick="startPresentation()">🏆 CONFIRMAR ESCALAÇÃO & INICIAR</button>
   </div>
 
+  <!-- ═══════════ TELA DE ESPERA / AUDITÓRIO ═══════════ -->
+  <div id="waiting-screen" style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; text-align: center;">
+    <div class="field-bg"></div>
+    <div class="field-lines">
+      <svg viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect x="50" y="50" width="900" height="600" fill="none" stroke="white" stroke-width="2" />
+        <line x1="500" y1="50" x2="500" y2="650" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="90" fill="none" stroke="white" stroke-width="2" />
+        <circle cx="500" cy="350" r="4" fill="white" />
+      </svg>
+    </div>
+    <div class="field-vignette"></div>
+
+    <div class="setup-header" style="margin-bottom: 3.5rem;">
+      <div class="cbf-badge-main" style="font-size: 5rem; margin-bottom: 1.5rem;">🏆</div>
+      <h1 style="font-size: clamp(3rem, 8vw, 5.5rem); line-height: 1.05; letter-spacing: 4px; background: linear-gradient(180deg, var(--branco) 30%, var(--amarelo) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);">
+        CONVOCAÇÃO OFICIAL<br>DOS ESTAGIÁRIOS
+      </h1>
+      <p style="font-size: 1.4rem; letter-spacing: 3px; color: var(--amarelo); margin-top: 1rem; font-weight: 700; text-transform: uppercase;">
+        Temporada de 2026
+      </p>
+    </div>
+
+    <button class="btn-convocar" onclick="iniciarApresentacaoReal()" style="padding: 20px 80px; font-size: 2.2rem; letter-spacing: 5px; box-shadow: 0 0 50px rgba(255, 223, 0, 0.6), 0 10px 30px rgba(0, 0, 0, 0.7);">
+      ⚽ INICIAR
+    </button>
+  </div>
+
   <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
   <div id="comissao-screen"
     style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: flex-start; padding-bottom: 120px; position: relative; overflow: hidden;">
@@ -2132,10 +2160,15 @@
       currentAlunoIdx = 0;
       currentComissaoIdx = 0;
 
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('waiting-screen').style.display = 'flex';
+    }
+
+    function iniciarApresentacaoReal() {
       sfx.playWhistle();
       music.play();
 
-      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('waiting-screen').style.display = 'none';
       startComissaoPresentation();
     }
 
@@ -2666,6 +2699,7 @@
 
     function goSetup() {
       music.stop(); // Para a música se voltar para o setup
+      document.getElementById('waiting-screen').style.display = 'none';
       document.getElementById('comissao-screen').style.display = 'none';
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'none';
