@@ -26,6 +26,7 @@ CHAVES = {
     "est_alunos": "alunos",
     "est_emp": "empresas",
     "est_enc": "encaminhamentos",
+    "est_comissao": "comissao",
 }
 
 DEFAULTS = {
@@ -33,6 +34,7 @@ DEFAULTS = {
     "est_alunos": [],
     "est_emp": [],
     "est_enc": {},
+    "est_comissao": [],
 }
 
 MIME = {
