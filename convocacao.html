@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Convocação Oficial — Estágios 2025</title>
+  <title>Convocação Oficial — Estágios 2026</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@600;800&display=swap');
 
@@ -1303,7 +1303,7 @@
     <div class="setup-header">
       <div class="cbf-badge-main">🏆</div>
       <h1>CONVOCAÇÃO OFICIAL<br>DE ESTAGIÁRIOS</h1>
-      <p>Comissão Técnica — Temporada 2025</p>
+      <p>Comissão Técnica — Temporada 2026</p>
     </div>
 
     <div class="setup-card">
@@ -1348,7 +1348,7 @@
         <span class="label">convocação para</span>
         <div class="nome" id="empresa-nome-display">—</div>
       </div>
-      <div class="conveying-label">TURMA 2025</div>
+      <div class="conveying-label">TURMA 2026</div>
     </div>
 
     <div class="stickers-area" id="stickers-area"></div>
@@ -1368,7 +1368,7 @@
       <div class="pack-top-half">
         <div class="crimped-edge-top"></div>
         <div class="pack-stars">⭐⭐⭐⭐⭐</div>
-        <div class="pack-title">ESTÁGIOS 2025</div>
+        <div class="pack-title">ESTÁGIOS 2026</div>
       </div>
 
       <!-- Metade Inferior do Pacote -->
@@ -1415,7 +1415,7 @@
     function renderPressLogos() {
       const container = document.getElementById('press-logos');
       container.innerHTML = '';
-      const textOptions = ['ESTÁGIO 2025', 'CBF', 'BRASIL', '🏆', 'OFFICIAL', 'SELEÇÃO'];
+      const textOptions = ['ESTÁGIO 2026', 'CBF', 'BRASIL', '🏆', 'OFFICIAL', 'SELEÇÃO'];
       for (let i = 0; i < 64; i++) {
         const item = document.createElement('div');
         item.className = 'press-logo-item';
@@ -1629,7 +1629,7 @@
       isMuted: false,
       nodes: [],
       whistleInterval: null,
-      
+
       init() {
         if (this.ctx) return;
         sfx.init();
@@ -1638,17 +1638,17 @@
         this.masterGain.gain.value = 0.22; // Nível confortável de fundo
         this.masterGain.connect(this.ctx.destination);
       },
-      
+
       play() {
         this.init();
         if (this.isPlaying) return;
-        
+
         if (this.ctx.state === 'suspended') {
           this.ctx.resume();
         }
         this.isPlaying = true;
         this.nodes = [];
-        
+
         // Função para gerar ondas de ruído de torcida oscilando em volume/frequência
         const createCrowdWave = (baseFreq, lfoSpeed, depth, vol) => {
           const bufferSize = this.ctx.sampleRate * 2.0;
@@ -1657,57 +1657,57 @@
           for (let i = 0; i < bufferSize; i++) {
             data[i] = Math.random() * 2 - 1;
           }
-          
+
           const noise = this.ctx.createBufferSource();
           noise.buffer = buffer;
           noise.loop = true;
-          
+
           const filter = this.ctx.createBiquadFilter();
           filter.type = 'bandpass';
           filter.frequency.value = baseFreq;
           filter.Q.value = 1.0;
-          
+
           const gainNode = this.ctx.createGain();
           gainNode.gain.value = vol;
-          
+
           // LFO para oscilar a frequência do filtro (torcida vibrando)
           const lfoFilter = this.ctx.createOscillator();
           const lfoFilterGain = this.ctx.createGain();
           lfoFilter.type = 'sine';
           lfoFilter.frequency.value = lfoSpeed;
           lfoFilterGain.gain.value = depth;
-          
+
           lfoFilter.connect(lfoFilterGain);
           lfoFilterGain.connect(filter.frequency);
-          
+
           // LFO para oscilar o volume (gritos que sobem e descem)
           const lfoVolume = this.ctx.createOscillator();
           const lfoVolumeGain = this.ctx.createGain();
           lfoVolume.type = 'sine';
           lfoVolume.frequency.value = lfoSpeed * 1.3;
           lfoVolumeGain.gain.value = vol * 0.45;
-          
+
           lfoVolume.connect(lfoVolumeGain);
           lfoVolumeGain.connect(gainNode.gain);
-          
+
           noise.connect(filter);
           filter.connect(gainNode);
           gainNode.connect(this.masterGain);
-          
+
           lfoFilter.start();
           lfoVolume.start();
           noise.start();
-          
+
           this.nodes.push(noise, filter, gainNode, lfoFilter, lfoFilterGain, lfoVolume, lfoVolumeGain);
         };
-        
+
         // 1. Som grave (murmúrio de estádio lotado)
         createCrowdWave(400, 0.08, 110, 0.16);
         // 2. Som médio (gritos e burburinho disperso)
         createCrowdWave(680, 0.05, 170, 0.12);
         // 3. Som agudo (ambiente geral de arquibancada)
         createCrowdWave(1150, 0.13, 250, 0.06);
-        
+
         // Apitos dispersos ao fundo de vez em quando
         this.whistleInterval = setInterval(() => {
           if (this.isMuted || !this.isPlaying) return;
@@ -1716,18 +1716,18 @@
           osc.type = 'sine';
           osc.frequency.setValueAtTime(1200 + Math.random() * 600, this.ctx.currentTime);
           osc.frequency.linearRampToValueAtTime(1400, this.ctx.currentTime + 0.25);
-          
+
           oscGain.gain.setValueAtTime(0, this.ctx.currentTime);
           oscGain.gain.linearRampToValueAtTime(0.012, this.ctx.currentTime + 0.08);
           oscGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.45);
-          
+
           osc.connect(oscGain);
           oscGain.connect(this.masterGain);
           osc.start();
           osc.stop(this.ctx.currentTime + 0.55);
         }, 4500);
       },
-      
+
       stop() {
         if (!this.isPlaying) return;
         this.isPlaying = false;
@@ -1735,11 +1735,11 @@
         this.nodes.forEach(node => {
           try {
             node.stop();
-          } catch (e) {}
+          } catch (e) { }
         });
         this.nodes = [];
       },
-      
+
       toggleMute() {
         this.isMuted = !this.isMuted;
         if (this.masterGain) {
@@ -1763,28 +1763,6 @@
       }
     }
 
-    /* ─── NOTÍCIAS DINÂMICAS DO RODAPÉ (CHYRON SYSTEM) ─── */
-    function updateChyronText(companyName = null) {
-      const content = document.getElementById('chyron-ticker-content');
-      const news = [
-        `URGENTE: Nova convocação para a Seleção Oficial de Estagiários 2025!`,
-        `TITE ADVERTE: "A escalação valoriza a união tática e o esforço individual de cada estagiário."`,
-        `COMENTARISTA: Galvão Bueno exalta contratações: "Haja coração, amigo! Que contratação de peso!"`,
-        `MARTA COMPARTILHA MENSAGEM: "Entrem em campo com garra, programem com amor e façam história!"`,
-        `MERCADO DA BOLA: Estagiários de tecnologia superam testes médicos e já estão prontos para produção.`
-      ];
-
-      if (companyName) {
-        news.unshift(
-          `SQUAD CONFIRMADO: Revelando os convocados especiais para a empresa ${companyName.toUpperCase()}!`,
-          `CONTRATO FECHADO: Estagiários se apresentam na sede da ${companyName.toUpperCase()} a partir da próxima semana.`
-        );
-      }
-
-      // Duplicar a lista para loop infinito e sem quebras
-      const fullText = [...news, ...news].map(text => `<div class="ticker-item"><span>★</span> ${text}</div>`).join('');
-      content.innerHTML = fullText;
-    }
 
     /* ─── SETUP / CONTROLE DE ESTADO ─── */
     function addEmpresa() {
@@ -1967,7 +1945,7 @@
             <div class="sf">
               <div class="sticker-hologram"></div>
               <div class="sf-top">
-                <span class="sf-serie">ESTÁGIO 2025</span>
+                <span class="sf-serie">ESTÁGIO 2026</span>
                 <span class="sf-stars-row">⭐⭐⭐⭐⭐</span>
                 <span class="sf-flag">🇧🇷</span>
               </div>
@@ -2242,12 +2220,12 @@
             fetch('/api/dados?chave=est_alunos', { headers }),
             fetch('/api/dados?chave=est_enc', { headers })
           ]);
-          
+
           if (resEmp.ok && resAlunos.ok && resEnc.ok) {
             const jsonEmp = await resEmp.json();
             const jsonAlunos = await resAlunos.json();
             const jsonEnc = await resEnc.json();
-            
+
             if (jsonEmp.ok && jsonAlunos.ok && jsonEnc.ok) {
               dbEmpresas = jsonEmp.dados || [];
               dbAlunos = jsonAlunos.dados || [];
