@@ -1760,44 +1760,53 @@
     renderPressLogos();
 
 
-    ctx: null,
+    const music = {
+      ctx: null,
       isPlaying: false,
-        masterGain: null,
-          isMuted: false,
-            nodes: [],
-              whistleInterval: null,
+      masterGain: null,
+      isMuted: false,
+      nodes: [],
+      whistleInterval: null,
 
-                init() {
-      if (this.ctx) return;
-      sfx.init();
-      this.ctx = sfx.ctx;
-      this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.value = 0.22; // Nível confortável de fundo
-      this.masterGain.connect(this.ctx.destination);
-    },
+      init() {
+        if (this.ctx) return;
+        sfx.init();
+        this.ctx = sfx.ctx;
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.value = 0.22; // Nível confortável de fundo
+        this.masterGain.connect(this.ctx.destination);
+      },
 
-    play() {
-      this.init();
-      if (this.isPlaying) return;
+      play() {
+        this.init();
+        if (this.isPlaying) return;
 
-      if (this.ctx.state === 'suspended') {
-        this.ctx.resume();
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        this.isPlaying = true;
+        this.nodes = [];
+      },
+
+      stop() {
+        if (!this.isPlaying) return;
+        this.isPlaying = false;
+        clearInterval(this.whistleInterval);
+        this.nodes.forEach(node => {
+          try {
+            node.stop();
+          } catch (e) { }
+        });
+        this.nodes = [];
+      },
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain) {
+          this.masterGain.gain.value = this.isMuted ? 0 : 0.22;
+        }
+        return this.isMuted;
       }
-      this.isPlaying = true;
-      this.nodes = [];
-
-    },
-
-    stop() {
-      if (!this.isPlaying) return;
-      this.isPlaying = false;
-      clearInterval(this.whistleInterval);
-      this.nodes.forEach(node => {
-        try {
-          node.stop();
-        } catch (e) { }
-      });
-      this.nodes = [];
     };
 
     function toggleMusic() {
