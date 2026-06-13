@@ -1759,6 +1759,235 @@
     }
     renderPressLogos();
 
+    /* ─── EFEITOS SONOROS (WEB AUDIO API) ─── */
+    const sfx = {
+      ctx: null,
+
+      init() {
+        if (this.ctx) return;
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      },
+
+      playWhistle() {
+        this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gainNode = this.ctx.createGain();
+
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(2000, now);
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(2150, now);
+
+        const lfo = this.ctx.createOscillator();
+        const lfoGain = this.ctx.createGain();
+        lfo.frequency.setValueAtTime(35, now);
+        lfoGain.gain.setValueAtTime(15, now);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc1.frequency);
+        lfoGain.connect(osc2.frequency);
+
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+        gainNode.gain.setValueAtTime(0.3, now + 0.4);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+        osc1.connect(gainNode);
+        osc2.connect(gainNode);
+        gainNode.connect(this.ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        lfo.start(now);
+
+        osc1.stop(now + 0.6);
+        osc2.stop(now + 0.6);
+        lfo.stop(now + 0.6);
+      },
+
+      playTear() {
+        this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const duration = 0.5;
+        const bufferSize = this.ctx.sampleRate * duration;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noiseNode = this.ctx.createBufferSource();
+        noiseNode.buffer = buffer;
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.setValueAtTime(2, now);
+        filter.frequency.setValueAtTime(1000, now);
+        filter.frequency.exponentialRampToValueAtTime(300, now + duration);
+
+        const gainNode = this.ctx.createGain();
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.25, now + 0.05);
+
+        const mod = this.ctx.createOscillator();
+        const modGain = this.ctx.createGain();
+        mod.frequency.setValueAtTime(50, now);
+        modGain.gain.setValueAtTime(0.1, now);
+
+        mod.connect(modGain);
+        modGain.connect(gainNode.gain);
+
+        gainNode.gain.setValueAtTime(0.2, now + 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        noiseNode.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.ctx.destination);
+
+        noiseNode.start(now);
+        mod.start(now);
+        noiseNode.stop(now + duration);
+        mod.stop(now + duration);
+      },
+
+      playChime() {
+        this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
+
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gainNode = this.ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+          const noteStart = now + idx * 0.08;
+          gainNode.gain.setValueAtTime(0, noteStart);
+          gainNode.gain.linearRampToValueAtTime(0.08, noteStart + 0.02);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, noteStart + 1.2);
+
+          osc.connect(gainNode);
+          gainNode.connect(this.ctx.destination);
+
+          osc.start(noteStart);
+          osc.stop(noteStart + 1.25);
+        });
+      },
+
+      playStadiumHorn() {
+        this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const duration = 1.0;
+
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const osc3 = this.ctx.createOscillator();
+        const gainNode = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(180, now);
+        osc2.type = 'sawtooth';
+        osc2.frequency.setValueAtTime(182, now);
+        osc3.type = 'sawtooth';
+        osc3.frequency.setValueAtTime(90, now);
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(800, now);
+        filter.Q.setValueAtTime(1.5, now);
+
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.2, now + 0.05);
+        gainNode.gain.setValueAtTime(0.2, now + 0.7);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc1.connect(filter);
+        osc2.connect(filter);
+        osc3.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(this.ctx.destination);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc3.start(now);
+
+        osc1.stop(now + duration);
+        osc2.stop(now + duration);
+        osc3.stop(now + duration);
+      },
+
+      playTamborzao() {
+        this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        const now = this.ctx.currentTime;
+        const beats = [
+          { type: 'boom', time: 0.0 },
+          { type: 'boom', time: 0.15 },
+          { type: 'chag', time: 0.3 },
+          { type: 'boom', time: 0.5 },
+          { type: 'boom', time: 0.65 },
+          { type: 'chag', time: 0.8 }
+        ];
+
+        beats.forEach(beat => {
+          const hitTime = now + beat.time;
+          if (beat.type === 'boom') {
+            const osc = this.ctx.createOscillator();
+            const gainNode = this.ctx.createGain();
+            osc.frequency.setValueAtTime(150, hitTime);
+            osc.frequency.exponentialRampToValueAtTime(0.01, hitTime + 0.15);
+
+            gainNode.gain.setValueAtTime(0, hitTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, hitTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, hitTime + 0.2);
+
+            osc.connect(gainNode);
+            gainNode.connect(this.ctx.destination);
+            osc.start(hitTime);
+            osc.stop(hitTime + 0.21);
+          } else {
+            const bufferSize = this.ctx.sampleRate * 0.1;
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+              data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = this.ctx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1000, hitTime);
+            filter.Q.setValueAtTime(3, hitTime);
+
+            const gainNode = this.ctx.createGain();
+            gainNode.gain.setValueAtTime(0, hitTime);
+            gainNode.gain.linearRampToValueAtTime(0.15, hitTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, hitTime + 0.1);
+
+            noise.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(this.ctx.destination);
+
+            noise.start(hitTime);
+            noise.stop(hitTime + 0.11);
+          }
+        });
+      }
+    };
 
     const music = {
       ctx: null,
