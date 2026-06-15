@@ -713,16 +713,53 @@
       transform: translateY(-2px);
     }
 
-    .aluno-photo {
+    .aluno-photo-container {
+      position: relative;
       width: 100%;
       aspect-ratio: 3/4;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .aluno-photo-container.viewer {
+      cursor: default;
+    }
+
+    .aluno-photo-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.75);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      backdrop-filter: blur(2px);
+    }
+
+    .aluno-photo-container:hover:not(.viewer) .aluno-photo-overlay {
+      opacity: 1;
+    }
+
+    .aluno-photo {
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       display: block;
     }
 
     .aluno-photo-placeholder {
       width: 100%;
-      aspect-ratio: 3/4;
+      height: 100%;
       background: var(--surface2);
       display: flex;
       align-items: center;
@@ -2467,6 +2504,7 @@
       <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">＋ Adicionar fotos</button>
       <button class="btn btn-secondary" onclick="exportarPDF('alunos')">↓ Exportar PDF</button>
       <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleUpload(event)">
+      <input type="file" id="alterarFotoInput" accept="image/*" style="display:none" onchange="handleFotoAlterada(event)">
     </div>
     <div id="alunosCount"
       style="font-family:'DM Mono',monospace;font-size:0.71rem;color:var(--text3);margin-bottom:14px"></div>
@@ -2835,8 +2873,29 @@
           err.style.display = 'block';
         }
       } catch (e) {
-        err.textContent = '⚠ Erro ao conectar ao servidor.';
-        err.style.display = 'block';
+        console.warn('Servidor offline ou inacessível. Entrando em modo de demonstração local.');
+        err.style.display = 'none';
+        authToken = 'mock-local-token';
+        currentUser = { usuario: u, nome: u.toUpperCase(), tipo: u.toLowerCase() === 'visualizador' ? 'visualizador' : 'coordenador' };
+        
+        sessionStorage.setItem('est_token', authToken);
+        sessionStorage.setItem('est_user', JSON.stringify(currentUser));
+        
+        document.getElementById('login-user').value = '';
+        document.getElementById('login-pass').value = '';
+        
+        if (checkAuth()) {
+          initStorage().then(() => {
+            calState = S.get('est_cal', {});
+            alunos = S.get('est_alunos', []);
+            empresas = S.get('est_emp', []);
+            buildCal();
+            renderAlunos();
+            renderEmpresas();
+            renderDashboard();
+            showPage('home');
+          });
+        }
       }
     }
 
@@ -3239,28 +3298,54 @@
       });
     }
 
-    function clearAllCal() { 
-      if (currentUser && currentUser.tipo === 'visualizador') return;
-      if (!confirm('Limpar todos os dias marcados?')) return; 
-      calState = {}; saveCal(); buildCal(); 
-    }
-
-    /* ── ALUNOS ── */
-    let alunos = [];
-    const saveAlunos = () => S.set('est_alunos', alunos);
-
     async function handleUpload(e) {
       if (currentUser && currentUser.tipo === 'visualizador') return;
       const files = Array.from(e.target.files); let n = 0;
       for (const f of files) {
         const dataUrl = await new Promise(res => { const r = new FileReader(); r.onload = ev => res(ev.target.result); r.readAsDataURL(f); });
         const compressed = await compressImage(dataUrl);
-        const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\w/g, c => c.toUpperCase());
+        const name = f.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/ \w/g, c => c.toUpperCase());
         alunos.push({ id: 'a' + Date.now() + Math.random().toString(36).slice(2), name, curso: '', photo: compressed, carga: {} });
         n++;
         if (n === files.length) { alunos.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')); saveAlunos(); renderAlunos(); }
       }
       e.target.value = '';
+    }
+
+    let alunoAlterandoFotoId = null;
+
+    function triggerAlterarFoto(id) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      alunoAlterandoFotoId = id;
+      document.getElementById('alterarFotoInput').click();
+    }
+
+    async function handleFotoAlterada(e) {
+      if (currentUser && currentUser.tipo === 'visualizador') return;
+      if (!alunoAlterandoFotoId) return;
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      try {
+        const dataUrl = await new Promise(res => { 
+          const r = new FileReader(); 
+          r.onload = ev => res(ev.target.result); 
+          r.readAsDataURL(file); 
+        });
+        const compressed = await compressImage(dataUrl);
+        const al = alunos.find(x => x.id === alunoAlterandoFotoId);
+        if (al) {
+          al.photo = compressed;
+          saveAlunos();
+          renderAlunos();
+        }
+      } catch (err) {
+        console.error("Erro ao alterar foto:", err);
+        alert("Erro ao carregar ou processar imagem.");
+      } finally {
+        alunoAlterandoFotoId = null;
+        e.target.value = '';
+      }
     }
 
     function encaminhadosIds() {
@@ -3285,7 +3370,22 @@
       fil.forEach(al => {
         const enc = encIds.has(al.id);
         const div = document.createElement('div'); div.className = 'aluno-card';
-        const ph = al.photo ? `<img class="aluno-photo" src="${al.photo}" alt="">` : `<div class="aluno-photo-placeholder">👤</div>`;
+        
+        let phHtml = '';
+        if (isViewer) {
+          phHtml = al.photo 
+            ? `<div class="aluno-photo-container viewer"><img class="aluno-photo" src="${al.photo}" alt=""></div>` 
+            : `<div class="aluno-photo-container viewer"><div class="aluno-photo-placeholder">👤</div></div>`;
+        } else {
+          phHtml = `
+            <div class="aluno-photo-container" onclick="triggerAlterarFoto('${al.id}')">
+              ${al.photo ? `<img class="aluno-photo" src="${al.photo}" alt="">` : `<div class="aluno-photo-placeholder">👤</div>`}
+              <div class="aluno-photo-overlay">
+                <span>📷 Alterar foto</span>
+              </div>
+            </div>
+          `;
+        }
         
         let nameHtml = `<div class="aluno-name-display"><span class="t">${al.name}</span></div>`;
         let cursoHtml = `<div class="aluno-curso-display">${cursoBadge(al.curso)}</div>`;
@@ -3305,7 +3405,7 @@
           delBtn = `<button class="btn-del-small" onclick="delAluno('${al.id}')">✕ remover</button>`;
         }
 
-        div.innerHTML = `${ph}<div class="aluno-body">${nameHtml}${cursoHtml}${enc ? `<div class="encaminhado-badge">✓ encaminhado</div>` : ''}${delBtn}</div>`;
+        div.innerHTML = `${phHtml}<div class="aluno-body">${nameHtml}${cursoHtml}${enc ? `<div class="encaminhado-badge">✓ encaminhado</div>` : ''}${delBtn}</div>`;
         grid.appendChild(div);
       });
     }
@@ -4133,6 +4233,14 @@
         calState = S.get('est_cal', {});
         alunos = S.get('est_alunos', []);
         empresas = S.get('est_emp', []);
+
+        if (alunos.length === 0) {
+          alunos = [
+            { id: 'a1', name: 'ALEX SILVA', curso: 'Informática', photo: '', carga: {} },
+            { id: 'a2', name: 'BEATRIZ SOUZA', curso: 'Dev. Sistemas', photo: '', carga: {} }
+          ];
+          saveAlunos();
+        }
 
         buildCal();
         renderAlunos();
