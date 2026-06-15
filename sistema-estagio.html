@@ -2611,6 +2611,15 @@
           <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">NOME COMPLETO</label>
           <input type="text" id="usr-nome" placeholder="Ex: Maria Souza" style="width: 100%; margin-bottom: 0;">
         </div>
+
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 6px;">FOTO</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div id="usr-foto-preview" style="width:52px;height:52px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);overflow:hidden;font-size:1.2rem;">👤</div>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('usr-foto').click()" style="padding:8px 10px;font-size:0.72rem;">Adicionar foto</button>
+            <input type="file" id="usr-foto" accept="image/*" style="display:none" onchange="handleNovaFotoUsuario(event)">
+          </div>
+        </div>
         
         <div style="margin-bottom: 12px;">
           <label style="font-size: 0.68rem; color: var(--text3); font-family: 'DM Mono', monospace; display: block; margin-bottom: 4px;">NOME DE USUÁRIO (LOGIN)</label>
@@ -2638,9 +2647,10 @@
       
       <!-- Lista de usuários -->
       <div class="carga-table-wrap">
-        <table class="carga-table" style="min-width: 600px;">
+        <table class="carga-table" style="min-width: 760px;">
           <thead>
             <tr>
+              <th>Foto</th>
               <th>Usuário</th>
               <th>Nome</th>
               <th>Perfil</th>
@@ -2652,6 +2662,7 @@
             <!-- Dinâmico -->
           </tbody>
         </table>
+        <input type="file" id="usuarioFotoInput" accept="image/*" style="display:none" onchange="handleFotoUsuarioAlterada(event)">
       </div>
     </div>
   </div>
@@ -2910,6 +2921,8 @@
     }
 
     /* ── GESTÃO DE USUÁRIOS (APENAS COORDENADOR) ── */
+    let novaFotoUsuario = '';
+
     async function carregarUsuarios() {
       if (!currentUser || currentUser.tipo !== 'coordenador') return;
       try {
@@ -2932,7 +2945,7 @@
       if (!tbody) return;
       tbody.innerHTML = '';
       if (!list.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">Nenhum usuário cadastrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text3)">Nenhum usuário cadastrado.</td></tr>';
         return;
       }
       list.forEach(u => {
@@ -2948,8 +2961,17 @@
         const delBtn = isSelf 
           ? '<span style="font-size:0.75rem;color:var(--text3)">conectado</span>' 
           : `<button class="btn-del-small" style="margin-top:0;width:auto;padding:2px 8px" onclick="deletarUsuario('${u.usuario}')">✕ excluir</button>`;
+        const fotoHtml = u.foto
+          ? `<img src="${u.foto}" alt="" style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid var(--border);display:block;">`
+          : `<div style="width:42px;height:42px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);">👤</div>`;
 
         tr.innerHTML = `
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${fotoHtml}
+              <button class="btn-del-small" style="margin-top:0;width:auto;padding:2px 8px" onclick="triggerFotoUsuario('${u.usuario}')">foto</button>
+            </div>
+          </td>
           <td><strong style="color:var(--text);font-family:'DM Mono',monospace">${u.usuario}</strong></td>
           <td>${u.nome}</td>
           <td>${badge}</td>
@@ -2958,6 +2980,70 @@
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    async function handleNovaFotoUsuario(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const dataUrl = await new Promise(res => {
+          const r = new FileReader();
+          r.onload = ev => res(ev.target.result);
+          r.readAsDataURL(file);
+        });
+        novaFotoUsuario = await compressImage(dataUrl, 700, 0.82);
+        const prev = document.getElementById('usr-foto-preview');
+        if (prev) prev.innerHTML = `<img src="${novaFotoUsuario}" alt="" style="width:100%;height:100%;object-fit:cover;">`;
+      } catch (err) {
+        console.error('Erro ao carregar foto do usuário:', err);
+        alert('Erro ao carregar ou processar foto do usuário.');
+      } finally {
+        e.target.value = '';
+      }
+    }
+
+    function limparNovaFotoUsuario() {
+      novaFotoUsuario = '';
+      const prev = document.getElementById('usr-foto-preview');
+      if (prev) prev.innerHTML = '👤';
+    }
+
+    function triggerFotoUsuario(usuario) {
+      const input = document.getElementById('usuarioFotoInput');
+      input.dataset.usuario = usuario;
+      input.click();
+    }
+
+    async function handleFotoUsuarioAlterada(e) {
+      const usuario = e.target.dataset.usuario;
+      const file = e.target.files[0];
+      if (!usuario || !file) return;
+
+      try {
+        const dataUrl = await new Promise(res => {
+          const r = new FileReader();
+          r.onload = ev => res(ev.target.result);
+          r.readAsDataURL(file);
+        });
+        const foto = await compressImage(dataUrl, 700, 0.82);
+        const r = await fetch('/api/usuarios/foto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ usuario, foto })
+        });
+        const j = await r.json();
+        if (j.ok) carregarUsuarios();
+        else alert('Erro ao salvar foto: ' + j.erro);
+      } catch (err) {
+        console.error('Erro ao alterar foto do usuário:', err);
+        alert('Erro ao carregar ou salvar foto do usuário.');
+      } finally {
+        e.target.value = '';
+        delete e.target.dataset.usuario;
+      }
     }
 
     async function cadastrarUsuario() {
@@ -2978,13 +3064,14 @@
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authToken}`
           },
-          body: JSON.stringify({ usuario: u, senha: s, nome: n, tipo: t })
+          body: JSON.stringify({ usuario: u, senha: s, nome: n, tipo: t, foto: novaFotoUsuario || null })
         });
         const j = await r.json();
         if (j.ok) {
           document.getElementById('usr-nome').value = '';
           document.getElementById('usr-login').value = '';
           document.getElementById('usr-senha').value = '';
+          limparNovaFotoUsuario();
           carregarUsuarios();
         } else {
           alert('Erro ao cadastrar: ' + j.erro);

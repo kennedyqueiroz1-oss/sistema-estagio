@@ -1540,65 +1540,9 @@
         opacity: 1;
       }
 
-      .waiting-comissao-panel {
-        position: absolute;
-        left: 24px;
-        bottom: 24px;
-        width: min(760px, calc(100vw - 48px));
-        z-index: 110;
-        background: rgba(2, 6, 23, 0.78);
-        border: 1px solid rgba(255, 223, 0, 0.28);
-        border-radius: 14px;
-        padding: 14px;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-        text-align: left;
-      }
-
-      .waiting-comissao-panel h2 {
-        color: var(--amarelo);
-        font-family: 'Bebas Neue', sans-serif;
-        font-size: 1.25rem;
-        letter-spacing: 1.5px;
-        margin-bottom: 10px;
-      }
-
-      .waiting-comissao-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 10px;
-      }
-
-      .waiting-comissao-status {
-        color: rgba(255, 255, 255, 0.68);
-        font-size: 0.72rem;
-      }
-
-      @media (max-width: 760px) {
-        .waiting-comissao-panel {
-          left: 12px;
-          right: 12px;
-          bottom: 12px;
-          width: auto;
-          max-height: 48vh;
-          overflow-y: auto;
-        }
-      }
     </style>
 
     <button class="btn-cbf-crest" onclick="iniciarApresentacaoReal()" title="Iniciar Convocação"></button>
-
-    <div class="waiting-comissao-panel">
-      <h2>COMISSÃO TÉCNICA</h2>
-      <div id="comissao-list"
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; max-height: 28vh; overflow-y: auto; padding-right: 6px;">
-      </div>
-      <div class="waiting-comissao-actions">
-        <button class="btn-save" id="btn-save-comissao" onclick="salvarComissaoBanco()">💾 SALVAR FOTOS</button>
-        <span class="waiting-comissao-status" id="comissao-save-status"></span>
-      </div>
-    </div>
   </div>
 
   <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
@@ -1765,7 +1709,7 @@
           usuario: u.usuario || '',
           nome: u.nome || u.usuario || `Usuário ${idx + 1}`,
           cargo: cargoUsuario(u.tipo),
-          photoUrl: salvo?.photoUrl || null
+          photoUrl: u.foto || salvo?.photoUrl || null
         };
       });
     }
@@ -2849,7 +2793,7 @@
             fetch('/api/dados?chave=est_emp', { headers }),
             fetch('/api/dados?chave=est_alunos', { headers }),
             fetch('/api/dados?chave=est_enc', { headers }),
-            fetch('/api/dados?chave=est_comissao', { headers })
+            fetch('/api/comissao', { headers })
           ]);
 
           if (resEmp.ok && resAlunos.ok && resEnc.ok) {
@@ -2860,8 +2804,8 @@
             let dbComissao = [];
             if (resComissao && resComissao.ok) {
               const jsonComissao = await resComissao.json();
-              if (jsonComissao.ok && jsonComissao.dados) {
-                dbComissao = jsonComissao.dados;
+              if (jsonComissao.ok && Array.isArray(jsonComissao.usuarios)) {
+                dbComissao = montarComissaoDosUsuarios(jsonComissao.usuarios);
               }
             }
 
@@ -2870,20 +2814,8 @@
               dbAlunos = jsonAlunos.dados || [];
               dbEnc = jsonEnc.dados || {};
 
-            if (dbComissao && dbComissao.length) {
-              comissaoTecnica = dbComissao;
-            }
-
-              try {
-                const resUsuarios = await fetch('/api/usuarios', { headers });
-                if (resUsuarios.ok) {
-                  const jsonUsuarios = await resUsuarios.json();
-                  if (jsonUsuarios.ok && Array.isArray(jsonUsuarios.usuarios)) {
-                    comissaoTecnica = montarComissaoDosUsuarios(jsonUsuarios.usuarios, dbComissao);
-                  }
-                }
-              } catch (e) {
-                console.warn("Não foi possível carregar usuários para a comissão técnica.", e);
+              if (dbComissao && dbComissao.length) {
+                comissaoTecnica = dbComissao;
               }
 
               window.originalEmpresas = dbEmpresas;

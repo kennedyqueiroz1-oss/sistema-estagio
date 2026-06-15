@@ -94,9 +94,11 @@ def init_db():
                     senha_hash text not null,
                     nome text not null,
                     tipo text not null check (tipo in ('coordenador', 'orientador', 'visualizador')),
+                    foto text,
                     criado_em timestamp with time zone default now()
                 );
             """)
+            cur.execute("alter table sistema_usuarios add column if not exists foto text;")
 
             # 3. Seed do coordenador inicial
             cur.execute("select count(*) from sistema_usuarios;")
@@ -137,24 +139,31 @@ def salvar_dados(chave, dados):
 def obter_usuario(usuario):
     with get_conn() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-            cur.execute("select usuario, senha_hash, nome, tipo from sistema_usuarios where usuario = %s", (usuario.lower().strip(),))
+            cur.execute("select usuario, senha_hash, nome, tipo, foto from sistema_usuarios where usuario = %s", (usuario.lower().strip(),))
             return cur.fetchone()
 
 def listar_usuarios():
     with get_conn() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-            cur.execute("select usuario, nome, tipo, criado_em from sistema_usuarios order by usuario;")
+            cur.execute("select usuario, nome, tipo, foto, criado_em from sistema_usuarios order by usuario;")
             return cur.fetchall()
 
-def salvar_usuario(usuario, senha_hash, nome, tipo):
+def salvar_usuario(usuario, senha_hash, nome, tipo, foto=None):
     with get_conn() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                insert into sistema_usuarios (usuario, senha_hash, nome, tipo)
-                values (%s, %s, %s, %s)
+                insert into sistema_usuarios (usuario, senha_hash, nome, tipo, foto)
+                values (%s, %s, %s, %s, %s)
                 on conflict (usuario)
-                do update set senha_hash = excluded.senha_hash, nome = excluded.nome, tipo = excluded.tipo;
-            """, (usuario.lower().strip(), senha_hash, nome.strip(), tipo))
+                do update set senha_hash = excluded.senha_hash, nome = excluded.nome, tipo = excluded.tipo,
+                              foto = coalesce(excluded.foto, sistema_usuarios.foto);
+            """, (usuario.lower().strip(), senha_hash, nome.strip(), tipo, foto))
+        conn.commit()
+
+def atualizar_foto_usuario(usuario, foto):
+    with get_conn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("update sistema_usuarios set foto = %s where usuario = %s;", (foto, usuario.lower().strip()))
         conn.commit()
 
 def excluir_usuario(usuario):
@@ -246,6 +255,21 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 except Exception as e:
                     return self.send_json({"ok": False, "erro": str(e)}, 500)
 
+            if route == "/api/comissao":
+                try:
+                    usuarios = [
+                        {
+                            "usuario": u["usuario"],
+                            "nome": u["nome"],
+                            "tipo": u["tipo"],
+                            "foto": u.get("foto")
+                        }
+                        for u in listar_usuarios()
+                    ]
+                    return self.send_json({"ok": True, "usuarios": usuarios})
+                except Exception as e:
+                    return self.send_json({"ok": False, "erro": str(e)}, 500)
+
         # Se for arquivos estáticos
         if route == "/":
             route = "/sistema-estagio.html"
@@ -330,12 +354,36 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 new_pass = payload.get("senha", "")
                 new_name = payload.get("nome", "").strip()
                 new_type = payload.get("tipo", "")
+                new_foto = payload.get("foto")
 
                 if not new_user or not new_pass or not new_name or new_type not in ('coordenador', 'orientador', 'visualizador'):
                     return self.send_json({"ok": False, "erro": "Preencha todos os campos corretamente."}, 400)
 
                 senha_hash = hash_senha(new_pass, new_user)
-                salvar_usuario(new_user, senha_hash, new_name, new_type)
+                salvar_usuario(new_user, senha_hash, new_name, new_type, new_foto)
+                return self.send_json({"ok": True})
+            except Exception as e:
+                return self.send_json({"ok": False, "erro": str(e)}, 500)
+
+        if route == "/api/usuarios/foto":
+            if usuario_sessao["tipo"] != "coordenador":
+                return self.send_json({"ok": False, "erro": "Acesso negado. Apenas coordenadores podem gerenciar usuários."}, 403)
+
+            length = int(self.headers.get("Content-Length", 0))
+            try:
+                payload = json.loads(self.rfile.read(length).decode("utf-8"))
+                usuario_foto = payload.get("usuario", "").strip().lower()
+                foto = payload.get("foto")
+
+                if not usuario_foto:
+                    return self.send_json({"ok": False, "erro": "Usuário não especificado."}, 400)
+                if foto is None:
+                    return self.send_json({"ok": False, "erro": "Foto ausente."}, 400)
+
+                if not obter_usuario(usuario_foto):
+                    return self.send_json({"ok": False, "erro": "Usuário não encontrado."}, 404)
+
+                atualizar_foto_usuario(usuario_foto, foto)
                 return self.send_json({"ok": True})
             except Exception as e:
                 return self.send_json({"ok": False, "erro": str(e)}, 500)
