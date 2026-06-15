@@ -3298,6 +3298,9 @@
       });
     }
 
+    let alunos = [];
+    const saveAlunos = () => S.set('est_alunos', alunos);
+
     async function handleUpload(e) {
       if (currentUser && currentUser.tipo === 'visualizador') return;
       const files = Array.from(e.target.files); let n = 0;
