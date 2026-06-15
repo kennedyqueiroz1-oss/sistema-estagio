@@ -959,32 +959,6 @@
       color: var(--amarelo);
     }
 
-    /* Botão de Mute Música */
-    .btn-mute-music {
-      position: absolute;
-      top: 25px;
-      right: 25px;
-      z-index: 100;
-      background: rgba(2, 6, 23, 0.85);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      color: #fff;
-      padding: 8px 14px;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .btn-mute-music:hover {
-      border-color: var(--amarelo);
-      color: var(--amarelo);
-    }
-
     /* ─── PACOTE DE FIGURINHAS REALÍSTICO (ANIMADO) ─── */
     .pack-overlay {
       position: fixed;
@@ -1525,49 +1499,12 @@
   <div class="press-backdrop"></div>
   <div class="press-logo-grid" id="press-logos"></div>
 
-  <!-- ═══════════ SETUP ═══════════ -->
-  <div id="setup-screen">
-    <div class="setup-header">
-      <div class="cbf-badge-main">🏆</div>
-      <h1>CONVOCAÇÃO OFICIAL<br>DE ESTAGIÁRIOS</h1>
-      <p>Comissão Técnica — Temporada 2026</p>
-    </div>
-
-    <div class="setup-card">
-      <h2>🏭 ESCALAÇÃO DE EMPRESAS & ALUNOS</h2>
-      <div id="empresas-list" style="max-height: 48vh; overflow-y: auto; padding-right: 8px;"></div>
-    </div>
-
-    <div class="setup-card">
-      <h2>📋 COMISSÃO TÉCNICA (4 PROFESSORES)</h2>
-      <div id="comissao-list"
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; max-height: 30vh; overflow-y: auto; padding-right: 8px;">
-      </div>
-    </div>
-
-    <div class="setup-card">
-      <h2>🎵 ÁUDIO DE ESPERA (OPCIONAL DO YOUTUBE)</h2>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <label
-          style="font-size: 0.72rem; color: var(--amarelo); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; display: block; margin-bottom: 2px;">LINK
-          DO VÍDEO DO YOUTUBE:</label>
-        <input type="text" id="yt-link-input"
-          placeholder="Cole o link do YouTube (ex: https://www.youtube.com/watch?v=...)"
-          style="width: 100%; background: rgba(0, 39, 118, 0.2); border: 1px solid rgba(255, 223, 0, 0.3); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.9rem; outline: none; transition: all 0.2s;">
-        <span style="font-size: 0.7rem; color: rgba(255, 255, 255, 0.5); line-height: 1.3;">O áudio deste vídeo tocará
-          em loop na tela de espera enquanto o público entra. Ao clicar em "Iniciar", o som do YouTube para
-          automaticamente.</span>
-      </div>
-    </div>
-
-    <button class="btn-add-empresa" onclick="addEmpresa()">➕ Adicionar Empresa</button>
-    <button class="btn-save" id="btn-save-dados" onclick="salvarDadosBanco()">💾 SALVAR ALTERAÇÕES NO BANCO</button>
-    <button class="btn-start" onclick="startPresentation()">🏆 CONFIRMAR ESCALAÇÃO & INICIAR</button>
-  </div>
+  <!-- ═══════════ SETUP ANTIGO DESATIVADO ═══════════ -->
+  <div id="setup-screen" style="display: none;"></div>
 
   <!-- ═══════════ TELA DE ESPERA / AUDITÓRIO ═══════════ -->
   <div id="waiting-screen"
-    style="display: none; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; text-align: center;">
+    style="display: flex; min-height: 100vh; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; text-align: center;">
     <div
       style="position: absolute; inset: 0; background: url('fundo_convocacao.png') no-repeat center center/cover; z-index: 0;">
     </div>
@@ -1602,14 +1539,66 @@
       .btn-cbf-crest:hover::after {
         opacity: 1;
       }
+
+      .waiting-comissao-panel {
+        position: absolute;
+        left: 24px;
+        bottom: 24px;
+        width: min(760px, calc(100vw - 48px));
+        z-index: 110;
+        background: rgba(2, 6, 23, 0.78);
+        border: 1px solid rgba(255, 223, 0, 0.28);
+        border-radius: 14px;
+        padding: 14px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        text-align: left;
+      }
+
+      .waiting-comissao-panel h2 {
+        color: var(--amarelo);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 1.25rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 10px;
+      }
+
+      .waiting-comissao-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .waiting-comissao-status {
+        color: rgba(255, 255, 255, 0.68);
+        font-size: 0.72rem;
+      }
+
+      @media (max-width: 760px) {
+        .waiting-comissao-panel {
+          left: 12px;
+          right: 12px;
+          bottom: 12px;
+          width: auto;
+          max-height: 48vh;
+          overflow-y: auto;
+        }
+      }
     </style>
 
     <button class="btn-cbf-crest" onclick="iniciarApresentacaoReal()" title="Iniciar Convocação"></button>
-  </div>
 
-  <!-- Contêiner do Player Invisível do YouTube -->
-  <div id="yt-audio-player"
-    style="position: absolute; top: -9999px; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
+    <div class="waiting-comissao-panel">
+      <h2>COMISSÃO TÉCNICA</h2>
+      <div id="comissao-list"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; max-height: 28vh; overflow-y: auto; padding-right: 6px;">
+      </div>
+      <div class="waiting-comissao-actions">
+        <button class="btn-save" id="btn-save-comissao" onclick="salvarComissaoBanco()">💾 SALVAR FOTOS</button>
+        <span class="waiting-comissao-status" id="comissao-save-status"></span>
+      </div>
+    </div>
   </div>
 
   <!-- ═══════════ APRESENTAÇÃO DA COMISSÃO TÉCNICA ═══════════ -->
@@ -1670,8 +1659,6 @@
       <div class="score-info" id="score-company-name">EMPRESA</div>
       <div class="score-count" id="score-convocados-count">00/00</div>
     </div>
-
-    <button class="btn-mute-music" id="btn-mute-music" onclick="toggleMusic()">🔊 TORCIDA: LIGADA</button>
 
     <div class="empresa-banner" id="empresa-banner">
       <div class="empresa-badge">
@@ -1758,6 +1745,47 @@
       }
     }
     renderPressLogos();
+
+    function cargoUsuario(tipo) {
+      if (tipo === 'coordenador') return 'COORDENADOR';
+      if (tipo === 'orientador') return 'ORIENTADOR';
+      if (tipo === 'visualizador') return 'VISUALIZADOR';
+      return 'COMISSÃO TÉCNICA';
+    }
+
+    function montarComissaoDosUsuarios(usuarios, salvos = []) {
+      if (!Array.isArray(usuarios) || !usuarios.length) return salvos.length ? salvos : comissaoTecnica;
+      return usuarios.map((u, idx) => {
+        const id = `usr-${u.usuario || idx}`;
+        const salvo = salvos.find(s => s.id === id)
+          || salvos.find(s => (s.usuario || '').toLowerCase() === (u.usuario || '').toLowerCase())
+          || salvos.find(s => (s.nome || '').toLowerCase() === (u.nome || '').toLowerCase());
+        return {
+          id,
+          usuario: u.usuario || '',
+          nome: u.nome || u.usuario || `Usuário ${idx + 1}`,
+          cargo: cargoUsuario(u.tipo),
+          photoUrl: salvo?.photoUrl || null
+        };
+      });
+    }
+
+    function compressImage(dataUrl, maxW = 700, quality = 0.82) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxW / img.width);
+          const w = Math.round(img.width * scale);
+          const h = Math.round(img.height * scale);
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = dataUrl;
+      });
+    }
 
     /* ─── EFEITOS SONOROS (WEB AUDIO API) ─── */
 
@@ -2103,14 +2131,11 @@
         const div = document.createElement('div');
         div.className = 'empresa-block';
         div.style.margin = '0';
-        div.style.padding = '1rem';
+        div.style.padding = '0.8rem';
         div.innerHTML = `
           <div style="display: flex; flex-direction: column; gap: 8px;">
-            <strong style="color: var(--amarelo); font-size: 0.9rem;">Professor ${cti + 1}</strong>
-            <input type="text" placeholder="Nome do Professor" value="${ct.nome}"
-              oninput="comissaoTecnica[${cti}].nome=this.value" style="background: rgba(0, 39, 118, 0.2); border: 1px solid rgba(255, 223, 0, 0.3); border-radius: 8px; padding: 6px 10px; color: #fff; font-size: 0.9rem;">
-            <input type="text" placeholder="Cargo/Função" value="${ct.cargo}"
-              oninput="comissaoTecnica[${cti}].cargo=this.value" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 10px; color: #aaa; font-size: 0.8rem;">
+            <strong style="color: var(--amarelo); font-size: 0.95rem;">${ct.nome}</strong>
+            <span style="color: rgba(255,255,255,0.65); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.04em;">${ct.cargo}</span>
             <label class="photo-label ${ct.photoUrl ? 'ok' : ''}" style="padding: 6px 10px; font-size: 0.75rem;">
               <input type="file" accept="image/*" onchange="handleComissaoPhoto(event, ${cti})">
               ${ct.photoUrl ? '✓ Foto Carregada' : '📷 Enviar Foto'}
@@ -2121,19 +2146,29 @@
       });
     }
 
-    function handleComissaoPhoto(event, idx) {
+    async function handleComissaoPhoto(event, idx) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        comissaoTecnica[idx].photoUrl = e.target.result;
+      try {
+        const dataUrl = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.readAsDataURL(file);
+        });
+        comissaoTecnica[idx].photoUrl = await compressImage(dataUrl);
         renderSetupComissao();
-      };
-      reader.readAsDataURL(file);
+        salvarComissaoBanco({ silent: true });
+      } catch (err) {
+        console.error('Erro ao carregar foto da comissão:', err);
+        alert('Não foi possível carregar a foto da comissão.');
+      } finally {
+        event.target.value = '';
+      }
     }
 
     function renderSetup() {
       const list = document.getElementById('empresas-list');
+      if (!list) return;
       list.innerHTML = '';
       empresas.forEach((emp, ei) => {
         const div = document.createElement('div');
@@ -2181,7 +2216,7 @@
     function startPresentation() {
       const valid = empresas.filter(e => e.nome.trim() && e.alunos.some(a => a.nome.trim()));
       if (!valid.length) {
-        alert('Por favor, adicione pelo menos uma empresa com estagiários cadastrados!');
+        alert('Nenhum encaminhamento encontrado para a convocação.');
         return;
       }
       empresas = valid.map(e => ({
@@ -2194,36 +2229,24 @@
       currentAlunoIdx = 0;
       currentComissaoIdx = 0;
 
-      // Disparar áudio do YouTube na tela de espera, se configurado
-      const ytLink = document.getElementById('yt-link-input').value.trim();
-      ytVideoId = getYouTubeId(ytLink);
-      if (ytVideoId) {
-        if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-          ytPlayer.unMute();
-          ytPlayer.setVolume(100);
-          ytPlayer.loadVideoById({
-            videoId: ytVideoId,
-            startSeconds: 0
-          });
-          ytPlayer.playVideo();
-        } else {
-          // Guardar para carregar assim que a API estiver pronta
-          window.pendingYtVideoId = ytVideoId;
-        }
-      }
-
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('waiting-screen').style.display = 'flex';
     }
 
     function iniciarApresentacaoReal() {
-      // Parar áudio do YouTube
-      if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
-        ytPlayer.stopVideo();
+      const valid = empresas.filter(e => e.nome.trim() && e.alunos.some(a => a.nome.trim()));
+      if (!valid.length) {
+        alert('Nenhum encaminhamento encontrado para a convocação.');
+        return;
       }
-
-      sfx.playWhistle();
-      music.play();
+      empresas = valid.map(e => ({
+        ...e,
+        tecnico: e.tecnico || 'Reinaldo',
+        alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3)
+      }));
+      currentEmpIdx = 0;
+      currentAlunoIdx = 0;
+      currentComissaoIdx = 0;
 
       document.getElementById('waiting-screen').style.display = 'none';
       startComissaoPresentation();
@@ -2267,7 +2290,6 @@
       }).join('');
 
       overlay.classList.add('active');
-      sfx.playTear();
 
       setTimeout(() => {
         container.classList.add('shaking');
@@ -2276,7 +2298,6 @@
       setTimeout(() => {
         container.classList.remove('shaking');
         container.classList.add('ripping');
-        sfx.playWhistle();
       }, 1000);
 
       setTimeout(() => {
@@ -2289,9 +2310,6 @@
           inner.classList.add('revealed');
         });
 
-        sfx.playChime();
-        sfx.playStadiumHorn();
-        sfx.playTamborzao();
         launchConfetti(80);
       }, 1600);
 
@@ -2386,6 +2404,11 @@
     }
 
     /* ─── APRESENTAÇÃO DE SELEÇÃO ─── */
+    function updateChyronText(nomeEmpresa = '') {
+      const label = document.querySelector('.conveying-label');
+      if (label && nomeEmpresa) label.textContent = `TURMA 2026 • ${nomeEmpresa.toUpperCase()}`;
+    }
+
     function loadEmpresa(idx) {
       currentAlunoIdx = 0;
       const emp = empresas[idx];
@@ -2404,7 +2427,9 @@
       const miniCoachDisplay = document.getElementById('mini-coach-display');
       if (miniCoachDisplay) {
         miniCoachDisplay.classList.remove('show', 'coach-left', 'coach-right');
-        const coachObj = comissaoTecnica.find(c => c.id === (tec === 'Verônica' ? 'ct2' : 'ct3'));
+        const tecnicoNome = tec.toLowerCase();
+        const coachObj = comissaoTecnica.find(c => (c.nome || '').toLowerCase().includes(tecnicoNome))
+          || comissaoTecnica.find(c => c.id === (tec === 'Verônica' ? 'ct2' : 'ct3'));
         if (coachObj) {
           const coachNum = (tec === 'Verônica' ? 2 : 3);
           miniCoachDisplay.innerHTML = `<div class="sticker-wrap">${buildComissaoStickerHTML(coachObj, coachNum, true)}</div>`;
@@ -2607,7 +2632,6 @@
 
       // Exibir Overlay e tocar efeito sonoro de entrada
       overlay.classList.add('active');
-      sfx.playTear();
 
       // Sequência de Animações
       setTimeout(() => {
@@ -2619,7 +2643,6 @@
         // 2. Rasgar pacote e tocar o apito do árbitro
         container.classList.remove('shaking');
         container.classList.add('ripping');
-        sfx.playWhistle();
       }, 1000);
 
       setTimeout(() => {
@@ -2631,9 +2654,6 @@
           innerShowcase.classList.remove('hidden-back');
           innerShowcase.classList.add('revealed');
         }
-        sfx.playChime();
-        sfx.playStadiumHorn(); // Som da comemoração de torcida e corneta
-        sfx.playTamborzao();  // Tamborzão do Brasil ritmo
         launchConfetti(50);
       }, 1600);
 
@@ -2747,21 +2767,17 @@
     }
 
     function showFinal() {
-      music.stop(); // Para a música no final
-      sfx.playWhistle();
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'flex';
       launchConfetti(280);
     }
 
     function goSetup() {
-      music.stop(); // Para a música se voltar para o setup
       document.getElementById('waiting-screen').style.display = 'none';
       document.getElementById('comissao-screen').style.display = 'none';
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'none';
-      document.getElementById('setup-screen').style.display = 'flex';
-      renderSetup();
+      document.getElementById('waiting-screen').style.display = 'flex';
       renderSetupComissao();
     }
 
@@ -2854,8 +2870,20 @@
               dbAlunos = jsonAlunos.dados || [];
               dbEnc = jsonEnc.dados || {};
 
-              if (dbComissao && dbComissao.length) {
-                comissaoTecnica = dbComissao;
+            if (dbComissao && dbComissao.length) {
+              comissaoTecnica = dbComissao;
+            }
+
+              try {
+                const resUsuarios = await fetch('/api/usuarios', { headers });
+                if (resUsuarios.ok) {
+                  const jsonUsuarios = await resUsuarios.json();
+                  if (jsonUsuarios.ok && Array.isArray(jsonUsuarios.usuarios)) {
+                    comissaoTecnica = montarComissaoDosUsuarios(jsonUsuarios.usuarios, dbComissao);
+                  }
+                }
+              } catch (e) {
+                console.warn("Não foi possível carregar usuários para a comissão técnica.", e);
               }
 
               window.originalEmpresas = dbEmpresas;
@@ -3037,9 +3065,57 @@
       }
 
       // Renderizar o setup inicial
-      renderSetup();
       renderSetupComissao();
       updateChyronText();
+    }
+
+    async function salvarComissaoBanco(options = {}) {
+      const silent = !!options.silent;
+      const btn = document.getElementById('btn-save-comissao');
+      const status = document.getElementById('comissao-save-status');
+      if (btn && !silent) {
+        btn.disabled = true;
+        btn.textContent = 'SALVANDO...';
+      }
+      if (status) status.textContent = silent ? 'Salvando foto...' : '';
+
+      let salvoServidor = false;
+      if (authToken) {
+        try {
+          const r = await fetch('/api/dados', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({ chave: 'est_comissao', dados: comissaoTecnica })
+          });
+          const j = await r.json();
+          salvoServidor = r.ok && j.ok;
+        } catch (e) {
+          console.warn("Falha ao salvar comissão no servidor. Salvando localmente...", e);
+        }
+      }
+
+      try {
+        localStorage.setItem('est_comissao', JSON.stringify(comissaoTecnica));
+      } catch (e) {
+        console.warn("Falha ao salvar comissão no localStorage:", e);
+      }
+
+      if (status) {
+        status.textContent = salvoServidor ? 'Fotos salvas no banco.' : 'Fotos salvas localmente.';
+        setTimeout(() => {
+          if (status.textContent) status.textContent = '';
+        }, 2500);
+      }
+      if (!silent) {
+        alert(salvoServidor ? 'Fotos da comissão salvas no banco.' : 'Fotos da comissão salvas localmente.');
+      }
+      if (btn && !silent) {
+        btn.disabled = false;
+        btn.textContent = '💾 SALVAR FOTOS';
+      }
     }
 
     async function salvarDadosBanco() {
@@ -3225,60 +3301,6 @@
     // Inicializar carregamento de dados
     carregarDados();
     detectarPacoteCustomizado();
-
-    // ─── INTEGRAÇÃO COM ÁUDIO DO YOUTUBE ───
-    let ytPlayer = null;
-    let ytVideoId = null;
-
-    // Carregar a API do YouTube IFrame de forma assíncrona
-    const ytScript = document.createElement('script');
-    ytScript.src = "https://www.youtube.com/iframe_api";
-    const firstScript = document.getElementsByTagName('script')[0];
-    firstScript.parentNode.insertBefore(ytScript, firstScript);
-
-    window.onYouTubeIframeAPIReady = function () {
-      ytPlayer = new YT.Player('yt-audio-player', {
-        height: '1px',
-        width: '1px',
-        videoId: '',
-        playerVars: {
-          'autoplay': 0,
-          'controls': 0,
-          'disablekb': 1,
-          'fs': 0,
-          'modestbranding': 1,
-          'rel': 0,
-          'showinfo': 0
-        },
-        events: {
-          'onReady': function (event) {
-            console.log("Player do YouTube pronto.");
-            event.target.unMute();
-            event.target.setVolume(100);
-            if (window.pendingYtVideoId) {
-              event.target.loadVideoById({
-                videoId: window.pendingYtVideoId,
-                startSeconds: 0
-              });
-              event.target.playVideo();
-              window.pendingYtVideoId = null;
-            }
-          },
-          'onStateChange': function (event) {
-            if (event.data === 0) { // Vídeo terminou -> Loop
-              event.target.playVideo();
-            }
-          }
-        }
-      });
-    };
-
-    function getYouTubeId(url) {
-      if (!url) return null;
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
-    }
   </script>
 </body>
 
