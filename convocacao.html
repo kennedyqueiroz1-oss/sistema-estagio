@@ -1760,6 +1760,8 @@
     renderPressLogos();
 
     /* ─── EFEITOS SONOROS (WEB AUDIO API) ─── */
+
+    /*
     const sfx = {
       ctx: null,
 
@@ -2038,20 +2040,20 @@
       }
     };
 
-    function toggleMusic() {
-      const isMuted = music.toggleMute();
-      const btn = document.getElementById('btn-mute-music');
-      if (isMuted) {
-        btn.innerHTML = '🔇 MÚSICA: DESLIGADA';
-        btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-        btn.style.color = '#fff';
-      } else {
-        btn.innerHTML = '🔊 MÚSICA: TAMBORZÃO';
-        btn.style.borderColor = 'var(--amarelo)';
-        btn.style.color = 'var(--amarelo)';
+      function toggleMusic() {
+        const isMuted = music.toggleMute();
+        const btn = document.getElementById('btn-mute-music');
+        if (isMuted) {
+          btn.innerHTML = '🔇 MÚSICA: DESLIGADA';
+          btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+          btn.style.color = '#fff';
+        } else {
+          btn.innerHTML = '🔊 MÚSICA: TAMBORZÃO';
+          btn.style.borderColor = 'var(--amarelo)';
+          btn.style.color = 'var(--amarelo)';
+        }
       }
-    }
-
+  */
 
     /* ─── SETUP / CONTROLE DE ESTADO ─── */
     function addEmpresa() {
