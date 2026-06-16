@@ -1671,7 +1671,7 @@
       { id: 'ct1', nome: 'Cinthia', cargo: 'TÉCNICA', photoUrl: null },
       { id: 'ct2', nome: 'Verônica', cargo: 'TÉCNICA', photoUrl: null },
       { id: 'ct3', nome: 'Reinaldo', cargo: 'TÉCNICO', photoUrl: null },
-      { id: 'ct4', nome: 'Kennedy', cargo: 'TÉCNICO', photoUrl: null }
+      { id: 'ct4', nome: 'Jhon', cargo: 'TÉCNICO', photoUrl: null }
     ];
     let currentComissaoIdx = 0;
     let isShowingComissao = false;
@@ -1697,18 +1697,35 @@
       return 'COMISSÃO TÉCNICA';
     }
 
+    const ORDEM_COMISSAO = ['cinthia', 'veronica', 'reinaldo', 'jhon'];
+
+    function normalizarTextoComissao(texto) {
+      return String(texto || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+    }
+
     function montarComissaoDosUsuarios(usuarios, salvos = []) {
       if (!Array.isArray(usuarios) || !usuarios.length) return salvos.length ? salvos : comissaoTecnica;
-      return usuarios.map((u, idx) => {
-        const id = `usr-${u.usuario || idx}`;
+      return ORDEM_COMISSAO.map((nomeBase, idx) => {
+        const usuarioEncontrado = usuarios.find(u => {
+          const alvo = `${u.nome || ''} ${u.usuario || ''}`;
+          return normalizarTextoComissao(alvo).includes(nomeBase);
+        });
+        const u = usuarioEncontrado || {};
+        const id = usuarioEncontrado ? `usr-${u.usuario || idx}` : `ct${idx + 1}`;
         const salvo = salvos.find(s => s.id === id)
           || salvos.find(s => (s.usuario || '').toLowerCase() === (u.usuario || '').toLowerCase())
-          || salvos.find(s => (s.nome || '').toLowerCase() === (u.nome || '').toLowerCase());
+          || salvos.find(s => normalizarTextoComissao(s.nome) === normalizarTextoComissao(u.nome))
+          || salvos.find(s => normalizarTextoComissao(s.nome).includes(nomeBase));
+        const padrao = comissaoTecnica[idx];
         return {
           id,
           usuario: u.usuario || '',
-          nome: u.nome || u.usuario || `Usuário ${idx + 1}`,
-          cargo: cargoUsuario(u.tipo),
+          nome: u.nome || padrao.nome,
+          cargo: u.tipo ? cargoUsuario(u.tipo) : padrao.cargo,
           photoUrl: u.foto || salvo?.photoUrl || null
         };
       });
