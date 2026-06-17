@@ -1717,18 +1717,20 @@
           return normalizarTextoComissao(alvo).includes(nomeBase);
         });
         const u = usuarioEncontrado || {};
+        const fotoUsuario = u.foto || u.photoUrl || u.photo || '';
         const id = usuarioEncontrado ? `usr-${u.usuario || idx}` : `ct${idx + 1}`;
         const salvo = salvos.find(s => s.id === id)
           || salvos.find(s => (s.usuario || '').toLowerCase() === (u.usuario || '').toLowerCase())
           || salvos.find(s => normalizarTextoComissao(s.nome) === normalizarTextoComissao(u.nome))
           || salvos.find(s => normalizarTextoComissao(s.nome).includes(nomeBase));
+        const fotoSalva = salvo?.foto || salvo?.photoUrl || salvo?.photo || '';
         const padrao = comissaoTecnica[idx];
         return {
           id,
           usuario: u.usuario || '',
           nome: u.nome || padrao.nome,
           cargo: u.tipo ? cargoUsuario(u.tipo) : padrao.cargo,
-          photoUrl: u.foto || salvo?.photoUrl || null
+          photoUrl: fotoUsuario || fotoSalva || null
         };
       });
     }

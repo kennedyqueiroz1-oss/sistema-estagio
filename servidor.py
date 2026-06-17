@@ -262,7 +262,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
                             "usuario": u["usuario"],
                             "nome": u["nome"],
                             "tipo": u["tipo"],
-                            "foto": u.get("foto")
+                            "foto": u.get("foto"),
+                            "photoUrl": u.get("foto")
                         }
                         for u in listar_usuarios()
                     ]

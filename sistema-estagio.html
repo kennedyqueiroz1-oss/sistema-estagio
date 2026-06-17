@@ -2811,6 +2811,8 @@
       if (loginScreen) loginScreen.style.display = 'none';
       if (topbar) topbar.style.display = 'flex';
       if (userProfile) userProfile.style.display = 'flex';
+      localStorage.setItem('est_token', authToken);
+      localStorage.setItem('est_user', JSON.stringify(currentUser));
       const upn = document.getElementById('user-profile-name');
       if (upn) upn.textContent = `${currentUser.nome} (${currentUser.tipo.toUpperCase()})`;
       
@@ -2863,6 +2865,8 @@
           
           sessionStorage.setItem('est_token', authToken);
           sessionStorage.setItem('est_user', JSON.stringify(currentUser));
+          localStorage.setItem('est_token', authToken);
+          localStorage.setItem('est_user', JSON.stringify(currentUser));
           
           document.getElementById('login-user').value = '';
           document.getElementById('login-pass').value = '';
@@ -2891,6 +2895,8 @@
         
         sessionStorage.setItem('est_token', authToken);
         sessionStorage.setItem('est_user', JSON.stringify(currentUser));
+        localStorage.setItem('est_token', authToken);
+        localStorage.setItem('est_user', JSON.stringify(currentUser));
         
         document.getElementById('login-user').value = '';
         document.getElementById('login-pass').value = '';
