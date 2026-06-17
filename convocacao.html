@@ -1496,6 +1496,8 @@
 <body>
 
   <canvas id="confetti-canvas"></canvas>
+  <audio id="audio-espera" src="1.mp3" preload="auto" loop></audio>
+  <audio id="audio-apresentacao" src="2.mp3" preload="auto" loop></audio>
   <div class="press-backdrop"></div>
   <div class="press-logo-grid" id="press-logos"></div>
 
@@ -1654,7 +1656,7 @@
     <div class="cup-glow-bg"></div>
     <div class="cup-illustration">🏆</div>
     <h1>ELENCO<br>CONVOCADO!</h1>
-    <p>Todos os novos estagiários foram integrados com sucesso. Boa sorte na jornada e que tragam grandes resultados!
+    <p>Boa sorte na jornada e que tragam grandes resultados!
     </p>
     <div class="stars-five">⭐⭐⭐⭐⭐</div>
     <button class="btn-restart" onclick="goSetup()">↩ REALIZAR NOVA CONVOCAÇÃO</button>
@@ -1878,6 +1880,39 @@
       });
     }
 
+    function tocarAudio(audio) {
+      if (!audio) return;
+      audio.volume = 0.7;
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {
+          // O navegador pode bloquear autoplay até a primeira interação do usuário.
+        });
+      }
+    }
+
+    function pausarAudio(audio) {
+      if (!audio) return;
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function tocarMusicaEspera() {
+      pausarAudio(document.getElementById('audio-apresentacao'));
+      tocarAudio(document.getElementById('audio-espera'));
+    }
+
+    function tocarMusicaApresentacao() {
+      pausarAudio(document.getElementById('audio-espera'));
+      tocarAudio(document.getElementById('audio-apresentacao'));
+    }
+
+    function pararMusicas() {
+      pausarAudio(document.getElementById('audio-espera'));
+      pausarAudio(document.getElementById('audio-apresentacao'));
+    }
+
     function startPresentation() {
       const valid = empresas.filter(e => e.nome.trim() && e.alunos.some(a => a.nome.trim()));
       if (!valid.length) {
@@ -1896,6 +1931,7 @@
 
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('waiting-screen').style.display = 'flex';
+      tocarMusicaEspera();
     }
 
     function iniciarApresentacaoReal() {
@@ -1913,6 +1949,7 @@
       currentAlunoIdx = 0;
       currentComissaoIdx = 0;
 
+      tocarMusicaApresentacao();
       document.getElementById('waiting-screen').style.display = 'none';
       startComissaoPresentation();
     }
@@ -2432,6 +2469,7 @@
     }
 
     function showFinal() {
+      pararMusicas();
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'flex';
       launchConfetti(280);
@@ -2443,6 +2481,7 @@
       document.getElementById('field-screen').style.display = 'none';
       document.getElementById('final-screen').style.display = 'none';
       document.getElementById('waiting-screen').style.display = 'flex';
+      tocarMusicaEspera();
       renderSetupComissao();
     }
 
@@ -2954,6 +2993,7 @@
     // Inicializar carregamento de dados
     carregarDados();
     detectarPacoteCustomizado();
+    tocarMusicaEspera();
   </script>
 </body>
 
