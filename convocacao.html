@@ -1668,6 +1668,7 @@
     let currentEmpIdx = 0;
     let currentAlunoIdx = 0;
     let isAnimatingPack = false;
+    let carregamentoDadosPromise = null;
 
     let comissaoTecnica = [
       { id: 'ct1', nome: 'Cinthia', cargo: 'TÉCNICA', photoUrl: null },
@@ -1936,7 +1937,11 @@
       tocarMusicaEspera();
     }
 
-    function iniciarApresentacaoReal() {
+    async function iniciarApresentacaoReal() {
+      if (carregamentoDadosPromise) {
+        await carregamentoDadosPromise;
+      }
+
       const valid = empresas.filter(e => e.nome.trim() && e.alunos.some(a => a.nome.trim()));
       if (!valid.length) {
         alert('Nenhum encaminhamento encontrado para a convocação.');
@@ -2993,7 +2998,7 @@
     }
 
     // Inicializar carregamento de dados
-    carregarDados();
+    carregamentoDadosPromise = carregarDados();
     detectarPacoteCustomizado();
     tocarMusicaEspera();
   </script>
