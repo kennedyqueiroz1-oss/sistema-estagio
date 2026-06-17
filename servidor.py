@@ -93,12 +93,18 @@ def init_db():
                     usuario text primary key,
                     senha_hash text not null,
                     nome text not null,
-                    tipo text not null check (tipo in ('coordenador', 'orientador', 'visualizador')),
+                    tipo text not null check (tipo in ('coordenador', 'orientador', 'visualizador', 'aluno')),
                     foto text,
                     criado_em timestamp with time zone default now()
                 );
             """)
             cur.execute("alter table sistema_usuarios add column if not exists foto text;")
+            cur.execute("alter table sistema_usuarios drop constraint if exists sistema_usuarios_tipo_check;")
+            cur.execute("""
+                alter table sistema_usuarios
+                add constraint sistema_usuarios_tipo_check
+                check (tipo in ('coordenador', 'orientador', 'visualizador', 'aluno'));
+            """)
 
             # 3. Seed do coordenador inicial
             cur.execute("select count(*) from sistema_usuarios;")
@@ -322,7 +328,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         if route == "/api/dados":
             # Visualizadores não podem alterar dados
-            if usuario_sessao["tipo"] == "visualizador":
+            if usuario_sessao["tipo"] in ("visualizador", "aluno"):
                 return self.send_json({"ok": False, "erro": "Acesso negado. Perfil de apenas visualização."}, 403)
 
             length = int(self.headers.get("Content-Length", 0))
@@ -357,7 +363,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 new_type = payload.get("tipo", "")
                 new_foto = payload.get("foto")
 
-                if not new_user or not new_pass or not new_name or new_type not in ('coordenador', 'orientador', 'visualizador'):
+                if not new_user or not new_pass or not new_name or new_type not in ('coordenador', 'orientador', 'visualizador', 'aluno'):
                     return self.send_json({"ok": False, "erro": "Preencha todos os campos corretamente."}, 400)
 
                 senha_hash = hash_senha(new_pass, new_user)

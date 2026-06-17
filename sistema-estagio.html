@@ -2598,7 +2598,7 @@
     <div class="mod-header">
       <div class="mod-title">
         <h2>Gestão de <span>Usuários</span></h2>
-        <p>Cadastre e gerencie coordenadores, orientadores e visualizadores do sistema</p>
+        <p>Cadastre e gerencie coordenadores, orientadores, visualizadores e acessos de alunos</p>
       </div>
     </div>
     
@@ -2638,6 +2638,7 @@
               <option value="orientador">Orientador</option>
               <option value="coordenador">Coordenador</option>
               <option value="visualizador">Visualizador (Leitura)</option>
+              <option value="aluno">Aluno (somente convocação)</option>
             </select>
           </div>
         </div>
@@ -2813,6 +2814,12 @@
       if (userProfile) userProfile.style.display = 'flex';
       localStorage.setItem('est_token', authToken);
       localStorage.setItem('est_user', JSON.stringify(currentUser));
+
+      if (currentUser.tipo === 'aluno') {
+        window.location.href = '/convocacao.html';
+        return false;
+      }
+
       const upn = document.getElementById('user-profile-name');
       if (upn) upn.textContent = `${currentUser.nome} (${currentUser.tipo.toUpperCase()})`;
       
@@ -2823,8 +2830,12 @@
     function applyRoleRestrictions() {
       const isCoord = currentUser.tipo === 'coordenador';
       const isViewer = currentUser.tipo === 'visualizador';
+      const isAluno = currentUser.tipo === 'aluno';
 
       const tabUsr = document.getElementById('tab-usuarios');
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.style.display = isAluno && tab.id !== 'tab-convocacao' ? 'none' : '';
+      });
       if (tabUsr) tabUsr.style.display = isCoord ? '' : 'none';
 
       const writeBtns = document.querySelectorAll(
@@ -2835,7 +2846,7 @@
       );
       
       writeBtns.forEach(btn => {
-        btn.style.display = isViewer ? 'none' : '';
+        btn.style.display = (isViewer || isAluno) ? 'none' : '';
       });
     }
 
@@ -2891,7 +2902,11 @@
         console.warn('Servidor offline ou inacessível. Entrando em modo de demonstração local.');
         err.style.display = 'none';
         authToken = 'mock-local-token';
-        currentUser = { usuario: u, nome: u.toUpperCase(), tipo: u.toLowerCase() === 'visualizador' ? 'visualizador' : 'coordenador' };
+        currentUser = {
+          usuario: u,
+          nome: u.toUpperCase(),
+          tipo: u.toLowerCase() === 'visualizador' ? 'visualizador' : u.toLowerCase() === 'aluno' ? 'aluno' : 'coordenador'
+        };
         
         sessionStorage.setItem('est_token', authToken);
         sessionStorage.setItem('est_user', JSON.stringify(currentUser));
@@ -2962,6 +2977,7 @@
         let badge = '';
         if (u.tipo === 'coordenador') badge = '<span class="status-badge sb-atrasado">Coordenador</span>';
         else if (u.tipo === 'orientador') badge = '<span class="status-badge sb-andamento">Orientador</span>';
+        else if (u.tipo === 'aluno') badge = '<span class="status-badge sb-pendente">Aluno</span>';
         else badge = '<span class="status-badge sb-pendente">Visualizador</span>';
 
         const delBtn = isSelf 
