@@ -1924,7 +1924,7 @@
       }
       empresas = valid.map(e => ({
         ...e,
-        tecnico: e.tecnico || 'Reinaldo',
+        tecnico: e.orientador || e.tecnico || 'Reinaldo',
         alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3)
       }));
 
@@ -1949,7 +1949,7 @@
       }
       empresas = valid.map(e => ({
         ...e,
-        tecnico: e.tecnico || 'Reinaldo',
+        tecnico: e.orientador || e.tecnico || 'Reinaldo',
         alunos: e.alunos.filter(a => a.nome.trim()).slice(0, 3)
       }));
       currentEmpIdx = 0;
@@ -2129,8 +2129,8 @@
 
       document.getElementById('empresa-nome-display').textContent = emp.nome.toUpperCase();
 
-      const tec = emp.tecnico || 'Reinaldo';
-      document.getElementById('empresa-tecnico-display').textContent = `TÉCNICO DE ACOMPANHAMENTO: ${tec.toUpperCase()}`;
+      const tec = emp.orientador || emp.tecnico || 'Reinaldo';
+      document.getElementById('empresa-tecnico-display').textContent = `ORIENTADOR: ${tec.toUpperCase()}`;
 
       // Gerenciar exibição da miniatura do Técnico no canto do campo
       const miniCoachDisplay = document.getElementById('mini-coach-display');
@@ -2757,7 +2757,8 @@
           return {
             id: emp.id,
             nome: emp.name,
-            tecnico: emp.tecnico || (ei % 2 === 0 ? 'Reinaldo' : 'Verônica'),
+            orientador: emp.orientador || emp.tecnico || 'Reinaldo',
+            tecnico: emp.orientador || emp.tecnico || 'Reinaldo',
             alunos: listAlunos
           };
         }).filter(emp => emp.alunos.length > 0);
